@@ -41,8 +41,6 @@
 
         public function wipeSessionVariables() {
             $_SESSION = array();
-
-            // THROW EXCEPTION AT THE CONTROLLER
         }
 
         public function isSetNewSessionID() {
@@ -57,10 +55,10 @@
         }
 
         public function setSessionID() {
-            session_id($_SESSION['new_session_id']);
+            if ($this->isSetNewSessionID() == TRUE) {
+                session_id($_SESSION['new_session_id']);
+            }
         }
-
-        // CALL start() AT THE CONTROLLER
 
     }
 
