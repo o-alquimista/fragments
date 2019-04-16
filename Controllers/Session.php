@@ -2,16 +2,16 @@
 
     require '../Models/Session.php';
 
-    interface SessionInitInterface {
+    interface Init {
 
         public function start();
 
     }
 
-    class SessionInitControl implements SessionInitInterface {
+    class SessionInit implements Init {
 
         public function start() {
-            $Session = new SessionInit;
+            $Session = new SessionInitModel;
             $Session->start();
             return $this->isDestroyed($Session);
         }
@@ -39,16 +39,16 @@
 
     }
 
-    interface SessionRegenerateIDInterface {
+    interface RegenerateID {
 
         public function regenerate();
 
     }
 
-    class SessionRegenerateIDControl implements SessionRegenerateIDInterface {
+    class SessionRegenerateID implements RegenerateID {
 
         public function regenerate() {
-            $SessionRegenerate = new SessionRegenerateID;
+            $SessionRegenerate = new SessionRegenerateIDModel;
             $newID = $SessionRegenerate->createNewID();
             $SessionRegenerate->setDestroyed();
             $SessionRegenerate->commitSession();

@@ -1,37 +1,55 @@
 <?php
 
-    require 'ServiceClasses/InputValidationService.php';
+    require '../Models/InputValidation.php';
 
-    interface InputValidationControl {
+    interface InputValidation {
 
-        public function Validate();
+        public function validate($input);
 
     }
 
-    class EmailValidationControl implements InputValidationControl {
+    class EmailValidation implements InputValidation {
 
-        public function Validate() {
-            $EmailValidation = new EmailValidation;
-            $isEmpty = $EmailValidation->isEmpty();
-            $isValid = $EmailValidation->isValid();
-            if ($isEmpty == TRUE && $isValid == TRUE) {
-                return TRUE;
+        public function validate($input) {
+            $EmailValidation = new EmailValidationModel;
+            $isEmpty = $EmailValidation->isEmpty($input);
+            $isValid = $EmailValidation->isValid($input);
+            if ($isEmpty == TRUE) {
+                return FALSE;
+                /* at this point, error handling
+                should return an error message
+                to the form */
             }
-            return FALSE;
+            if ($isValid == FALSE) {
+                return FALSE;
+                /* at this point, error handling
+                should return an error message
+                to the form */
+            }
+            return TRUE;
         }
 
     }
 
-    class PasswordValidationControl implements InputValidationControl {
+    class PasswordValidation implements InputValidation {
 
-        public function Validate() {
-            $PasswordValidation = new PasswordValidation;
-            $isEmpty = $PasswordValidation->isEmpty();
-            $isValid = $PasswordValidation->isValid();
-            if ($isEmpty == TRUE && $isValid == TRUE) {
-                return TRUE;
+        public function validate($input) {
+            $PasswordValidation = new PasswordValidationModel;
+            $isEmpty = $PasswordValidation->isEmpty($input);
+            $isValid = $PasswordValidation->isValid($input);
+            if ($isEmpty == TRUE) {
+                return FALSE;
+                /* at this point, error handling
+                should return an error message
+                to the form */
             }
-            return FALSE;
+            if ($isValid == FALSE) {
+                return FALSE;
+                /* at this point, error handling
+                should return an error message
+                to the form */
+            }
+            return TRUE;
         }
 
     }

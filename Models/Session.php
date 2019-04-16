@@ -1,6 +1,6 @@
 <?php
 
-    interface SessionInterface {
+    interface InitModel {
 
         public function start();
         public function isDestroyed();
@@ -12,7 +12,7 @@
 
     }
 
-    class SessionInit implements SessionInterface {
+    class SessionInitModel implements InitModel {
 
         public function start() {
             session_start([
@@ -62,7 +62,7 @@
 
     }
 
-    interface SessionRegenerateInterface {
+    interface RegenerationModel {
 
         public function createNewID();
         public function setDestroyed();
@@ -74,7 +74,7 @@
 
     }
 
-    abstract class AbstractSessionRegenerate implements SessionRegenerateInterface {
+    abstract class RegenerateIDModel implements RegenerationModel {
 
         public function createNewID() {
             $new_session_id = session_create_id();
@@ -86,7 +86,7 @@
 
     }
 
-    class SessionRegenerateID extends AbstractSessionRegenerate {
+    class SessionRegenerateIDModel extends RegenerateIDModel {
 
         protected function returnNewSessionID($newID) {
             return $newID;

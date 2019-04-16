@@ -1,13 +1,13 @@
 <?php
 
-    interface InputValidationInterface {
+    interface Validation {
 
         public function isEmpty($input);
         public function isValid($input);
 
     }
 
-    abstract class InputValidation implements InputValidationInterface {
+    abstract class InputValidationModel implements Validation {
 
         public function isEmpty($input) {
             if (empty($input)) {
@@ -20,7 +20,7 @@
 
     }
 
-    class EmailValidation extends InputValidation {
+    class EmailValidationModel extends InputValidationModel {
 
         protected function returnResult($result) {
             return $result;
@@ -35,7 +35,7 @@
 
     }
 
-    class PasswordValidation extends InputValidation {
+    class PasswordValidationModel extends InputValidationModel {
 
         protected function returnResult($result) {
             return $result;
