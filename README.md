@@ -1,2 +1,6 @@
 # fragments-authentication
-A modular authentication system
+A modular web authentication application written in PHP. MySQL is used as the database for now.
+
+- The default database name is `fragments`. Change it at `Utils/Connection.php`. The username and password for the database connection can be set there as well.
+
+- Create the table: `CREATE TABLE users (id INT NOT NULL AUTO_INCREMENT, email VARCHAR(255) NOT NULL, hash VARCHAR(255) NOT NULL, PRIMARY KEY(id));`
