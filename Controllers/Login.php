@@ -1,6 +1,5 @@
 <?php
 
-    require '../Controllers/InputValidation.php';
     require '../Models/Login.php';
 
     interface Login {
@@ -14,8 +13,10 @@
         public $feedbackText = array();
 
         public function login($username, $passwd) {
-            $FormValidation = $this->FormValidation($username, $passwd);
-            if ($FormValidation == FALSE) {
+            $FormValidation = new FormValidation;
+            $Validation = $FormValidation->validate($username, $passwd);
+            if ($Validation == FALSE) {
+                $this->feedbackText = $FormValidation->feedbackText;
                 return FALSE;
             }
 
@@ -35,21 +36,6 @@
 
             $authentication = new SessionData;
             $authentication->setSessionVariables($username);
-            return TRUE;
-        }
-
-        protected function FormValidation($username, $passwd) {
-            $UsernameValidation = new UsernameValidation;
-            $result = $UsernameValidation->validate($username);
-
-            $PasswordValidation = new PasswordValidation;
-            $result = $PasswordValidation->validate($passwd);
-
-            $this->feedbackText[] = $UsernameValidation->feedbackText;
-            $this->feedbackText[] = $PasswordValidation->feedbackText;
-            if (!is_null($this->feedbackText[0]) || !is_null($this->feedbackText[1])) {
-                return FALSE;
-            }
             return TRUE;
         }
 

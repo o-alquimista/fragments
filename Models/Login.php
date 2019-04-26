@@ -1,8 +1,14 @@
 <?php
 
+    /* all functions that connect to database should be
+    tied to an abstract class that contains the connection
+    object and a connection constructor shared with all
+    child classes */
+
     require_once '../Utils/Text.php';
     require_once '../Utils/Connection.php';
     require_once '../Controllers/Session.php';
+    require_once '../Utils/InputValidation.php';
 
     interface UserExistsInterface {
 
@@ -26,12 +32,8 @@
             $stmt->execute();
             $resultStmt = $stmt->get_result();
             if ($resultStmt->num_rows == 0) {
-                $feedback = new TextTools;
-                $feedbackMessage = $feedback->get('FEEDBACK_NOT_REGISTERED');
-
-                // format feedback message
-                $feedbackFormat = new WarningFormat;
-                $feedbackReady = $feedbackFormat->format($feedbackMessage);
+                $feedbackMessage = Text::get('FEEDBACK_NOT_REGISTERED');
+                $feedbackReady = WarningFormat::format($feedbackMessage);
                 $this->feedbackText = $feedbackReady;
                 return FALSE;
             }
@@ -66,12 +68,8 @@
             }
 
             if (!password_verify($passwd, $hash)) {
-                $feedback = new TextTools;
-                $feedbackMessage = $feedback->get('FEEDBACK_INCORRECT_PASSWD');
-
-                // format feedback message
-                $feedbackFormat = new WarningFormat;
-                $feedbackReady = $feedbackFormat->format($feedbackMessage);
+                $feedbackMessage = Text::get('FEEDBACK_INCORRECT_PASSWD');
+                $feedbackReady = WarningFormat::format($feedbackMessage);
                 $this->feedbackText = $feedbackReady;
                 return FALSE;
             }
@@ -113,6 +111,45 @@
         protected function generateNewSessionID() {
             $newID = new SessionRegenerateID;
             $newID->regenerate();
+        }
+
+    }
+
+    interface FormValidationInterface {
+
+        public function validate($username, $passwd);
+
+    }
+
+    class FormValidation implements FormValidationInterface {
+
+        public $feedbackText = array();
+
+        public function validate($username, $passwd) {
+            $UsernameValidation = new UsernameValidation;
+            $PasswordValidation = new PasswordValidation;
+
+            $UsernameEmpty = $UsernameValidation->isEmpty($username);
+            if ($UsernameEmpty == TRUE) {
+                $feedbackMsg = Text::get('FEEDBACK_USERNAME_EMPTY');
+                $feedbackFormat = WarningFormat::format($feedbackMsg);
+                $this->feedbackText[] = $feedbackFormat;
+            }
+
+            $PasswordEmpty = $PasswordValidation->isEmpty($passwd);
+            if ($PasswordEmpty == TRUE) {
+                $feedbackMsg = Text::get('FEEDBACK_PASSWORD_EMPTY');
+                $feedbackFormat = WarningFormat::format($feedbackMsg);
+                $this->feedbackText[] = $feedbackFormat;
+            }
+
+            foreach ($this->feedbackText as $entry) {
+                if (!is_null($entry)) {
+                    return FALSE;
+                }
+            }
+
+            return TRUE;
         }
 
     }

@@ -1,14 +1,14 @@
 <?php
 
-    interface Text {
+    interface TextTools {
 
-        public function get($feedback);
+        public static function get($feedback);
 
     }
 
-    class TextTools implements Text {
+    class Text implements TextTools {
 
-        protected $feedbackText = array(
+        protected static $feedbackText = array(
             'FEEDBACK_USERNAME_EMPTY' => 'Username was left empty',
             'FEEDBACK_USERNAME_LENGTH' => 'Minimum username length is 5 characters',
             'FEEDBACK_PASSWORD_EMPTY' => 'Password was left empty',
@@ -19,8 +19,8 @@
             'FEEDBACK_REGISTRATION_COMPLETE' => 'Registration complete'
         );
 
-        public function get($feedback) {
-            $result = $this->feedbackText[$feedback];
+        public static function get($feedback) {
+            $result = self::$feedbackText[$feedback];
             return $result;
         }
 
@@ -28,13 +28,13 @@
 
     interface Format {
 
-        public function format($feedback);
+        public static function format($feedback);
 
     }
 
     class WarningFormat implements Format {
 
-        public function format($feedback) {
+        public static function format($feedback) {
             ob_start();
                 echo "<div class='alert alert-warning' role='alert'>
                 " . $feedback . "
@@ -48,7 +48,7 @@
 
     class SuccessFormat implements Format {
 
-        public function format($feedback) {
+        public static function format($feedback) {
             ob_start();
                 echo "<div class='alert alert-success' role='alert'>
                 " . $feedback . "

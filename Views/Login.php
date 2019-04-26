@@ -24,7 +24,7 @@
             <?php
                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-                    require '../Utils/InputProcessing.php';
+                    require '../Utils/InputValidation.php';
                     require '../Controllers/Login.php';
 
                     $username = CleanInput::clean_input($_POST['username']);
