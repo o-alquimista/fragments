@@ -9,8 +9,8 @@
     class DatabaseConnection implements Connection {
 
         private $host = "localhost";
-        private $username = "alq";
-        private $password = "alq";
+        private $username = "";
+        private $password = "";
         private $database = "fragments";
         private $connection;
 
