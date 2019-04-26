@@ -27,11 +27,11 @@
                     require '../Utils/InputProcessing.php';
                     require '../Controllers/Login.php';
 
-                    $email = CleanInput::clean_input($_POST['email']);
+                    $username = CleanInput::clean_input($_POST['username']);
                     $passwd = CleanInput::clean_input($_POST['passwd']);
 
                     $login = new LoginForm;
-                    $loginStatus = $login->login($email, $passwd);
+                    $loginStatus = $login->login($username, $passwd);
                     if ($loginStatus == FALSE) {
                         foreach ($login->feedbackText as $text) {
                             echo $text;
@@ -45,14 +45,14 @@
 
             <form method='post' action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>'>
                 <div class='form-group'>
-                    <input type='email' name='email' class='form-control' id='email'
-                        placeholder='Email' autocapitalize=off required autofocus>
+                    <input type='text' name='username' class='form-control' minlength='5'
+                        placeholder='Username' autocapitalize=off required autofocus>
                 </div>
 
                 <div class='form-group'>
                     <input type='password' name='passwd' class='form-control'
-                        id='pwd' placeholder='Password' minlength="8"
-                        title="Must be longer than 8 characters" autocapitalize=off
+                        id='pwd' placeholder='Password' minlength='8'
+                        title='Must be longer than 8 characters' autocapitalize=off
                         autocomplete=off required>
                 </div>
 

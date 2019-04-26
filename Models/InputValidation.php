@@ -20,14 +20,14 @@
 
     }
 
-    class EmailValidationModel extends InputValidationModel {
+    class UsernameValidationModel extends InputValidationModel {
 
         protected function returnResult($result) {
             return $result;
         }
 
         public function isValid($input) {
-            if (filter_var($input, FILTER_VALIDATE_EMAIL)) {
+            if (strlen($input) > 4) {
                 return TRUE;
             }
             return FALSE;

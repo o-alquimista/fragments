@@ -1,40 +1,38 @@
 <?php
 
     require '../Controllers/InputValidation.php';
-    require '../Models/Login.php';
+    require '../Models/Register.php';
 
-    interface Login {
+    interface Register {
 
-        public function login($username, $passwd);
+        public function registerUser($username, $passwd);
 
     }
 
-    class LoginForm implements Login {
+    class Registration implements Register {
 
         public $feedbackText = array();
 
-        public function login($username, $passwd) {
+        public function registerUser($username, $passwd) {
             $FormValidation = $this->FormValidation($username, $passwd);
             if ($FormValidation == FALSE) {
                 return FALSE;
             }
 
-            $checkExists = new UserExists;
+            $checkExists = new CheckUsername;
             $resultUserExists = $checkExists->isUserRegistered($username);
             if ($resultUserExists == FALSE) {
                 $this->feedbackText[] = $checkExists->feedbackText;
                 return FALSE;
             }
 
-            $checkPassword = new PasswordVerify;
-            $resultCheckPassword = $checkPassword->VerifyPassword($username, $passwd);
-            if ($resultCheckPassword == FALSE) {
-                $this->feedbackText[] = $checkPassword->feedbackText;
-                return FALSE;
-            }
+            $hashPassword = new PasswordHash;
+            $hashedPassword = $hashPassword->hashPassword($passwd);
 
-            $authentication = new SessionData;
-            $authentication->setSessionVariables($username);
+            $insertData = new RegisterToDatabase;
+            $insertData->insertData($username, $hashedPassword);
+            $this->feedbackText[] = $insertData->feedbackText;
+
             return TRUE;
         }
 

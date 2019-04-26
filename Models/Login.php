@@ -2,10 +2,11 @@
 
     require_once '../Utils/Text.php';
     require_once '../Utils/Connection.php';
+    require_once '../Controllers/Session.php';
 
     interface UserExistsInterface {
 
-        public function isUserRegistered($email);
+        public function isUserRegistered($username);
 
     }
 
@@ -19,9 +20,9 @@
             $this->connection = $connect->getConnection();
         }
 
-        public function isUserRegistered($email) {
-            $stmt = $this->connection->prepare("SELECT * FROM users WHERE email = ?");
-            $stmt->bind_param("s", $email);
+        public function isUserRegistered($username) {
+            $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = ?");
+            $stmt->bind_param("s", $username);
             $stmt->execute();
             $resultStmt = $stmt->get_result();
             if ($resultStmt->num_rows == 0) {
@@ -41,7 +42,7 @@
 
     interface PasswordVerifyInterface {
 
-        public function VerifyPassword($email, $passwd);
+        public function VerifyPassword($username, $passwd);
 
     }
 
@@ -55,9 +56,9 @@
             $this->connection = $connect->getConnection();
         }
 
-        public function VerifyPassword($email, $passwd) {
-            $stmt = $this->connection->prepare("SELECT hash FROM users WHERE email = ?");
-            $stmt->bind_param("s", $email);
+        public function VerifyPassword($username, $passwd) {
+            $stmt = $this->connection->prepare("SELECT hash FROM users WHERE username = ?");
+            $stmt->bind_param("s", $username);
             $stmt->execute();
             $resultStmt = $stmt->get_result();
             while ($result = $resultStmt->fetch_object()) {
@@ -81,7 +82,7 @@
 
     interface SessionDataInterface {
 
-        public function setSessionVariables($email);
+        public function setSessionVariables($username);
 
     }
 
@@ -94,17 +95,24 @@
             $this->connection = $connect->getConnection();
         }
 
-        public function setSessionVariables($email) {
-            $stmt = $this->connection->prepare("SELECT * FROM users WHERE email = ?");
-            $stmt->bind_param("s", $email);
+        public function setSessionVariables($username) {
+            $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = ?");
+            $stmt->bind_param("s", $username);
             $stmt->execute();
             $resultStmt = $stmt->get_result();
 
+            $this->generateNewSessionID();
+
             while ($result = $resultStmt->fetch_object()) {
-                $_SESSION['login'];
-                $_SESSION['email'] = $result->email;
+                $_SESSION['login'] = "";
+                $_SESSION['username'] = $result->username;
             }
             return TRUE;
+        }
+
+        protected function generateNewSessionID() {
+            $newID = new SessionRegenerateID;
+            $newID->regenerate();
         }
 
     }
