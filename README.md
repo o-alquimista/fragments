@@ -1,5 +1,5 @@
 # fragments-authentication
-A modular web authentication application written in PHP. MySQL is used as the database for now.
+A modular web authentication application written in PHP.
 
 - The default database name is `fragments`. Change it at `Utils/Connection.php`. The username and password for the database connection can be set there as well.
 
