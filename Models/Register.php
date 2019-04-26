@@ -7,6 +7,7 @@
 
     require_once '../Utils/Text.php';
     require_once '../Utils/Connection.php';
+    require_once '../Utils/InputValidation.php';
 
     interface Username {
 
@@ -25,11 +26,10 @@
         }
 
         public function isUserRegistered($username) {
-            $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = ?");
-            $stmt->bind_param("s", $username);
+            $stmt = $this->connection->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
+            $stmt->bindParam(":username", $username);
             $stmt->execute();
-            $resultStmt = $stmt->get_result();
-            if ($resultStmt->num_rows >= 1) {
+            if ($stmt->fetchColumn() >= 1) {
                 $feedbackMessage = Text::get('FEEDBACK_USERNAME_TAKEN');
                 $feedbackReady = WarningFormat::format($feedbackMessage);
                 $this->feedbackText = $feedbackReady;
@@ -73,8 +73,9 @@
 
         public function insertData($username, $hash) {
             $stmt = $this->connection->prepare("INSERT INTO users (username, hash)
-                VALUES (?, ?)");
-            $stmt->bind_param("ss", $username, $hash);
+                VALUES (:username, :hash)");
+            $stmt->bindParam(":username", $username);
+            $stmt->bindParam(":hash", $hash);
             $stmt->execute();
 
             $feedbackMessage = Text::get('FEEDBACK_REGISTRATION_COMPLETE');

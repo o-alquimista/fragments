@@ -8,19 +8,15 @@
 
     class DatabaseConnection implements Connection {
 
-        private $host = "localhost";
         private $username = "";
         private $password = "";
+        private $host = "localhost";
         private $database = "fragments";
         private $connection;
 
         public function __construct() {
-            $this->connection = new mysqli($this->host, $this->username,
-                $this->password, $this->database);
-
-            if ($this->connection->connect_error) {
-                die("Connection failed: " . $this->connection->connect_error);
-            }
+            $this->connection = new PDO("mysql:host=$this->host;dbname=$this->database",
+                $this->username, $this->password);
         }
 
         public function getConnection() {

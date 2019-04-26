@@ -27,11 +27,10 @@
         }
 
         public function isUserRegistered($username) {
-            $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = ?");
-            $stmt->bind_param("s", $username);
+            $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = :username");
+            $stmt->bindParam(":username", $username);
             $stmt->execute();
-            $resultStmt = $stmt->get_result();
-            if ($resultStmt->num_rows == 0) {
+            if ($stmt->fetchColumn() == 0) {
                 $feedbackMessage = Text::get('FEEDBACK_NOT_REGISTERED');
                 $feedbackReady = WarningFormat::format($feedbackMessage);
                 $this->feedbackText = $feedbackReady;
@@ -59,11 +58,10 @@
         }
 
         public function VerifyPassword($username, $passwd) {
-            $stmt = $this->connection->prepare("SELECT hash FROM users WHERE username = ?");
-            $stmt->bind_param("s", $username);
+            $stmt = $this->connection->prepare("SELECT hash FROM users WHERE username = :username");
+            $stmt->bindParam(":username", $username);
             $stmt->execute();
-            $resultStmt = $stmt->get_result();
-            while ($result = $resultStmt->fetch_object()) {
+            while ($result = $stmt->fetchObject()) {
                 $hash = $result->hash;
             }
 
@@ -94,14 +92,13 @@
         }
 
         public function setSessionVariables($username) {
-            $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = ?");
-            $stmt->bind_param("s", $username);
+            $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = :username");
+            $stmt->bindParam(":username", $username);
             $stmt->execute();
-            $resultStmt = $stmt->get_result();
 
             $this->generateNewSessionID();
 
-            while ($result = $resultStmt->fetch_object()) {
+            while ($result = $stmt->fetchObject()) {
                 $_SESSION['login'] = "";
                 $_SESSION['username'] = $result->username;
             }
