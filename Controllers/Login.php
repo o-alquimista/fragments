@@ -34,7 +34,7 @@
                 return FALSE;
             }
 
-            $authentication = new SessionData;
+            $authentication = new Authenticate;
             $authentication->setSessionVariables($username);
             return TRUE;
         }

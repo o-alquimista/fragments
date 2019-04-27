@@ -9,82 +9,6 @@
     require_once '../Utils/Connection.php';
     require_once '../Utils/InputValidation.php';
 
-    interface Username {
-
-        public function isUserRegistered($username);
-
-    }
-
-    class CheckUsername implements Username {
-
-        protected $connection;
-        public $feedbackText;
-
-        public function __construct() {
-            $connect = new DatabaseConnection;
-            $this->connection = $connect->getConnection();
-        }
-
-        public function isUserRegistered($username) {
-            $stmt = $this->connection->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
-            $stmt->bindParam(":username", $username);
-            $stmt->execute();
-            if ($stmt->fetchColumn() >= 1) {
-                $feedbackMessage = Text::get('FEEDBACK_USERNAME_TAKEN');
-                $feedbackReady = WarningFormat::format($feedbackMessage);
-                $this->feedbackText = $feedbackReady;
-                return FALSE;
-            }
-            return TRUE;
-        }
-
-    }
-
-    interface Hash {
-
-        public function hashPassword($passwd);
-
-    }
-
-    class PasswordHash implements Hash {
-
-        public function hashPassword($passwd) {
-            $hash = password_hash($passwd, PASSWORD_DEFAULT);
-            return $hash;
-        }
-
-    }
-
-    interface RegisterData {
-
-        public function insertData($username, $passwd);
-
-    }
-
-    class RegisterToDatabase implements RegisterData {
-
-        protected $connection;
-        public $feedbackText;
-
-        public function __construct() {
-            $connect = new DatabaseConnection;
-            $this->connection = $connect->getConnection();
-        }
-
-        public function insertData($username, $hash) {
-            $stmt = $this->connection->prepare("INSERT INTO users (username, hash)
-                VALUES (:username, :hash)");
-            $stmt->bindParam(":username", $username);
-            $stmt->bindParam(":hash", $hash);
-            $stmt->execute();
-
-            $feedbackMessage = Text::get('FEEDBACK_REGISTRATION_COMPLETE');
-            $feedbackReady = SuccessFormat::format($feedbackMessage);
-            $this->feedbackText = $feedbackReady;
-        }
-
-    }
-
     interface FormValidationInterface {
 
         public function validate($username, $passwd);
@@ -140,6 +64,89 @@
             }
 
             return TRUE;
+        }
+
+    }
+
+    abstract class DatabaseOperations {
+
+        protected $connection;
+
+        public function __construct() {
+            $connect = new DatabaseConnection;
+            $this->connection = $connect->getConnection();
+        }
+
+    }
+
+    interface UsernameExistsInterface {
+
+        public function isUserRegistered($username);
+
+    }
+
+    class UsernameExists extends DatabaseOperations implements UsernameExistsInterface {
+
+        public $feedbackText;
+
+        public function __construct() {
+            parent::__construct();
+        }
+
+        public function isUserRegistered($username) {
+            $stmt = $this->connection->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
+            $stmt->bindParam(":username", $username);
+            $stmt->execute();
+            if ($stmt->fetchColumn() >= 1) {
+                $feedbackMessage = Text::get('FEEDBACK_USERNAME_TAKEN');
+                $feedbackReady = WarningFormat::format($feedbackMessage);
+                $this->feedbackText = $feedbackReady;
+                return FALSE;
+            }
+            return TRUE;
+        }
+
+    }
+
+    interface Write {
+
+        public function insertData($username, $passwd);
+
+    }
+
+    class WriteData extends DatabaseOperations implements Write {
+
+        public $feedbackText;
+
+        public function __construct() {
+            parent::__construct();
+        }
+
+        public function insertData($username, $hash) {
+            $stmt = $this->connection->prepare("INSERT INTO users (username, hash)
+                VALUES (:username, :hash)");
+            $stmt->bindParam(":username", $username);
+            $stmt->bindParam(":hash", $hash);
+            $stmt->execute();
+
+            $feedbackMessage = Text::get('FEEDBACK_REGISTRATION_COMPLETE');
+            $feedbackReady = SuccessFormat::format($feedbackMessage);
+            $this->feedbackText = $feedbackReady;
+        }
+
+    }
+
+    interface Hash {
+
+        public function hashPassword($passwd);
+
+    }
+
+    class PasswordHash implements Hash {
+
+        public function hashPassword($passwd) {
+            $hash = password_hash($passwd, PASSWORD_DEFAULT);
+            return $hash;
         }
 
     }

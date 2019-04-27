@@ -2,13 +2,13 @@
 
     require '../Models/Register.php';
 
-    interface Register {
+    interface Registration {
 
         public function registerUser($username, $passwd);
 
     }
 
-    class Registration implements Register {
+    class Register implements Registration {
 
         public $feedbackText = array();
 
@@ -20,19 +20,19 @@
                 return FALSE;
             }
 
-            $checkExists = new CheckUsername;
-            $resultUserExists = $checkExists->isUserRegistered($username);
-            if ($resultUserExists == FALSE) {
-                $this->feedbackText[] = $checkExists->feedbackText;
+            $UsernameExists = new UsernameExists;
+            $resultUsernameExists = $UsernameExists->isUserRegistered($username);
+            if ($resultUsernameExists == FALSE) {
+                $this->feedbackText[] = $UsernameExists->feedbackText;
                 return FALSE;
             }
 
             $hashPassword = new PasswordHash;
             $hashedPassword = $hashPassword->hashPassword($passwd);
 
-            $insertData = new RegisterToDatabase;
-            $insertData->insertData($username, $hashedPassword);
-            $this->feedbackText[] = $insertData->feedbackText;
+            $writeData = new WriteData;
+            $writeData->insertData($username, $hashedPassword);
+            $this->feedbackText[] = $writeData->feedbackText;
 
             return TRUE;
         }

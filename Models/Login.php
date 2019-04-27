@@ -10,108 +10,6 @@
     require_once '../Controllers/Session.php';
     require_once '../Utils/InputValidation.php';
 
-    interface UserExistsInterface {
-
-        public function isUserRegistered($username);
-
-    }
-
-    class UserExists implements UserExistsInterface {
-
-        protected $connection;
-        public $feedbackText;
-
-        public function __construct() {
-            $connect = new DatabaseConnection;
-            $this->connection = $connect->getConnection();
-        }
-
-        public function isUserRegistered($username) {
-            $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = :username");
-            $stmt->bindParam(":username", $username);
-            $stmt->execute();
-            if ($stmt->fetchColumn() == 0) {
-                $feedbackMessage = Text::get('FEEDBACK_NOT_REGISTERED');
-                $feedbackReady = WarningFormat::format($feedbackMessage);
-                $this->feedbackText = $feedbackReady;
-                return FALSE;
-            }
-            return TRUE;
-        }
-
-    }
-
-    interface PasswordVerifyInterface {
-
-        public function VerifyPassword($username, $passwd);
-
-    }
-
-    class PasswordVerify implements PasswordVerifyInterface {
-
-        protected $connection;
-        public $feedbackText;
-
-        public function __construct() {
-            $connect = new DatabaseConnection;
-            $this->connection = $connect->getConnection();
-        }
-
-        public function VerifyPassword($username, $passwd) {
-            $stmt = $this->connection->prepare("SELECT hash FROM users WHERE username = :username");
-            $stmt->bindParam(":username", $username);
-            $stmt->execute();
-            while ($result = $stmt->fetchObject()) {
-                $hash = $result->hash;
-            }
-
-            if (!password_verify($passwd, $hash)) {
-                $feedbackMessage = Text::get('FEEDBACK_INCORRECT_PASSWD');
-                $feedbackReady = WarningFormat::format($feedbackMessage);
-                $this->feedbackText = $feedbackReady;
-                return FALSE;
-            }
-            return TRUE;
-        }
-
-    }
-
-    interface SessionDataInterface {
-
-        public function setSessionVariables($username);
-
-    }
-
-    class SessionData implements SessionDataInterface {
-
-        protected $connection;
-
-        public function __construct() {
-            $connect = new DatabaseConnection;
-            $this->connection = $connect->getConnection();
-        }
-
-        public function setSessionVariables($username) {
-            $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = :username");
-            $stmt->bindParam(":username", $username);
-            $stmt->execute();
-
-            $this->generateNewSessionID();
-
-            while ($result = $stmt->fetchObject()) {
-                $_SESSION['login'] = "";
-                $_SESSION['username'] = $result->username;
-            }
-            return TRUE;
-        }
-
-        protected function generateNewSessionID() {
-            $newID = new SessionRegenerateID;
-            $newID->regenerate();
-        }
-
-    }
-
     interface FormValidationInterface {
 
         public function validate($username, $passwd);
@@ -147,6 +45,114 @@
             }
 
             return TRUE;
+        }
+
+    }
+
+    abstract class DatabaseOperations {
+
+        protected $connection;
+
+        public function __construct() {
+            $connect = new DatabaseConnection;
+            $this->connection = $connect->getConnection();
+        }
+
+    }
+
+    interface UserExistsInterface {
+
+        public function isUserRegistered($username);
+
+    }
+
+    class UserExists extends DatabaseOperations implements UserExistsInterface {
+
+        public $feedbackText;
+
+        public function __construct() {
+            parent::__construct();
+        }
+
+        public function isUserRegistered($username) {
+            $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = :username");
+            $stmt->bindParam(":username", $username);
+            $stmt->execute();
+            if ($stmt->fetchColumn() == 0) {
+                $feedbackMessage = Text::get('FEEDBACK_NOT_REGISTERED');
+                $feedbackReady = WarningFormat::format($feedbackMessage);
+                $this->feedbackText = $feedbackReady;
+                return FALSE;
+            }
+            return TRUE;
+        }
+
+    }
+
+    interface PasswordVerifyInterface {
+
+        public function VerifyPassword($username, $passwd);
+
+    }
+
+    class PasswordVerify extends DatabaseOperations implements PasswordVerifyInterface {
+
+        public $feedbackText;
+
+        public function __construct() {
+            parent::__construct();
+        }
+
+        public function VerifyPassword($username, $passwd) {
+            $stmt = $this->connection->prepare("SELECT hash FROM users WHERE username = :username");
+            $stmt->bindParam(":username", $username);
+            $stmt->execute();
+            while ($result = $stmt->fetchObject()) {
+                $hash = $result->hash;
+            }
+
+            if (!password_verify($passwd, $hash)) {
+                $feedbackMessage = Text::get('FEEDBACK_INCORRECT_PASSWD');
+                $feedbackReady = WarningFormat::format($feedbackMessage);
+                $this->feedbackText = $feedbackReady;
+                return FALSE;
+            }
+            return TRUE;
+        }
+
+    }
+
+    interface AuthenticateInterface {
+
+        public function setSessionVariables($username);
+
+    }
+
+    class Authenticate extends DatabaseOperations implements AuthenticateInterface {
+
+        public $feedbackText;
+
+        public function __construct() {
+            parent::__construct();
+        }
+
+        public function setSessionVariables($username) {
+            $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = :username");
+            $stmt->bindParam(":username", $username);
+            $stmt->execute();
+
+            $this->generateNewSessionID();
+
+            while ($result = $stmt->fetchObject()) {
+                $_SESSION['login'] = "";
+                $_SESSION['username'] = $result->username;
+            }
+            return TRUE;
+        }
+
+        protected function generateNewSessionID() {
+            $newID = new SessionRegenerateID;
+            $newID->regenerate();
         }
 
     }

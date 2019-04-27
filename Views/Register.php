@@ -30,9 +30,9 @@
                     $username = CleanInput::clean_input($_POST['username']);
                     $passwd = CleanInput::clean_input($_POST['passwd']);
 
-                    $Registration = new Registration;
-                    $Registration->registerUser($username, $passwd);
-                    foreach ($Registration->feedbackText as $text) {
+                    $Register = new Register;
+                    $Register->registerUser($username, $passwd);
+                    foreach ($Register->feedbackText as $text) {
                         echo $text;
                     }
                 }
