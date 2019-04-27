@@ -135,8 +135,8 @@
             SessionID::regenerate();
 
             while ($result = $stmt->fetchObject()) {
-                $_SESSION['login'] = "";
-                $_SESSION['username'] = $result->username;
+                SessionData::set('login', '');
+                SessionData::set('username', $result->username);
             }
             return TRUE;
         }
