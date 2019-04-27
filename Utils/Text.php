@@ -6,11 +6,6 @@
 
     }
 
-    /* the get() function should receive 2 arguments, FeedbackType and FeedbackMessage.
-    The type will determine which format method will be used. The returned value will
-    be a properly formatted feedback message, eliminating the need to call the format
-    function from outside */
-
     class Text implements TextTools {
 
         protected static $feedbackText = array(
