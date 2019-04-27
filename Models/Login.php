@@ -2,7 +2,7 @@
 
     require_once '../Utils/Text.php';
     require_once '../Utils/Connection.php';
-    require_once '../Controllers/Session.php';
+    require_once '../Utils/Session.php';
     require_once '../Utils/InputValidation.php';
 
     interface FormValidationInterface {
@@ -132,7 +132,7 @@
             $stmt->bindParam(":username", $username);
             $stmt->execute();
 
-            SessionRegenerateID::regenerate();
+            SessionID::regenerate();
 
             while ($result = $stmt->fetchObject()) {
                 $_SESSION['login'] = "";
