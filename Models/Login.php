@@ -1,10 +1,5 @@
 <?php
 
-    /* all functions that connect to database should be
-    tied to an abstract class that contains the connection
-    object and a connection constructor shared with all
-    child classes */
-
     require_once '../Utils/Text.php';
     require_once '../Utils/Connection.php';
     require_once '../Controllers/Session.php';
@@ -26,16 +21,14 @@
 
             $UsernameEmpty = $UsernameValidation->isEmpty($username);
             if ($UsernameEmpty == TRUE) {
-                $feedbackMsg = Text::get('FEEDBACK_USERNAME_EMPTY');
-                $feedbackFormat = WarningFormat::format($feedbackMsg);
-                $this->feedbackText[] = $feedbackFormat;
+                $feedbackMsg = Text::get('warning', 'FEEDBACK_USERNAME_EMPTY');
+                $this->feedbackText[] = $feedbackMsg;
             }
 
             $PasswordEmpty = $PasswordValidation->isEmpty($passwd);
             if ($PasswordEmpty == TRUE) {
-                $feedbackMsg = Text::get('FEEDBACK_PASSWORD_EMPTY');
-                $feedbackFormat = WarningFormat::format($feedbackMsg);
-                $this->feedbackText[] = $feedbackFormat;
+                $feedbackMsg = Text::get('warning', 'FEEDBACK_PASSWORD_EMPTY');
+                $this->feedbackText[] = $feedbackMsg;
             }
 
             foreach ($this->feedbackText as $entry) {
@@ -79,9 +72,8 @@
             $stmt->bindParam(":username", $username);
             $stmt->execute();
             if ($stmt->fetchColumn() == 0) {
-                $feedbackMessage = Text::get('FEEDBACK_NOT_REGISTERED');
-                $feedbackReady = WarningFormat::format($feedbackMessage);
-                $this->feedbackText = $feedbackReady;
+                $feedbackMsg = Text::get('warning', 'FEEDBACK_NOT_REGISTERED');
+                $this->feedbackText = $feedbackMsg;
                 return FALSE;
             }
             return TRUE;
@@ -112,9 +104,8 @@
             }
 
             if (!password_verify($passwd, $hash)) {
-                $feedbackMessage = Text::get('FEEDBACK_INCORRECT_PASSWD');
-                $feedbackReady = WarningFormat::format($feedbackMessage);
-                $this->feedbackText = $feedbackReady;
+                $feedbackMsg = Text::get('warning', 'FEEDBACK_INCORRECT_PASSWD');
+                $this->feedbackText = $feedbackMsg;
                 return FALSE;
             }
             return TRUE;
@@ -141,18 +132,13 @@
             $stmt->bindParam(":username", $username);
             $stmt->execute();
 
-            $this->generateNewSessionID();
+            SessionRegenerateID::regenerate();
 
             while ($result = $stmt->fetchObject()) {
                 $_SESSION['login'] = "";
                 $_SESSION['username'] = $result->username;
             }
             return TRUE;
-        }
-
-        protected function generateNewSessionID() {
-            $newID = new SessionRegenerateID;
-            $newID->regenerate();
         }
 
     }

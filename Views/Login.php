@@ -1,7 +1,8 @@
 <?php
     require '../Controllers/Session.php';
-    $Session = new SessionInit;
-    $Session->start();
+    require '../Utils/Requests.php';
+
+    SessionInit::start();
 ?>
 
 <!DOCTYPE html>
@@ -22,24 +23,23 @@
             <h4>Login</h4>
 
             <?php
-                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                if (ServerRequest::isPost() == TRUE) {
 
                     require '../Utils/InputValidation.php';
                     require '../Controllers/Login.php';
 
-                    $username = CleanInput::clean_input($_POST['username']);
-                    $passwd = CleanInput::clean_input($_POST['passwd']);
+                    $username = CleanInput::clean_input(ServerRequest::get('username'));
+                    $passwd = CleanInput::clean_input(ServerRequest::get('passwd'));
 
-                    $login = new LoginForm;
-                    $loginStatus = $login->login($username, $passwd);
-                    if ($loginStatus == FALSE) {
-                        foreach ($login->feedbackText as $text) {
-                            echo $text;
-                        }
+                    $Login = new LoginForm;
+                    $LoginStatus = $Login->login($username, $passwd);
+                    if ($LoginStatus == FALSE) {
+                        echo RenderFeedback::render($Login);
                     } else {
                         // redirect to 'profile'
                         echo "Logged in";
                     }
+
                 }
             ?>
 

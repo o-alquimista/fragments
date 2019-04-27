@@ -1,10 +1,5 @@
 <?php
 
-    /* all functions that connect to database should be
-    tied to an abstract class that contains the connection
-    object and a connection constructor shared with all
-    child classes */
-
     require_once '../Utils/Text.php';
     require_once '../Utils/Connection.php';
     require_once '../Utils/InputValidation.php';
@@ -25,16 +20,14 @@
 
             $UsernameEmpty = $UsernameValidation->isEmpty($username);
             if ($UsernameEmpty == TRUE) {
-                $feedbackMsg = Text::get('FEEDBACK_USERNAME_EMPTY');
-                $feedbackFormat = WarningFormat::format($feedbackMsg);
-                $this->feedbackText[] = $feedbackFormat;
+                $feedbackMsg = Text::get('warning', 'FEEDBACK_USERNAME_EMPTY');
+                $this->feedbackText[] = $feedbackMsg;
             }
 
             $PasswordEmpty = $PasswordValidation->isEmpty($passwd);
             if ($PasswordEmpty == TRUE) {
-                $feedbackMsg = Text::get('FEEDBACK_PASSWORD_EMPTY');
-                $feedbackFormat = WarningFormat::format($feedbackMsg);
-                $this->feedbackText[] = $feedbackFormat;
+                $feedbackMsg = Text::get('warning', 'FEEDBACK_PASSWORD_EMPTY');
+                $this->feedbackText[] = $feedbackMsg;
             }
 
             foreach ($this->feedbackText as $entry) {
@@ -45,16 +38,14 @@
 
             $UsernameValid = $UsernameValidation->isValid($username);
             if ($UsernameValid == FALSE) {
-                $feedbackMsg = Text::get('FEEDBACK_USERNAME_LENGTH');
-                $feedbackFormat = WarningFormat::format($feedbackMsg);
-                $this->feedbackText[] = $feedbackFormat;
+                $feedbackMsg = Text::get('warning', 'FEEDBACK_USERNAME_LENGTH');
+                $this->feedbackText[] = $feedbackMsg;
             }
 
             $PasswordValid = $PasswordValidation->isValid($passwd);
             if ($PasswordValid == FALSE) {
-                $feedbackMsg = Text::get('FEEDBACK_PASSWORD_LENGTH');
-                $feedbackFormat = WarningFormat::format($feedbackMsg);
-                $this->feedbackText[] = $feedbackFormat;
+                $feedbackMsg = Text::get('warning', 'FEEDBACK_PASSWORD_LENGTH');
+                $this->feedbackText[] = $feedbackMsg;
             }
 
             foreach ($this->feedbackText as $entry) {
@@ -98,9 +89,8 @@
             $stmt->bindParam(":username", $username);
             $stmt->execute();
             if ($stmt->fetchColumn() >= 1) {
-                $feedbackMessage = Text::get('FEEDBACK_USERNAME_TAKEN');
-                $feedbackReady = WarningFormat::format($feedbackMessage);
-                $this->feedbackText = $feedbackReady;
+                $feedbackMsg = Text::get('warning', 'FEEDBACK_USERNAME_TAKEN');
+                $this->feedbackText = $feedbackMsg;
                 return FALSE;
             }
             return TRUE;
@@ -129,9 +119,8 @@
             $stmt->bindParam(":hash", $hash);
             $stmt->execute();
 
-            $feedbackMessage = Text::get('FEEDBACK_REGISTRATION_COMPLETE');
-            $feedbackReady = SuccessFormat::format($feedbackMessage);
-            $this->feedbackText = $feedbackReady;
+            $feedbackMsg = Text::get('success', 'FEEDBACK_REGISTRATION_COMPLETE');
+            $this->feedbackText = $feedbackMsg;
         }
 
     }
