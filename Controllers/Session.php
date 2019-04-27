@@ -4,59 +4,57 @@
 
     interface Init {
 
-        public function start();
+        public static function start();
 
     }
 
     class SessionInit implements Init {
 
-        public function start() {
-            $Session = new SessionInitModel;
-            $Session->start();
-            return $this->isDestroyed($Session);
+        public static function start() {
+            SessionInitModel::start();
+            return self::isDestroyed();
         }
 
-        protected function isDestroyed($Session) {
-            if ($Session->isDestroyed() == TRUE) {
-                $this->isExpired($Session);
+        protected static function isDestroyed() {
+            if (SessionInitModel::isDestroyed() == TRUE) {
+                self::isExpired();
             }
         }
 
-        protected function isExpired($Session) {
-            if ($Session->isExpired() == TRUE) {
-                $Session->wipeSessionVariables();
+        protected static function isExpired() {
+            if (SessionInitModel::isExpired() == TRUE) {
+                SessionInitModel::wipeSessionVariables();
                 throw new Exception('This session is obsolete');
             } else {
-                $this->isSetNewSessionID($Session);
+                self::isSetNewSessionID();
             }
         }
 
-        protected function isSetNewSessionID($Session) {
-            $Session->commitSession();
-            $Session->setSessionID();
-            $Session->start();
+        protected static function isSetNewSessionID() {
+            SessionInitModel::commitSession();
+            SessionInitModel::setSessionID();
+            SessionInitModel::start();
         }
 
     }
 
     interface RegenerateID {
 
-        public function regenerate();
+        public static function regenerate();
 
     }
 
     class SessionRegenerateID implements RegenerateID {
 
-        public function regenerate() {
-            $SessionRegenerate = new SessionRegenerateIDModel;
-            $newID = $SessionRegenerate->createNewID();
-            $SessionRegenerate->setDestroyed();
-            $SessionRegenerate->commitSession();
-            $SessionRegenerate->setNewID($newID);
-            $SessionRegenerate->initializeSessionID();
-            $SessionRegenerate->commitSession();
-            $SessionRegenerate->start();
-            $SessionRegenerate->unsetSessionVariables();
+        public static function regenerate() {
+            $newID = SessionRegenerateIDModel::createNewID();
+            SessionRegenerateIDModel::setDestroyed();
+            SessionRegenerateIDModel::commitSession();
+            SessionRegenerateIDModel::setNewID($newID);
+            SessionRegenerateIDModel::initializeSessionID();
+            SessionRegenerateIDModel::commitSession();
+            SessionRegenerateIDModel::start();
+            SessionRegenerateIDModel::unsetSessionVariables();
         }
 
     }
