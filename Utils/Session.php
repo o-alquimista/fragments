@@ -1,5 +1,7 @@
 <?php
 
+    require 'SessionTools.php';
+
     interface SessionStart {
 
         public static function start();
@@ -22,13 +24,13 @@
         }
 
         protected static function isDestroyed() {
-            if (isset($_SESSION['destroyed'])) {
+            if (null !== SessionData::get('destroyed')) {
                 self::isExpired();
             }
         }
 
         protected static function isExpired() {
-            if ($_SESSION['destroyed'] < time() - 300) {
+            if (SessionData::get('destroyed') < time() - 300) {
                 self::wipeSessionVariables();
                 throw new Exception('This session is obsolete');
             }
@@ -36,11 +38,11 @@
         }
 
         protected static function wipeSessionVariables() {
-            $_SESSION = array();
+            SessionData::destroyAll();
         }
 
         protected static function isSetNewSessionID() {
-            if (isset($_SESSION['new_session_id'])) {
+            if (null !== SessionData::get('new_session_id')) {
                 self::commitSession();
             }
         }
@@ -51,7 +53,7 @@
         }
 
         protected static function setSessionID() {
-            session_id($_SESSION['new_session_id']);
+            session_id(SessionData::get('new_session_id'));
             self::start();
         }
 
@@ -73,12 +75,12 @@
 
         protected static function createNewID() {
             self::$newID = session_create_id();
-            $_SESSION['new_session_id'] = self::$newID;
+            SessionData::set('new_session_id', self::$newID);
             self::setDestroyed();
         }
 
         protected static function setDestroyed() {
-            $_SESSION['destroyed'] = time();
+            SessionData::set('destroyed', time());
             self::commitSession();
         }
 
@@ -124,8 +126,8 @@
         }
 
         protected static function unsetSessionVariables() {
-            unset($_SESSION['destroyed']);
-            unset($_SESSION['new_session_id']);
+            SessionData::destroy('destroyed');
+            SessionData::destroy('new_session_id');
         }
 
     }
