@@ -23,27 +23,27 @@
             <h4>Login</h4>
 
             <?php
-                if (ServerRequest::isPost() == TRUE) {
+                if (ServerRequest::method('POST') == TRUE) {
 
                     require '../Utils/InputValidation.php';
                     require '../Controllers/Login.php';
 
-                    $username = CleanInput::clean_input(ServerRequest::get('username'));
-                    $passwd = CleanInput::clean_input(ServerRequest::get('passwd'));
+                    $username = CleanInput::clean_input(ServerRequest::get('post', 'username'));
+                    $passwd = CleanInput::clean_input(ServerRequest::get('post', 'passwd'));
 
                     $Login = new LoginForm;
                     $LoginStatus = $Login->login($username, $passwd);
                     if ($LoginStatus == FALSE) {
                         echo RenderFeedback::render($Login);
                     } else {
-                        // redirect to 'profile'
+                        // call redirect function from Utils/Requests.php
                         echo "Logged in";
                     }
 
                 }
             ?>
 
-            <form method='post' action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>'>
+            <form method='post' action='<?php echo ServerRequest::self()?>'>
                 <div class='form-group'>
                     <input type='text' name='username' class='form-control' minlength='5'
                         placeholder='Username' autocapitalize=off required autofocus>

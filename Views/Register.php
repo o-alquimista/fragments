@@ -23,13 +23,13 @@
             <h4>Register</h4>
 
             <?php
-                if (ServerRequest::isPost() == TRUE) {
+                if (ServerRequest::method('POST') == TRUE) {
 
                     require '../Utils/InputValidation.php';
                     require '../Controllers/Register.php';
 
-                    $username = CleanInput::clean_input(ServerRequest::get('username'));
-                    $passwd = CleanInput::clean_input(ServerRequest::get('passwd'));
+                    $username = CleanInput::clean_input(ServerRequest::get('post', 'username'));
+                    $passwd = CleanInput::clean_input(ServerRequest::get('post', 'passwd'));
 
                     $Register = new Register;
                     $Register->registerUser($username, $passwd);
@@ -38,7 +38,7 @@
                 }
             ?>
 
-            <form method='post' action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>'>
+            <form method='post' action='<?php echo ServerRequest::self()?>'>
                 <div class='form-group'>
                     <input type='text' name='username' class='form-control' minlength='5'
                         placeholder='Username' autocapitalize=off required autofocus>
