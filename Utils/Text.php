@@ -2,9 +2,14 @@
 
     interface TextTools {
 
-        public static function get($feedback);
+        public static function get($type, $feedback);
 
     }
+
+    /* the get() function should receive 2 arguments, FeedbackType and FeedbackMessage.
+    The type will determine which format method will be used. The returned value will
+    be a properly formatted feedback message, eliminating the need to call the format
+    function from outside */
 
     class Text implements TextTools {
 
@@ -19,9 +24,36 @@
             'FEEDBACK_REGISTRATION_COMPLETE' => 'Registration complete'
         );
 
-        public static function get($feedback) {
-            $result = self::$feedbackText[$feedback];
-            return $result;
+        public static function get($type, $feedback) {
+            $message = self::$feedbackText[$feedback];
+
+            switch ($type) {
+                case 'warning':
+                    return WarningFormat::format($message);
+                    break;
+                case 'success':
+                    return SuccessFormat::format($message);
+                    break;
+                default:
+                    throw new Exception('Invalid feedback type');
+                    break;
+            }
+        }
+
+    }
+
+    interface Render {
+
+        public static function render($feedback);
+
+    }
+
+    class RenderFeedback implements Render {
+
+        public static function render($feedback) {
+            foreach ($feedback->feedbackText as $text) {
+                echo $text;
+            }
         }
 
     }
