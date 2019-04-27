@@ -1,8 +1,8 @@
 <?php
-    require '../Controllers/Session.php';
+    require '../Utils/Session.php';
     require '../Utils/Requests.php';
 
-    SessionInit::start();
+    Session::start();
 ?>
 
 <!DOCTYPE html>
