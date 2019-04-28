@@ -1,8 +1,16 @@
 <?php
+
+    /**
+    *
+    * Login View
+    *
+    */
+
     require '../Utils/Session.php';
     require '../Utils/Requests.php';
 
     Session::start();
+
 ?>
 
 <!DOCTYPE html>
@@ -23,24 +31,36 @@
             <h4>Login</h4>
 
             <?php
-                if (ServerRequest::method('POST') == TRUE) {
+
+                if (ServerRequest::requestMethod('POST') == TRUE) {
 
                     require '../Utils/InputValidation.php';
                     require '../Controllers/Login.php';
+
+                    /*
+                    Sanitize input
+                    */
 
                     $username = CleanInput::clean_input(ServerRequest::get('post', 'username'));
                     $passwd = CleanInput::clean_input(ServerRequest::get('post', 'passwd'));
 
                     $Login = new LoginForm;
                     $LoginStatus = $Login->login($username, $passwd);
+
+                    /*
+                    If the controller returns FALSE, echo feedback messages.
+                    If the controller returns TRUE, call redirect function from Utils/Requests.php
+                    */
+
                     if ($LoginStatus == FALSE) {
                         echo RenderFeedback::render($Login);
                     } else {
-                        // call redirect function from Utils/Requests.php
+                        // redirect
                         echo "Logged in";
                     }
 
                 }
+
             ?>
 
             <form method='post' action='<?php echo ServerRequest::self()?>'>

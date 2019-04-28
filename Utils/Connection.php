@@ -1,5 +1,14 @@
 <?php
 
+    /**
+    *
+    * Connection Utility
+    *
+    * Creates a database connection object.
+    * It can be retrieved with the method getConnection()
+    *
+    */
+
     interface Connection {
 
         public function getConnection();

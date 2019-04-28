@@ -1,8 +1,16 @@
 <?php
+
+    /**
+    *
+    * Register View
+    *
+    */
+
     require '../Utils/Session.php';
     require '../Utils/Requests.php';
 
     Session::start();
+
 ?>
 
 <!DOCTYPE html>
@@ -23,19 +31,30 @@
             <h4>Register</h4>
 
             <?php
-                if (ServerRequest::method('POST') == TRUE) {
+
+                if (ServerRequest::requestMethod('POST') == TRUE) {
 
                     require '../Utils/InputValidation.php';
                     require '../Controllers/Register.php';
+
+                    /*
+                    Sanitize input
+                    */
 
                     $username = CleanInput::clean_input(ServerRequest::get('post', 'username'));
                     $passwd = CleanInput::clean_input(ServerRequest::get('post', 'passwd'));
 
                     $Register = new Register;
                     $Register->registerUser($username, $passwd);
+
+                    /*
+                    Echo all feedback messages
+                    */
+
                     echo RenderFeedback::render($Register);
 
                 }
+
             ?>
 
             <form method='post' action='<?php echo ServerRequest::self()?>'>

@@ -1,5 +1,13 @@
 <?php
 
+    /**
+    *
+    * Text Utility
+    *
+    * Handles processing text/feedback messages
+    *
+    */
+
     interface TextTools {
 
         public static function get($type, $feedback);
@@ -19,7 +27,13 @@
             'FEEDBACK_REGISTRATION_COMPLETE' => 'Registration complete'
         );
 
+        /*
+        Method get() returns the requested feedback message
+        formatted with the specified $type
+        */
+
         public static function get($type, $feedback) {
+
             $message = self::$feedbackText[$feedback];
 
             switch ($type) {
@@ -33,6 +47,7 @@
                     throw new Exception('Invalid feedback type');
                     break;
             }
+
         }
 
     }
@@ -45,10 +60,16 @@
 
     class RenderFeedback implements Render {
 
+        /*
+        The foreach echoes all feedback messages from the array
+        */
+
         public static function render($feedback) {
+
             foreach ($feedback->feedbackText as $text) {
                 echo $text;
             }
+
         }
 
     }
@@ -59,9 +80,15 @@
 
     }
 
+    /*
+    Each class below inserts $feedback into the
+    specified Bootstrap alert color and returns it
+    */
+
     class WarningFormat implements Format {
 
         public static function format($feedback) {
+
             ob_start();
                 echo "<div class='alert alert-warning' role='alert'>
                 " . $feedback . "
@@ -69,6 +96,7 @@
                 $output = ob_get_contents();
             ob_end_clean();
             return $output;
+
         }
 
     }
@@ -76,6 +104,7 @@
     class SuccessFormat implements Format {
 
         public static function format($feedback) {
+
             ob_start();
                 echo "<div class='alert alert-success' role='alert'>
                 " . $feedback . "
@@ -83,6 +112,7 @@
                 $output = ob_get_contents();
             ob_end_clean();
             return $output;
+
         }
 
     }

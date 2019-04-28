@@ -1,5 +1,11 @@
 <?php
 
+    /**
+    *
+    * Register Controller
+    *
+    */
+
     require '../Models/Register.php';
 
     interface Registration {
@@ -10,9 +16,17 @@
 
     class Register implements Registration {
 
+        /*
+        $feedbackText holds feedback messages and is retrieved
+        at the register view if the registerUser() method returns FALSE
+        */
+
         public $feedbackText = array();
 
         public function registerUser($username, $passwd) {
+
+            // Returns FALSE if input validation fails
+
             $FormValidation = new FormValidation;
             $Validation = $FormValidation->validate($username, $passwd);
             if ($Validation == FALSE) {
@@ -20,21 +34,28 @@
                 return FALSE;
             }
 
-            $UsernameExists = new UsernameExists;
-            $resultUsernameExists = $UsernameExists->isUserRegistered($username);
-            if ($resultUsernameExists == FALSE) {
-                $this->feedbackText[] = $UsernameExists->feedbackText;
+            // Returns FALSE if username is already registered
+
+            $UsernameAvailable = new UsernameAvailable;
+            $resultUsernameAvailable = $UsernameAvailable->isUsernameAvailable($username);
+            if ($resultUsernameAvailable == FALSE) {
+                $this->feedbackText[] = $UsernameAvailable->feedbackText;
                 return FALSE;
             }
 
-            $hashPassword = new PasswordHash;
-            $hashedPassword = $hashPassword->hashPassword($passwd);
+            // Hash the password
+
+            $passwordHash = new PasswordHash;
+            $hash = $passwordHash->hashPassword($passwd);
+
+            // Write username and hash to the database
 
             $writeData = new WriteData;
-            $writeData->insertData($username, $hashedPassword);
+            $writeData->insertData($username, $hash);
             $this->feedbackText[] = $writeData->feedbackText;
 
             return TRUE;
+
         }
 
     }
