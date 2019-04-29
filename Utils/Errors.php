@@ -6,7 +6,7 @@
     *
     * Errors Utility
     *
-    * A set of custom exception handlers
+    * A set of custom exception handlers.
     *
     */
 
@@ -18,7 +18,7 @@
 
     interface HardErrors {
 
-        public function invalidRequestMethod();
+        // No HardExceptions used so far
 
     }
 
@@ -37,17 +37,7 @@
 
         }
 
-        public function invalidRequestMethod() {
-
-            $errDetailed = "Error on line " . $this->getLine() . " at " .
-                $this->getFile() . " >> " . "'" . $this->getMessage() . "'" .
-                " is an invalid request method";
-
-            error_log($errDetailed);
-
-            return $this->errFeedback;
-
-        }
+        // No HardExceptions used so far
 
     }
 
@@ -64,14 +54,6 @@
 
     class SoftException extends Exception implements SoftErrors {
 
-        protected $errSessionFeedback;
-
-        public function __construct() {
-
-            $this->errSessionFeedback = Text::get('danger', 'EXCEPTION_SESSION_EXPIRED');
-
-        }
-
         public function invalidFeedbackType() {
 
             $errDetailed = "Error on line " . $this->getLine() . " at " .
@@ -84,7 +66,8 @@
 
         public function sessionExpired() {
 
-            return $this->errSessionFeedback;
+            $errFeedback = Text::get('danger', 'EXCEPTION_SESSION_EXPIRED');
+            return $errFeedback;
 
         }
 
