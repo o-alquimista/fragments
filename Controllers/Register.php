@@ -25,6 +25,10 @@
 
         public function registerUser($username, $passwd) {
 
+            // Sanitize input
+
+            $username = CleanInput::clean_input($username);
+
             // Returns FALSE if input validation fails
 
             $FormValidation = new FormValidation;
