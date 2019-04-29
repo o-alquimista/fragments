@@ -74,13 +74,14 @@
 
         /*
         Method clean_input() returns $input sanitized
+        to help prevent XSS
         */
 
         public static function clean_input($input) {
 
-            $data = trim($input);
-            $data = stripslashes($input);
-            $data = htmlspecialchars($input);
+            $input = trim($input);
+            $input = stripslashes($input);
+            $input = htmlspecialchars($input);
             return $input;
 
         }
