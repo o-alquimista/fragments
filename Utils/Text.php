@@ -8,6 +8,8 @@
     *
     */
 
+    require_once 'Errors.php';
+
     interface TextTools {
 
         public static function get($type, $feedback);
@@ -24,7 +26,10 @@
             'FEEDBACK_NOT_REGISTERED' => 'Invalid credentials',
             'FEEDBACK_INCORRECT_PASSWD' => 'Invalid credentials',
             'FEEDBACK_USERNAME_TAKEN' => 'Username already taken',
-            'FEEDBACK_REGISTRATION_COMPLETE' => 'Registration complete'
+            'FEEDBACK_REGISTRATION_COMPLETE' => 'Registration complete',
+
+            'EXCEPTION_FATAL_ERROR' => 'Something went wrong. This event will be reported.',
+            'EXCEPTION_SESSION_EXPIRED' => 'This session has expired',
         );
 
         /*
