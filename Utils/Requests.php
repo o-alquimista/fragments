@@ -9,26 +9,25 @@
     *
     */
 
-    require_once 'Errors.php';
-
     interface Requests {
 
-        public static function requestMethod($method);
+        public static function isRequestPost();
         public static function self();
-        public static function get($method, $value);
+        public static function post($value);
+        public static function get($value);
 
     }
 
     class ServerRequest implements Requests {
 
         /*
-        Method requestMethod() returns TRUE if $method
-        matches the REQUEST_METHOD
+        Method isRequestPost() returns TRUE if
+        'REQUEST_METHOD' is 'POST'
         */
 
-        public static function requestMethod($method) {
+        public static function isRequestPost() {
 
-            if ($_SERVER["REQUEST_METHOD"] == $method) {
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 return TRUE;
             }
             return FALSE;
@@ -46,30 +45,22 @@
         }
 
         /*
-        Method get() returns the result of the request
-        specified in $method and its $value
+        Method post() returns the value of the post request
         */
 
-        public static function get($method, $value) {
+        public static function post($value) {
 
-            try {
+            return $_POST[$value];
 
-                switch ($method) {
-                    case 'post':
-                        return $_POST[$value];
-                        break;
-                    case 'get':
-                        return $_GET[$value];
-                        break;
-                    default:
-                        throw new HardException($method);
-                        break;
-                }
+        }
 
-            } catch(HardException $err) {
-                echo $err->invalidRequestMethod();
-                exit;
-            }
+        /*
+        Method get() returns the value of the get request
+        */
+
+        public static function get($value) {
+
+            return $_GET[$value];
 
         }
 
