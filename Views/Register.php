@@ -7,7 +7,6 @@
     */
 
     require '../Utils/Session.php';
-    require '../Utils/Requests.php';
 
     Session::start();
 
@@ -32,17 +31,14 @@
 
             <?php
 
-                if (ServerRequest::requestMethod('POST') == TRUE) {
+                require '../Utils/Requests.php';
 
-                    require '../Utils/InputValidation.php';
+                if (ServerRequest::isRequestPost() == TRUE) {
+
                     require '../Controllers/Register.php';
 
-                    /*
-                    Sanitize input
-                    */
-
-                    $username = CleanInput::clean_input(ServerRequest::get('post', 'username'));
-                    $passwd = CleanInput::clean_input(ServerRequest::get('post', 'passwd'));
+                    $username = ServerRequest::post('username');
+                    $passwd = ServerRequest::post('passwd');
 
                     $Register = new Register;
                     $Register->registerUser($username, $passwd);

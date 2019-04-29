@@ -7,7 +7,6 @@
     */
 
     require '../Utils/Session.php';
-    require '../Utils/Requests.php';
 
     Session::start();
 
@@ -32,24 +31,21 @@
 
             <?php
 
-                if (ServerRequest::requestMethod('POST') == TRUE) {
+                require '../Utils/Requests.php';
 
-                    require '../Utils/InputValidation.php';
+                if (ServerRequest::isRequestPost() == TRUE) {
+
                     require '../Controllers/Login.php';
 
-                    /*
-                    Sanitize input
-                    */
-
-                    $username = CleanInput::clean_input(ServerRequest::get('post', 'username'));
-                    $passwd = CleanInput::clean_input(ServerRequest::get('post', 'passwd'));
+                    $username = ServerRequest::post('username');
+                    $passwd = ServerRequest::post('passwd');
 
                     $Login = new LoginForm;
                     $LoginStatus = $Login->login($username, $passwd);
 
                     /*
                     If the controller returns FALSE, echo feedback messages.
-                    If the controller returns TRUE, call redirect function from Utils/Requests.php
+                    If TRUE is returned, call redirect function from Utils/Requests.php
                     */
 
                     if ($LoginStatus == FALSE) {
