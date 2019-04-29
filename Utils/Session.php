@@ -11,6 +11,7 @@
     */
 
     require 'SessionTools.php';
+    require_once 'Errors.php';
 
     interface SessionStart {
 
@@ -59,10 +60,17 @@
 
         protected static function isExpired() {
 
-            if (SessionData::get('destroyed') < time() - 300) {
-                self::wipeSessionVariables();
-                throw new Exception('This session is obsolete');
+            try {
+
+                if (SessionData::get('destroyed') < time() - 300) {
+                    self::wipeSessionVariables();
+                    throw new SoftException();
+                }
+
+            } catch(SoftException $err) {
+                echo $err->sessionExpired();
             }
+
             self::isSetNewSessionID();
 
         }
@@ -155,7 +163,7 @@
             self::commitSession();
 
         }
-        
+
         /*
         Method commitSession() will stop the current session
         and call the next method if property $newID hasn't been
