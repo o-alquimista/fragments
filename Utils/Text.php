@@ -97,7 +97,7 @@
 
     interface Format {
 
-        static function format($type, $feedback);
+        public static function format($type, $feedback);
 
     }
 
@@ -108,7 +108,7 @@
         specified Bootstrap alert type and returns it
         */
 
-        static function format($type, $feedback) {
+        public static function format($type, $feedback) {
 
             ob_start();
                 echo "<div class='alert alert-" . $type . "' role='alert'>
