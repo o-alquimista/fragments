@@ -82,7 +82,7 @@
     class RenderFeedback implements Render {
 
         /*
-        The foreach echoes all feedback messages from the array
+        Method render() echoes all feedback messages from the array
         */
 
         public static function render($feedback) {
