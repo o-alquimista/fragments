@@ -58,7 +58,7 @@
                     return FALSE;
                 }
             }
-            
+
             /*
             TRUE is returned if the feedback array does not contain any feedbacks
             */
