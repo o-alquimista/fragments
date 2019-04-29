@@ -31,9 +31,17 @@
                 'use_strict_mode' => 1,
                 'use_only_cookies' => 1,
                 'use_trans_sid' => 0,
-                'cookie_httponly' => 1
-                // 'cookie_samesite' => 1
-                // 'session.cookie_secure' => 1
+                'cookie_httponly' => 1,
+                /*
+                'cookie_samesite' => 1
+                The samesite option is only supported
+                for PHP 7.3 or newer
+                */
+                /*
+                'session.cookie_secure' => 1
+                The cookie_secure option can only
+                be enabled when using SSL
+                */
             ]);
 
             self::isDestroyed();
@@ -207,9 +215,17 @@
                 // without use_strict_mode
                 'use_only_cookies' => 1,
                 'use_trans_sid' => 0,
-                'cookie_httponly' => 1
-                // 'cookie_samesite' => 1
-                // 'session.cookie_secure' => 1
+                'cookie_httponly' => 1,
+                /*
+                'cookie_samesite' => 1
+                The samesite option is only supported
+                for PHP 7.3 or newer
+                */
+                /*
+                'session.cookie_secure' => 1
+                The cookie_secure option can only
+                be enabled when using SSL
+                */
             ]);
 
             self::commitSession();
@@ -223,9 +239,17 @@
                 'use_strict_mode' => 1,
                 'use_only_cookies' => 1,
                 'use_trans_sid' => 0,
-                'cookie_httponly' => 1
-                // 'cookie_samesite' => 1
-                // 'session.cookie_secure' => 1
+                'cookie_httponly' => 1,
+                /*
+                'cookie_samesite' => 1
+                The samesite option is only supported
+                for PHP 7.3 or newer
+                */
+                /*
+                'session.cookie_secure' => 1
+                The cookie_secure option can only
+                be enabled when using SSL
+                */
             ]);
 
             self::unsetSessionVariables();
