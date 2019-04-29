@@ -41,16 +41,32 @@
 
             $message = self::$feedbackText[$feedback];
 
-            switch ($type) {
-                case 'warning':
-                    return WarningFormat::format($message);
-                    break;
-                case 'success':
-                    return SuccessFormat::format($message);
-                    break;
-                default:
-                    throw new Exception('Invalid feedback type');
-                    break;
+            try {
+
+                switch ($type) {
+                    case 'warning':
+                        return FeedbackType::format($type, $message);
+                        break;
+                    case 'success':
+                        return FeedbackType::format($type, $message);
+                        break;
+                    case 'danger':
+                        return FeedbackType::format($type, $message);
+                        break;
+                    default:
+                        throw new SoftException($type);
+                        break;
+                }
+
+            } catch(SoftException $err) {
+                $err->invalidFeedbackType();
+
+                /*
+                Default to 'secondary' when an invalid
+                feedback type is detected
+                */
+
+                return FeedbackType::format('secondary', $message);
             }
 
         }
