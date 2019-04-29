@@ -97,37 +97,21 @@
 
     interface Format {
 
-        public static function format($feedback);
+        static function format($type, $feedback);
 
     }
 
-    /*
-    Each class below inserts $feedback into the
-    specified Bootstrap alert color and returns it
-    */
+    class FeedbackType implements Format {
 
-    class WarningFormat implements Format {
+        /*
+        Method format() inserts $feedback into the
+        specified Bootstrap alert type and returns it
+        */
 
-        public static function format($feedback) {
-
-            ob_start();
-                echo "<div class='alert alert-warning' role='alert'>
-                " . $feedback . "
-                </div>";
-                $output = ob_get_contents();
-            ob_end_clean();
-            return $output;
-
-        }
-
-    }
-
-    class SuccessFormat implements Format {
-
-        public static function format($feedback) {
+        static function format($type, $feedback) {
 
             ob_start();
-                echo "<div class='alert alert-success' role='alert'>
+                echo "<div class='alert alert-" . $type . "' role='alert'>
                 " . $feedback . "
                 </div>";
                 $output = ob_get_contents();
