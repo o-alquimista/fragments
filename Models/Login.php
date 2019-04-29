@@ -121,6 +121,7 @@
             $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = :username");
             $stmt->bindParam(":username", $username);
             $stmt->execute();
+
             if ($stmt->fetchColumn() == 0) {
                 $feedbackMsg = Text::get('warning', 'FEEDBACK_NOT_REGISTERED');
                 $this->feedbackText = $feedbackMsg;
@@ -162,6 +163,7 @@
             $stmt = $this->connection->prepare("SELECT hash FROM users WHERE username = :username");
             $stmt->bindParam(":username", $username);
             $stmt->execute();
+
             while ($result = $stmt->fetchObject()) {
                 $hash = $result->hash;
             }

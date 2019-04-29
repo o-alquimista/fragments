@@ -46,7 +46,7 @@
                 $feedbackMsg = Text::get('warning', 'FEEDBACK_PASSWORD_EMPTY');
                 $this->feedbackText[] = $feedbackMsg;
             }
-            
+
             /*
             The isEmpty() methods are checked before
             any other type of validation.
