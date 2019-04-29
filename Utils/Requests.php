@@ -9,6 +9,8 @@
     *
     */
 
+    require_once 'Errors.php';
+
     interface Requests {
 
         public static function requestMethod($method);
@@ -42,24 +44,33 @@
             return htmlspecialchars($_SERVER["PHP_SELF"]);
 
         }
-        
+
         /*
         Method get() returns the result of the request
         specified in $method and its $value
         */
 
         public static function get($method, $value) {
-            switch ($method) {
-                case 'post':
-                    return $_POST[$value];
-                    break;
-                case 'get':
-                    return $_GET[$value];
-                    break;
-                default:
-                    throw new Exception('Invalid request method');
-                    break;
+
+            try {
+
+                switch ($method) {
+                    case 'post':
+                        return $_POST[$value];
+                        break;
+                    case 'get':
+                        return $_GET[$value];
+                        break;
+                    default:
+                        throw new HardException($method);
+                        break;
+                }
+
+            } catch(HardException $err) {
+                echo $err->invalidRequestMethod();
+                exit;
             }
+
         }
 
     }
