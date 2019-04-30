@@ -26,11 +26,9 @@
         public function registerUser($username, $passwd) {
 
             // Sanitize input
-
             $username = CleanInput::clean_input($username);
 
             // Returns FALSE if input validation fails
-
             $FormValidation = new FormValidation;
             $Validation = $FormValidation->validate($username, $passwd);
             if ($Validation == FALSE) {
@@ -39,7 +37,6 @@
             }
 
             // Returns FALSE if username is already registered
-
             $UsernameAvailable = new UsernameAvailable;
             $resultUsernameAvailable = $UsernameAvailable->isUsernameAvailable($username);
             if ($resultUsernameAvailable == FALSE) {
@@ -48,12 +45,10 @@
             }
 
             // Hash the password
-
             $passwordHash = new PasswordHash;
             $hash = $passwordHash->hashPassword($passwd);
 
             // Write username and hash to the database
-
             $writeData = new WriteData;
             $writeData->insertData($username, $hash);
             $this->feedbackText[] = $writeData->feedbackText;

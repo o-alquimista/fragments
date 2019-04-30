@@ -26,38 +26,33 @@
         public function login($username, $passwd) {
 
             // Sanitize input
-
             $username = CleanInput::clean_input($username);
 
             // Returns FALSE if input validation fails
-
             $FormValidation = new FormValidation;
             $Validation = $FormValidation->validate($username, $passwd);
-            if ($Validation == FALSE) {
+            if ($Validation === FALSE) {
                 $this->feedbackText = $FormValidation->feedbackText;
                 return FALSE;
             }
 
             // Returns FALSE if user is not registered
-
             $checkExists = new UserExists;
             $resultUserExists = $checkExists->isUserRegistered($username);
-            if ($resultUserExists == FALSE) {
+            if ($resultUserExists === FALSE) {
                 $this->feedbackText[] = $checkExists->feedbackText;
                 return FALSE;
             }
 
             // Returns FALSE if password verification failed
-
             $checkPassword = new PasswordVerify;
             $resultCheckPassword = $checkPassword->VerifyPassword($username, $passwd);
-            if ($resultCheckPassword == FALSE) {
+            if ($resultCheckPassword === FALSE) {
                 $this->feedbackText[] = $checkPassword->feedbackText;
                 return FALSE;
             }
 
-            // Authenticate user
-
+            // Authenticate user and return TRUE
             $authentication = new Authenticate;
             $authentication->setSessionVariables($username);
             return TRUE;
