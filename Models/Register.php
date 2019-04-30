@@ -36,13 +36,13 @@
             */
 
             $UsernameEmpty = $UsernameValidation->isEmpty($username);
-            if ($UsernameEmpty == TRUE) {
+            if ($UsernameEmpty === TRUE) {
                 $feedbackMsg = Text::get('warning', 'FEEDBACK_USERNAME_EMPTY');
                 $this->feedbackText[] = $feedbackMsg;
             }
 
             $PasswordEmpty = $PasswordValidation->isEmpty($passwd);
-            if ($PasswordEmpty == TRUE) {
+            if ($PasswordEmpty === TRUE) {
                 $feedbackMsg = Text::get('warning', 'FEEDBACK_PASSWORD_EMPTY');
                 $this->feedbackText[] = $feedbackMsg;
             }
@@ -66,13 +66,13 @@
             */
 
             $UsernameValid = $UsernameValidation->isValid($username);
-            if ($UsernameValid == FALSE) {
+            if ($UsernameValid === FALSE) {
                 $feedbackMsg = Text::get('warning', 'FEEDBACK_USERNAME_LENGTH');
                 $this->feedbackText[] = $feedbackMsg;
             }
 
             $PasswordValid = $PasswordValidation->isValid($passwd);
-            if ($PasswordValid == FALSE) {
+            if ($PasswordValid === FALSE) {
                 $feedbackMsg = Text::get('warning', 'FEEDBACK_PASSWORD_LENGTH');
                 $this->feedbackText[] = $feedbackMsg;
             }
@@ -89,7 +89,8 @@
             }
 
             /*
-            TRUE is returned if the feedback array does not contain any feedbacks
+            TRUE is returned if the feedback array does not contain
+            any feedbacks
             */
 
             return TRUE;
