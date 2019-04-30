@@ -7,6 +7,7 @@
     */
 
     require '../Models/Register.php';
+    require_once '../Utils/InputValidation.php';
 
     interface Registration {
 

@@ -7,6 +7,7 @@
     */
 
     require '../Models/Login.php';
+    require_once '../Utils/InputValidation.php';
 
     interface Login {
 

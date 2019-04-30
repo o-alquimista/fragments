@@ -6,14 +6,13 @@
     *
     */
 
-    require '../Utils/Session.php';
-    require '../Utils/Requests.php';
+    require_once '../Utils/Session.php';
+    require_once '../Utils/Requests.php';
+    require '../Controllers/Register.php';
 
     Session::start();
 
     if (ServerRequest::isRequestPost() === TRUE) {
-
-        require '../Controllers/Register.php';
 
         $username = ServerRequest::post('username');
         $passwd = ServerRequest::post('passwd');

@@ -1,7 +1,5 @@
 <?php
 
-    require 'Text.php';
-
     /**
     *
     * Errors Utility
@@ -9,6 +7,8 @@
     * A set of custom exception handlers.
     *
     */
+
+    require_once 'Text.php';
 
     /*
     Hard exceptions are used for critical errors where
