@@ -64,20 +64,20 @@
 
     }
 
-    interface InputProcessing {
+    interface Filter {
 
-        public static function clean_input($input);
+        public static function clean($input);
 
     }
 
-    class CleanInput implements InputProcessing {
+    class FilterInput implements Filter {
 
         /*
-        Method clean_input() returns $input sanitized
+        Method clean() returns $input sanitized
         to help prevent XSS
         */
 
-        public static function clean_input($input) {
+        public static function clean($input) {
 
             $input = trim($input);
             $input = stripslashes($input);
