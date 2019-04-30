@@ -37,13 +37,13 @@
             */
 
             $UsernameEmpty = $UsernameValidation->isEmpty($username);
-            if ($UsernameEmpty == TRUE) {
+            if ($UsernameEmpty === TRUE) {
                 $feedbackMsg = Text::get('warning', 'FEEDBACK_USERNAME_EMPTY');
                 $this->feedbackText[] = $feedbackMsg;
             }
 
             $PasswordEmpty = $PasswordValidation->isEmpty($passwd);
-            if ($PasswordEmpty == TRUE) {
+            if ($PasswordEmpty === TRUE) {
                 $feedbackMsg = Text::get('warning', 'FEEDBACK_PASSWORD_EMPTY');
                 $this->feedbackText[] = $feedbackMsg;
             }
