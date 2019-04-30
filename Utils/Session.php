@@ -13,22 +13,23 @@
     require 'SessionTools.php';
     require_once 'Errors.php';
 
-    interface SessionStart {
-
-        public static function start();
-
-    }
-
-    class Session implements SessionStart {
+    abstract class SessionInit {
 
         /*
-        Method start() starts a session
+        Method init() has two modes: 'strict' and 'unsafe'.
+
+        When it is called with 'strict', session option
+        'use_strict_mode' is enabled, blocking all
+        uninitialized session IDs.
+
+        When it is called with 'unsafe', strict mode
+        is disabled, allowing us to set an uninitialized ID,
+        useful for ID regeneration.
         */
 
-        public static function start() {
+        public static function init($mode) {
 
-            session_start([
-                'use_strict_mode' => 1,
+            $options = array(
                 'use_only_cookies' => 1,
                 'use_trans_sid' => 0,
                 'cookie_httponly' => 1,
@@ -42,22 +43,102 @@
                 The cookie_secure option can only
                 be enabled when using SSL
                 */
-            ]);
+            );
 
-            self::isDestroyed();
+            try {
+
+                if ($mode === 'strict') {
+
+                    $options['use_strict_mode'] = 1;
+
+                } elseif ($mode === 'unsafe') {
+
+                    $options['use_strict_mode'] = 0;
+
+                } else {
+
+                    throw new HardException($mode);
+
+                }
+
+            } catch(HardException $err) {
+
+                echo $err->initParameterViolation();
+
+            }
+
+            session_start($options);
 
         }
 
+    }
+
+    interface SessionStart {
+
+        public static function start();
+
+    }
+
+    class Session extends SessionInit implements SessionStart {
+
         /*
-        Method isDestroyed() executes the next method if the
-        session variable 'destroyed' is set
+        Method start() controls the startup sequence
         */
+
+        public static function start() {
+
+            self::init('strict');
+
+            /*
+            If session is destroyed, this method
+            will check if it's expired. If it expired,
+            all session variables will be wiped and
+            a session expired exception will be
+            thrown.
+            If it hasn't expired yet, an attempt
+            to reset the newly generated ID will
+            be made.
+            */
+
+            $isDestroyed = self::isDestroyed();
+            if ($isDestroyed === FALSE) {
+                return;
+            }
+
+            $isExpired = self::isExpired();
+            if ($isExpired === TRUE) {
+                return;
+            }
+
+            $isSetNewSessionID = self::isSetNewSessionID();
+            if ($isSetNewSessionID === FALSE) {
+                return;
+            }
+
+            // close session
+            session_commit();
+
+            // set ID from session variable 'new_session_id'
+            session_id(SessionData::get('new_session_id'));
+
+            // start session
+            self::init('strict');
+
+        }
 
         protected static function isDestroyed() {
 
-            if (null !== SessionData::get('destroyed')) {
-                self::isExpired();
+            /*
+            If we use isset() here, it will trigger a
+            fatal error. To work around it, we use
+            'NULL === <expression>' to check if the
+            expression is NULL.
+            */
+
+            if (NULL === SessionData::get('destroyed')) {
+                return FALSE;
             }
+            return TRUE;
 
         }
 
@@ -71,57 +152,33 @@
             try {
 
                 if (SessionData::get('destroyed') < time() - 300) {
-                    self::wipeSessionVariables();
+                    SessionData::destroyAll();
                     throw new SoftException();
                 }
+                return FALSE;
 
             } catch(SoftException $err) {
+
                 echo $err->sessionExpired();
+                return TRUE;
+
             }
 
-            self::isSetNewSessionID();
-
         }
-
-        protected static function wipeSessionVariables() {
-
-            SessionData::destroyAll();
-
-        }
-
-        /*
-        Method isSetNewSessionID() executes the next method if session
-        variable 'new_session_id' is set
-        */
 
         protected static function isSetNewSessionID() {
 
-            if (null !== SessionData::get('new_session_id')) {
-                self::commitSession();
+            /*
+            If we use isset() here, it will trigger a
+            fatal error. To work around it, we use
+            'NULL === <expression>' to check if the
+            expression is NULL.
+            */
+
+            if (NULL === SessionData::get('new_session_id')) {
+                return FALSE;
             }
-
-        }
-
-        /*
-        Method commitSession() stops the current session
-        */
-
-        protected static function commitSession() {
-
-            session_commit();
-            self::setSessionID();
-
-        }
-
-        /*
-        Method setSessionID() sets the session ID to the session
-        variable 'new_session_id' and starts the session with it
-        */
-
-        protected static function setSessionID() {
-
-            session_id(SessionData::get('new_session_id'));
-            self::start();
+            return TRUE;
 
         }
 
@@ -133,7 +190,7 @@
 
     }
 
-    class SessionID implements RegenerateID {
+    class SessionID extends SessionInit implements RegenerateID {
 
         /*
         Property $newID holds the newly generated session ID
@@ -143,7 +200,31 @@
 
         public static function regenerate() {
 
+            // generate a new session ID
             self::createNewID();
+
+            /*
+            Set the session variable 'destroyed'
+            with current timestamp as its value
+            for the current session
+            */
+
+            SessionData::set('destroyed', time());
+
+            // close current session
+            session_commit();
+
+            /*
+            Set session ID to the one we generated
+            (uninitialized)
+            */
+            session_id(self::$newID);
+
+            // initialize the new ID
+            self::initializeID();
+
+            // destroy unnecessary session variables
+            self::unsetSessionVariables();
 
         }
 
@@ -156,112 +237,31 @@
 
             self::$newID = session_create_id();
             SessionData::set('new_session_id', self::$newID);
-            self::setDestroyed();
 
         }
 
-        /*
-        Method setDestroyed() creates the session variable 'destroyed'
-        and assigns the current timestamp as its value
-        */
+        protected static function initializeID() {
 
-        protected static function setDestroyed() {
+            // start session without strict mode
+            self::init('unsafe');
 
-            SessionData::set('destroyed', time());
-            self::commitSession();
-
-        }
-
-        /*
-        Method commitSession() will stop the current session
-        and call the next method if property $newID hasn't been
-        emptied yet
-        */
-
-        protected static function commitSession() {
-
+            /*
+            In order to enable strict mode again,
+            we close the session and start it again
+            with strict mode enabled. The ID we generated
+            is now initialized and will be accepted.
+            */
             session_commit();
-            if (!empty(self::$newID)) {
-                self::setNewID();
-            }
+            self::init('strict');
 
         }
-
-        /*
-        Method setNewID() sets the session ID to
-        the value of property $newID and deletes its content
-        */
-
-        protected static function setNewID() {
-
-            session_id(self::$newID);
-            self::$newID = "";
-            self::initializeSessionID();
-
-        }
-
-        /*
-        Method initializeSessionID() starts a session
-        with 'use_strict_mode' set to '0',
-        in order to successfully initialize the
-        uninitialized ID, then closes that session
-        and starts it again with 'use_strict_mode' set to '1'
-        */
-
-        protected static function initializeSessionID() {
-
-            ini_set('session.use_strict_mode', '0');
-            session_start([
-                // without use_strict_mode
-                'use_only_cookies' => 1,
-                'use_trans_sid' => 0,
-                'cookie_httponly' => 1,
-                /*
-                'cookie_samesite' => 1
-                The samesite option is only supported
-                for PHP 7.3 or newer
-                */
-                /*
-                'session.cookie_secure' => 1
-                The cookie_secure option can only
-                be enabled when using SSL
-                */
-            ]);
-
-            self::commitSession();
-            self::start();
-
-        }
-
-        protected static function start() {
-
-            session_start([
-                'use_strict_mode' => 1,
-                'use_only_cookies' => 1,
-                'use_trans_sid' => 0,
-                'cookie_httponly' => 1,
-                /*
-                'cookie_samesite' => 1
-                The samesite option is only supported
-                for PHP 7.3 or newer
-                */
-                /*
-                'session.cookie_secure' => 1
-                The cookie_secure option can only
-                be enabled when using SSL
-                */
-            ]);
-
-            self::unsetSessionVariables();
-
-        }
-
-        /*
-        Method unsetSessionVariables() destroys session
-        variables 'destroyed' and 'new_session_id'
-        */
 
         protected static function unsetSessionVariables() {
+
+            /*
+            The newly generated session ID doesn't need
+            these session variables associated to it
+            */
 
             SessionData::destroy('destroyed');
             SessionData::destroy('new_session_id');
