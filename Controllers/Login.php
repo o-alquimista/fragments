@@ -27,7 +27,7 @@
         public function login($username, $passwd) {
 
             // Sanitize input
-            $username = CleanInput::clean_input($username);
+            $username = FilterInput::clean($username);
 
             // Returns FALSE if input validation fails
             $FormValidation = new FormValidation;
