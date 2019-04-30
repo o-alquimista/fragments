@@ -7,8 +7,33 @@
     */
 
     require '../Utils/Session.php';
+    require '../Utils/Requests.php';
 
     Session::start();
+
+    if (ServerRequest::isRequestPost() === TRUE) {
+
+        require '../Controllers/Login.php';
+
+        $username = ServerRequest::post('username');
+        $passwd = ServerRequest::post('passwd');
+
+        $Login = new LoginForm;
+        $LoginStatus = $Login->login($username, $passwd);
+
+        /*
+        If the controller returns FALSE, echo feedback messages.
+        If TRUE is returned, call redirect function from Utils/Requests.php
+        */
+
+        if ($LoginStatus === FALSE) {
+            echo RenderFeedback::render($Login);
+        } else {
+            // redirect
+            echo "Logged in";
+        }
+
+    }
 
 ?>
 
@@ -28,36 +53,6 @@
         <div class='container'>
 
             <h4>Login</h4>
-
-            <?php
-
-                require '../Utils/Requests.php';
-
-                if (ServerRequest::isRequestPost() == TRUE) {
-
-                    require '../Controllers/Login.php';
-
-                    $username = ServerRequest::post('username');
-                    $passwd = ServerRequest::post('passwd');
-
-                    $Login = new LoginForm;
-                    $LoginStatus = $Login->login($username, $passwd);
-
-                    /*
-                    If the controller returns FALSE, echo feedback messages.
-                    If TRUE is returned, call redirect function from Utils/Requests.php
-                    */
-
-                    if ($LoginStatus == FALSE) {
-                        echo RenderFeedback::render($Login);
-                    } else {
-                        // redirect
-                        echo "Logged in";
-                    }
-
-                }
-
-            ?>
 
             <form method='post' action='<?php echo ServerRequest::self()?>'>
                 <div class='form-group'>

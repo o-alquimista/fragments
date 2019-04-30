@@ -7,8 +7,27 @@
     */
 
     require '../Utils/Session.php';
+    require '../Utils/Requests.php';
 
     Session::start();
+
+    if (ServerRequest::isRequestPost() === TRUE) {
+
+        require '../Controllers/Register.php';
+
+        $username = ServerRequest::post('username');
+        $passwd = ServerRequest::post('passwd');
+
+        $Register = new Register;
+        $Register->registerUser($username, $passwd);
+
+        /*
+        Echo all feedback messages
+        */
+
+        echo RenderFeedback::render($Register);
+
+    }
 
 ?>
 
@@ -28,30 +47,6 @@
         <div class='container'>
 
             <h4>Register</h4>
-
-            <?php
-
-                require '../Utils/Requests.php';
-
-                if (ServerRequest::isRequestPost() == TRUE) {
-
-                    require '../Controllers/Register.php';
-
-                    $username = ServerRequest::post('username');
-                    $passwd = ServerRequest::post('passwd');
-
-                    $Register = new Register;
-                    $Register->registerUser($username, $passwd);
-
-                    /*
-                    Echo all feedback messages
-                    */
-
-                    echo RenderFeedback::render($Register);
-
-                }
-
-            ?>
 
             <form method='post' action='<?php echo ServerRequest::self()?>'>
                 <div class='form-group'>
