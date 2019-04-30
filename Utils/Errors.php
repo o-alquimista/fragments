@@ -18,7 +18,7 @@
 
     interface HardErrors {
 
-        // No HardExceptions used so far
+        public function initParameterViolation();
 
     }
 
@@ -37,12 +37,23 @@
 
         }
 
-        // No HardExceptions used so far
+        public function initParameterViolation() {
+
+            $errDetailed = "Error on line " . $this->getLine() . " at " .
+                $this->getFile() . " >> " . "'" . $this->getMessage() . "'" .
+                " is not a valid argument.";
+
+            error_log($errDetailed);
+
+            return $this->errFeedback;
+
+        }
 
     }
 
     /*
-    Soft exceptions are not critical to the proper execution of code
+    Soft exceptions are not critical to the proper
+    execution of code
     */
 
     interface SoftErrors {
