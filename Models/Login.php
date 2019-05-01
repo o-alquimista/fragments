@@ -80,11 +80,6 @@
 
         protected $connection;
 
-        /*
-        parent::__construct() must be called by all inheriting classes
-        in order to create the connection object
-        */
-
         public function __construct() {
             $connect = new DatabaseConnection;
             $this->connection = $connect->getConnection();
@@ -106,10 +101,6 @@
         */
 
         public $feedbackText;
-
-        public function __construct() {
-            parent::__construct();
-        }
 
         /*
         Method isUserRegistered() returns FALSE if no rows matching
@@ -147,10 +138,6 @@
         */
 
         public $feedbackText;
-
-        public function __construct() {
-            parent::__construct();
-        }
 
         /*
         method VerifyPassword() retrieves the hash from
@@ -193,10 +180,6 @@
         */
 
         public $feedbackText;
-
-        public function __construct() {
-            parent::__construct();
-        }
 
         /*
         Method setSessionVariables() sets authentication flags and user data to the current session

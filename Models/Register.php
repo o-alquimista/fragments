@@ -50,6 +50,7 @@
             /*
             The isEmpty() methods are checked before
             any other type of validation.
+
             The following foreach will return FALSE if any
             feedbacks are found in the feedback array
             */
@@ -110,11 +111,6 @@
 
         protected $connection;
 
-        /*
-        parent::__construct() must be called by all inheriting classes
-        in order to create the connection object
-        */
-
         public function __construct() {
             $connect = new DatabaseConnection;
             $this->connection = $connect->getConnection();
@@ -137,10 +133,6 @@
 
         public $feedbackText;
 
-        public function __construct() {
-            parent::__construct();
-        }
-
         /*
         Method isUsernameAvailable() returns FALSE if
         a row matching $username was found, meaning that username
@@ -161,25 +153,6 @@
 
     }
 
-    interface Hash {
-
-        public function hashPassword($passwd);
-
-    }
-
-    class PasswordHash implements Hash {
-
-        /*
-        Method hashPassword() returns a hash of $passwd
-        */
-
-        public function hashPassword($passwd) {
-            $hash = password_hash($passwd, PASSWORD_DEFAULT);
-            return $hash;
-        }
-
-    }
-
     interface Write {
 
         public function insertData($username, $hash);
@@ -195,10 +168,6 @@
 
         public $feedbackText;
 
-        public function __construct() {
-            parent::__construct();
-        }
-
         /*
         Method insertData() writes the form data to the database
         and stores a 'success' feedback
@@ -213,6 +182,25 @@
 
             $feedbackMsg = Text::get('success', 'FEEDBACK_REGISTRATION_COMPLETE');
             $this->feedbackText = $feedbackMsg;
+        }
+
+    }
+
+    interface Hash {
+
+        public function hashPassword($passwd);
+
+    }
+
+    class PasswordHash implements Hash {
+
+        /*
+        Method hashPassword() returns a hash of $passwd
+        */
+
+        public function hashPassword($passwd) {
+            $hash = password_hash($passwd, PASSWORD_DEFAULT);
+            return $hash;
         }
 
     }
