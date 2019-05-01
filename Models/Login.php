@@ -7,7 +7,6 @@
     */
 
     require_once '../Utils/Text.php';
-    require_once '../Utils/Connection.php';
     require_once '../Utils/Session.php';
     require_once '../Utils/InputValidation.php';
 
@@ -69,31 +68,13 @@
 
     }
 
-    /*
-    This abstract class DatabaseOperations is inherited by
-    all classes that require a connection to the database.
-    The resulting connection object is stored in the
-    property $connection
-    */
-
-    abstract class DatabaseOperations {
-
-        protected $connection;
-
-        public function __construct() {
-            $connect = new DatabaseConnection;
-            $this->connection = $connect->getConnection();
-        }
-
-    }
-
     interface UserExistsInterface {
 
         public function isUserRegistered($username);
 
     }
 
-    class UserExists extends DatabaseOperations implements UserExistsInterface {
+    class UserExists implements UserExistsInterface {
 
         /*
         property $feedbackText holds feedback messages and
@@ -101,6 +82,11 @@
         */
 
         public $feedbackText;
+        public $connection;
+
+        public function __construct($connection) {
+            $this->connection = $connection;
+        }
 
         /*
         Method isUserRegistered() returns FALSE if no rows matching
@@ -130,7 +116,7 @@
 
     }
 
-    class PasswordVerify extends DatabaseOperations implements PasswordVerifyInterface {
+    class PasswordVerify implements PasswordVerifyInterface {
 
         /*
         property $feedbackText holds feedback messages and
@@ -138,6 +124,11 @@
         */
 
         public $feedbackText;
+        public $connection;
+
+        public function __construct($connection) {
+            $this->connection = $connection;
+        }
 
         /*
         method VerifyPassword() retrieves the hash from
@@ -172,7 +163,7 @@
 
     }
 
-    class Authenticate extends DatabaseOperations implements AuthenticateInterface {
+    class Authenticate implements AuthenticateInterface {
 
         /*
         property $feedbackText holds feedback messages and
@@ -180,6 +171,11 @@
         */
 
         public $feedbackText;
+        public $connection;
+
+        public function __construct($connection) {
+            $this->connection = $connection;
+        }
 
         /*
         Method setSessionVariables() sets authentication flags and user data to the current session
@@ -192,7 +188,6 @@
             $stmt->execute();
 
             // Regenerate a new session ID before setting the session variables
-
             SessionID::regenerate();
 
             while ($result = $stmt->fetchObject()) {

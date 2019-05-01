@@ -8,6 +8,7 @@
 
     require '../Models/Login.php';
     require_once '../Utils/InputValidation.php';
+    require_once '../Utils/Connection.php';
 
     interface Login {
 
@@ -37,8 +38,17 @@
                 return FALSE;
             }
 
+            /*
+            We create one instance of the database connection
+            class and, using dependency injection, we pass it
+            to the constructor of every class that needs it.
+            */
+
+            $connect = new DatabaseConnection;
+            $connection = $connect->getConnection();
+
             // Returns FALSE if user is not registered
-            $checkExists = new UserExists;
+            $checkExists = new UserExists($connection);
             $resultUserExists = $checkExists->isUserRegistered($username);
             if ($resultUserExists === FALSE) {
                 $this->feedbackText[] = $checkExists->feedbackText;
@@ -46,7 +56,7 @@
             }
 
             // Returns FALSE if password verification failed
-            $checkPassword = new PasswordVerify;
+            $checkPassword = new PasswordVerify($connection);
             $resultCheckPassword = $checkPassword->VerifyPassword($username, $passwd);
             if ($resultCheckPassword === FALSE) {
                 $this->feedbackText[] = $checkPassword->feedbackText;
@@ -54,7 +64,7 @@
             }
 
             // Authenticate user and return TRUE
-            $authentication = new Authenticate;
+            $authentication = new Authenticate($connection);
             $authentication->setSessionVariables($username);
             return TRUE;
 

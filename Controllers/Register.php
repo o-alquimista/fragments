@@ -8,6 +8,7 @@
 
     require '../Models/Register.php';
     require_once '../Utils/InputValidation.php';
+    require_once '../Utils/Connection.php';
 
     interface Registration {
 
@@ -37,8 +38,17 @@
                 return FALSE;
             }
 
+            /*
+            We create one instance of the database connection
+            class and, using dependency injection, we pass it
+            to the constructor of every class that needs it.
+            */
+
+            $connect = new DatabaseConnection;
+            $connection = $connect->getConnection();
+
             // Returns FALSE if username is already registered
-            $UsernameAvailable = new UsernameAvailable;
+            $UsernameAvailable = new UsernameAvailable($connection);
             $resultUsernameAvailable = $UsernameAvailable->isUsernameAvailable($username);
             if ($resultUsernameAvailable == FALSE) {
                 $this->feedbackText[] = $UsernameAvailable->feedbackText;
@@ -50,7 +60,7 @@
             $hash = $passwordHash->hashPassword($passwd);
 
             // Write username and hash to the database
-            $writeData = new WriteData;
+            $writeData = new WriteData($connection);
             $writeData->insertData($username, $hash);
             $this->feedbackText[] = $writeData->feedbackText;
 

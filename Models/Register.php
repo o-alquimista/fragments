@@ -7,7 +7,6 @@
     */
 
     require_once '../Utils/Text.php';
-    require_once '../Utils/Connection.php';
     require_once '../Utils/InputValidation.php';
 
     interface FormValidationInterface {
@@ -100,31 +99,13 @@
 
     }
 
-    /*
-    This abstract class DatabaseOperations is inherited by
-    all classes that require a connection to the database.
-    The resulting connection object is stored in the
-    property $connection
-    */
-
-    abstract class DatabaseOperations {
-
-        protected $connection;
-
-        public function __construct() {
-            $connect = new DatabaseConnection;
-            $this->connection = $connect->getConnection();
-        }
-
-    }
-
     interface UsernameAvailableInterface {
 
         public function isUsernameAvailable($username);
 
     }
 
-    class UsernameAvailable extends DatabaseOperations implements UsernameAvailableInterface {
+    class UsernameAvailable implements UsernameAvailableInterface {
 
         /*
         property $feedbackText holds feedback messages and
@@ -132,6 +113,11 @@
         */
 
         public $feedbackText;
+        public $connection;
+
+        public function __construct($connection) {
+            $this->connection = $connection;
+        }
 
         /*
         Method isUsernameAvailable() returns FALSE if
@@ -159,7 +145,7 @@
 
     }
 
-    class WriteData extends DatabaseOperations implements Write {
+    class WriteData implements Write {
 
         /*
         property $feedbackText holds feedback messages and
@@ -167,6 +153,11 @@
         */
 
         public $feedbackText;
+        public $connection;
+
+        public function __construct($connection) {
+            $this->connection = $connection;
+        }
 
         /*
         Method insertData() writes the form data to the database
