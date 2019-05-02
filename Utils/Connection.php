@@ -25,8 +25,34 @@
 
         public function __construct() {
 
-            $this->connection = new PDO("mysql:host=$this->host;dbname=$this->database",
-                $this->username, $this->password);
+            try {
+
+                $options = array(
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                );
+
+                $this->connection = new PDO("mysql:host=$this->host;dbname=$this->database",
+                    $this->username, $this->password, $options);
+
+            } catch(PDOException $err) {
+
+                /*
+                 * $errDetailed logs the error for the administrator
+                 * $errFeedback displays a feedback message to the user
+                 */
+
+                $errDetailed = $err->getMessage() . ' at line ' . $err->getLine();
+
+                error_log($errDetailed);
+
+                $errFeedback = 'Something went wrong. This event will be reported. Error code: '
+                    . $err->getCode();
+
+                echo $errFeedback;
+
+                exit;
+
+            }
 
         }
 
