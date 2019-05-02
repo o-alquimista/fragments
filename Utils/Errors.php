@@ -24,28 +24,22 @@
 
     class HardException extends Exception implements HardErrors {
 
-        /*
-        $errFeedback is meant for the user.
-        $errDetailed is meant for the server administrator.
-        */
-
-        protected $errFeedback;
-
-        public function __construct() {
-
-            $this->errFeedback = Text::get('danger', 'EXCEPTION_FATAL_ERROR');
-
-        }
-
         public function initParameterViolation() {
 
-            $errDetailed = "Error on line " . $this->getLine() . " at " .
-                $this->getFile() . " >> " . "'" . $this->getMessage() . "'" .
-                " is not a valid argument.";
+            /*
+             $errFeedback is meant for the user.
+             $errDetailed is meant for the server administrator.
+             */
+
+            $errDetailed = "Error on line " . $this->getLine() . " at "
+                . $this->getFile() . " >> " . "'" . $this->getMessage()
+                . "'" . " is not a valid argument for init().";
 
             error_log($errDetailed);
 
-            return $this->errFeedback;
+            $errFeedback = 'Something went wrong. This event will be reported.';
+
+            return $errFeedback;
 
         }
 
