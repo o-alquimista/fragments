@@ -65,6 +65,8 @@
 
                 echo $err->initParameterViolation();
 
+                exit;
+
             }
 
             session_start($options);
