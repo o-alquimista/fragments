@@ -45,13 +45,13 @@
 
                 switch ($type) {
                     case 'warning':
-                        return FeedbackType::format($type, $message);
+                        return self::format($type, $message);
                         break;
                     case 'success':
-                        return FeedbackType::format($type, $message);
+                        return self::format($type, $message);
                         break;
                     case 'danger':
-                        return FeedbackType::format($type, $message);
+                        return self::format($type, $message);
                         break;
                     default:
                         throw new SoftException($type);
@@ -59,6 +59,7 @@
                 }
 
             } catch(SoftException $err) {
+
                 $err->invalidFeedbackType();
 
                 /*
@@ -66,8 +67,30 @@
                 feedback type is detected
                 */
 
-                return FeedbackType::format('secondary', $message);
+                return self::format('secondary', $message);
+
             }
+
+        }
+
+        /*
+         Method format() inserts $feedback into the
+         specified Bootstrap alert type and returns it
+         */
+
+        protected static function format($type, $feedback) {
+
+            ob_start();
+
+            echo "<div class='alert alert-" . $type . "' role='alert'>
+                " . $feedback . "
+                </div>";
+
+            $output = ob_get_contents();
+
+            ob_end_clean();
+
+            return $output;
 
         }
 
@@ -88,35 +111,10 @@
         public static function render($feedback) {
 
             foreach ($feedback->feedbackText as $text) {
+
                 echo $text;
+
             }
-
-        }
-
-    }
-
-    interface Format {
-
-        public static function format($type, $feedback);
-
-    }
-
-    class FeedbackType implements Format {
-
-        /*
-        Method format() inserts $feedback into the
-        specified Bootstrap alert type and returns it
-        */
-
-        public static function format($type, $feedback) {
-
-            ob_start();
-                echo "<div class='alert alert-" . $type . "' role='alert'>
-                " . $feedback . "
-                </div>";
-                $output = ob_get_contents();
-            ob_end_clean();
-            return $output;
 
         }
 
