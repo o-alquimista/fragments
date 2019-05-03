@@ -21,7 +21,7 @@
         private $password = "";
         private $host = "localhost";
         private $database = "fragments";
-        private $connection;
+        protected $connection;
 
         public function __construct() {
 
@@ -57,7 +57,9 @@
         }
 
         public function getConnection() {
+
             return $this->connection;
+
         }
 
     }
