@@ -34,14 +34,12 @@
             methods return TRUE
             */
 
-            $UsernameEmpty = $UsernameValidation->isEmpty($username);
-            if ($UsernameEmpty === TRUE) {
+            if ($UsernameValidation->isEmpty($username) === TRUE) {
                 $feedbackMsg = Text::get('warning', 'FEEDBACK_USERNAME_EMPTY');
                 $this->feedbackText[] = $feedbackMsg;
             }
 
-            $PasswordEmpty = $PasswordValidation->isEmpty($passwd);
-            if ($PasswordEmpty === TRUE) {
+            if ($PasswordValidation->isEmpty($passwd) === TRUE) {
                 $feedbackMsg = Text::get('warning', 'FEEDBACK_PASSWORD_EMPTY');
                 $this->feedbackText[] = $feedbackMsg;
             }
@@ -65,14 +63,12 @@
             methods return FALSE
             */
 
-            $UsernameValid = $UsernameValidation->isValid($username);
-            if ($UsernameValid === FALSE) {
+            if ($UsernameValidation->isValid($username) === FALSE) {
                 $feedbackMsg = Text::get('warning', 'FEEDBACK_USERNAME_LENGTH');
                 $this->feedbackText[] = $feedbackMsg;
             }
 
-            $PasswordValid = $PasswordValidation->isValid($passwd);
-            if ($PasswordValid === FALSE) {
+            if ($PasswordValidation->isValid($passwd) === FALSE) {
                 $feedbackMsg = Text::get('warning', 'FEEDBACK_PASSWORD_LENGTH');
                 $this->feedbackText[] = $feedbackMsg;
             }
@@ -126,6 +122,7 @@
         */
 
         public function isUsernameAvailable($username) {
+
             $stmt = $this->connection->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
             $stmt->bindParam(":username", $username);
             $stmt->execute();
@@ -135,6 +132,7 @@
                 return FALSE;
             }
             return TRUE;
+
         }
 
     }
@@ -165,6 +163,7 @@
         */
 
         public function insertData($username, $hash) {
+
             $stmt = $this->connection->prepare("INSERT INTO users (username, hash)
                 VALUES (:username, :hash)");
             $stmt->bindParam(":username", $username);
@@ -173,6 +172,7 @@
 
             $feedbackMsg = Text::get('success', 'FEEDBACK_REGISTRATION_COMPLETE');
             $this->feedbackText = $feedbackMsg;
+
         }
 
     }

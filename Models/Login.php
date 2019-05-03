@@ -35,14 +35,12 @@
             methods return TRUE
             */
 
-            $UsernameEmpty = $UsernameValidation->isEmpty($username);
-            if ($UsernameEmpty === TRUE) {
+            if ($UsernameValidation->isEmpty($username) === TRUE) {
                 $feedbackMsg = Text::get('warning', 'FEEDBACK_USERNAME_EMPTY');
                 $this->feedbackText[] = $feedbackMsg;
             }
 
-            $PasswordEmpty = $PasswordValidation->isEmpty($passwd);
-            if ($PasswordEmpty === TRUE) {
+            if ($PasswordValidation->isEmpty($passwd) === TRUE) {
                 $feedbackMsg = Text::get('warning', 'FEEDBACK_PASSWORD_EMPTY');
                 $this->feedbackText[] = $feedbackMsg;
             }
