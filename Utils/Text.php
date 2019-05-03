@@ -28,7 +28,6 @@
             'FEEDBACK_USERNAME_TAKEN' => 'Username already taken',
             'FEEDBACK_REGISTRATION_COMPLETE' => 'Registration complete',
 
-            'EXCEPTION_FATAL_ERROR' => 'Something went wrong. This event will be reported.',
             'EXCEPTION_SESSION_EXPIRED' => 'This session has expired',
         );
 
