@@ -6,33 +6,7 @@
     *
     */
 
-    require_once '../Utils/Session.php';
-    require_once '../Utils/Requests.php';
-    require '../Controllers/Login.php';
-
-    Session::start();
-
-    if (ServerRequest::isRequestPost() === TRUE) {
-
-        $username = ServerRequest::post('username');
-        $passwd = ServerRequest::post('passwd');
-
-        $Login = new LoginForm;
-        $LoginStatus = $Login->login($username, $passwd);
-
-        /*
-        If the controller returns FALSE, echo feedback messages.
-        If TRUE is returned, call redirect function from Utils/Requests.php
-        */
-
-        if ($LoginStatus === FALSE) {
-            echo RenderFeedback::render($Login);
-        } else {
-            // redirect
-            echo "Logged in";
-        }
-
-    }
+    RenderFeedback::render($this);
 
 ?>
 
@@ -53,7 +27,7 @@
 
             <h4>Login</h4>
 
-            <form method='post' action='<?php echo ServerRequest::self()?>'>
+            <form method='post' action='/login'>
                 <div class='form-group'>
                     <input type='text' name='username' class='form-control' minlength='5'
                         placeholder='Username' autocapitalize=off required autofocus>

@@ -6,27 +6,7 @@
     *
     */
 
-    require_once '../Utils/Session.php';
-    require_once '../Utils/Requests.php';
-    require '../Controllers/Register.php';
-
-    Session::start();
-
-    if (ServerRequest::isRequestPost() === TRUE) {
-
-        $username = ServerRequest::post('username');
-        $passwd = ServerRequest::post('passwd');
-
-        $Register = new Register;
-        $Register->registerUser($username, $passwd);
-
-        /*
-        Echo all feedback messages
-        */
-
-        echo RenderFeedback::render($Register);
-
-    }
+    RenderFeedback::render($this);
 
 ?>
 
@@ -47,7 +27,7 @@
 
             <h4>Register</h4>
 
-            <form method='post' action='<?php echo ServerRequest::self()?>'>
+            <form method='post' action='/register'>
                 <div class='form-group'>
                     <input type='text' name='username' class='form-control' minlength='5'
                         placeholder='Username' autocapitalize=off required autofocus>
