@@ -105,9 +105,9 @@
         Method render() echoes all feedback messages from the array
         */
 
-        public static function render($feedback) {
+        public static function render($object) {
 
-            foreach ($feedback->feedbackText as $text) {
+            foreach ($object->feedbackText as $text) {
 
                 echo $text;
 
