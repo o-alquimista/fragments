@@ -6,9 +6,13 @@
     *
     */
 
-    require '../Models/Login.php';
-    require_once '../Utils/InputValidation.php';
-    require_once '../Utils/Connection.php';
+    require_once 'Models/Login.php';
+    require_once 'Utils/Requests.php';
+    require_once 'Utils/Session.php';
+    require_once 'Utils/Connection.php';
+    require_once 'Utils/InputValidation.php';
+    require_once 'Utils/Text.php';
+    require_once 'Utils/Errors.php';
 
     interface Login {
 
@@ -25,6 +29,31 @@
 
         public $feedbackText = array();
         protected $connection;
+
+        public function __construct() {
+
+            Session::start();
+
+            if (ServerRequest::isRequestPost() === TRUE) {
+
+                $username = ServerRequest::post('username');
+                $passwd = ServerRequest::post('passwd');
+
+                $status = $this->login($username, $passwd);
+
+                if ($status === TRUE) {
+
+                    // redirect to next action
+                    echo 'logged in';
+
+                }
+
+            }
+
+            // render view
+            require 'Views/Login.php';
+
+        }
 
         public function login($username, $passwd) {
 
