@@ -12,7 +12,6 @@
     interface Requests {
 
         public static function isRequestPost();
-        public static function self();
         public static function post($value);
         public static function get($value);
 
@@ -31,16 +30,6 @@
                 return TRUE;
             }
             return FALSE;
-
-        }
-
-        /*
-        Method self() returns a sanitized 'PHP_SELF'
-        */
-
-        public static function self() {
-
-            return htmlspecialchars($_SERVER["PHP_SELF"]);
 
         }
 
