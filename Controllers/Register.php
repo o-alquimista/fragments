@@ -55,17 +55,13 @@
              * return a connection object that we pass to the
              * constructor of every class that requires it.
              */
-            
+
             $Connect = new DatabaseConnection;
             $this->connection = $Connect->getConnection();
 
-            // Sanitize input
-
-            $username = FilterInput::clean($username);
-
             // Returns FALSE if input validation fails
 
-            $FormValidation = new FormValidation;
+            $FormValidation = new RegisterFormValidation;
             if ($FormValidation->validate($username, $passwd) === FALSE) {
                 $this->feedbackText = $FormValidation->feedbackText;
                 return FALSE;

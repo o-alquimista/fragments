@@ -6,16 +6,13 @@
     *
     */
 
-    require_once '../Utils/Text.php';
-    require_once '../Utils/InputValidation.php';
-
-    interface FormValidationInterface {
+    interface RegisterFormInterface {
 
         public function validate($username, $passwd);
 
     }
 
-    class FormValidation implements FormValidationInterface {
+    class RegisterFormValidation implements RegisterFormInterface {
 
         /*
         property $feedbackText holds feedback messages and

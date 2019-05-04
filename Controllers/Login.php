@@ -72,7 +72,7 @@
 
             // Returns FALSE if input validation fails
 
-            $formValidation = new FormValidation;
+            $formValidation = new LoginFormValidation;
             if ($formValidation->validate($username, $passwd) === FALSE) {
                 $this->feedbackText = $formValidation->feedbackText;
                 return FALSE;
