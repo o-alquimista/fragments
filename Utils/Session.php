@@ -10,9 +10,6 @@
     *
     */
 
-    require_once 'SessionTools.php';
-    require_once 'Errors.php';
-
     abstract class SessionInit {
 
         /*

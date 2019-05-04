@@ -8,8 +8,6 @@
     *
     */
 
-    require_once 'Text.php';
-
     /*
     Hard exceptions are used for critical errors where
     the code would not function properly if execution were

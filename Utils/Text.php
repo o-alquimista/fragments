@@ -8,8 +8,6 @@
     *
     */
 
-    require_once 'Errors.php';
-
     interface TextTools {
 
         public static function get($type, $feedback);
