@@ -1,10 +1,13 @@
 <?php
 
     /**
-    *
-    * Register View
-    *
-    */
+     *
+     * Register View
+     *
+     * Holds the HTML content,
+     * and displays feedback messages
+     *
+     */
 
     RenderFeedback::render($this);
 

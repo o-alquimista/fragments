@@ -1,10 +1,13 @@
 <?php
 
     /**
-    *
-    * Login View
-    *
-    */
+     *
+     * Login View
+     *
+     * Holds the HTML content,
+     * and displays feedback messages
+     *
+     */
 
     RenderFeedback::render($this);
 
