@@ -22,8 +22,15 @@
 
         public function __construct() {
 
-            $uri = $_SERVER["REQUEST_URI"];
-            $this->fragments = str_replace('/', '', $uri);
+            /*
+             * Grab the URI and remove all slashes.
+             * Then save the result to the
+             * property $fragments.
+             */
+
+            $uri = ServerRequest::getURI();
+            $uri = str_replace('/', '', $uri);
+            $this->fragments = $uri;
 
         }
 
@@ -52,6 +59,12 @@
         }
 
         public function interpreter() {
+
+            /*
+             * Method interpreter() checks which controller
+             * the request is about, and instantiates that
+             * controller.
+             */
 
             if ($this->path == 'login') {
 
