@@ -32,11 +32,18 @@
 
         public function __construct() {
 
+            /*
+             * This is the controller's entry point.
+             * It will start a session and check if
+             * a POST request has already been sent.
+             * If it has, the main method will be called.
+             */
+
             Session::start();
 
             if (ServerRequest::isRequestPost() === TRUE) {
 
-                $username = ServerRequest::post('username');
+                $username = FilterInput::clean(ServerRequest::post('username'));
                 $passwd = ServerRequest::post('passwd');
 
                 $status = $this->login($username, $passwd);
@@ -65,10 +72,6 @@
 
             $Connect = new DatabaseConnection;
             $this->connection = $Connect->getConnection();
-
-            // Sanitize input
-
-            $username = FilterInput::clean($username);
 
             // Returns FALSE if input validation fails
 
