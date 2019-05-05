@@ -12,6 +12,7 @@
     interface Requests {
 
         public static function isRequestPost();
+        public static function getURI();
         public static function post($value);
         public static function get($value);
 
@@ -30,6 +31,12 @@
                 return TRUE;
             }
             return FALSE;
+
+        }
+
+        public static function getURI() {
+
+            return $_SERVER['REQUEST_URI'];
 
         }
 
