@@ -7,7 +7,7 @@
      * This file instantiates the router.
      */
 
-    require_once 'Utils/Router.php';
+    require_once '../Utils/Router.php';
 
     $path = new PathFinder;
     $router = new Router($path);
