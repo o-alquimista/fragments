@@ -6,13 +6,13 @@
     *
     */
 
-    require_once 'Models/Register.php';
-    require_once 'Utils/Session.php';
-    require_once 'Utils/InputValidation.php';
-    require_once 'Utils/Connection.php';
-    require_once 'Utils/Requests.php';
-    require_once 'Utils/SessionTools.php';
-    require_once 'Utils/Text.php';
+    require_once '../Models/Register.php';
+    require_once '../Utils/Session.php';
+    require_once '../Utils/InputValidation.php';
+    require_once '../Utils/Connection.php';
+    require_once '../Utils/Requests.php';
+    require_once '../Utils/SessionTools.php';
+    require_once '../Utils/Text.php';
 
     interface Registration {
 
@@ -51,7 +51,7 @@
             }
 
             // render view
-            require 'Views/Register.php';
+            require '../Views/Register.php';
 
         }
 

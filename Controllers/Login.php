@@ -6,13 +6,13 @@
     *
     */
 
-    require_once 'Models/Login.php';
-    require_once 'Utils/Requests.php';
-    require_once 'Utils/Session.php';
-    require_once 'Utils/Connection.php';
-    require_once 'Utils/InputValidation.php';
-    require_once 'Utils/Text.php';
-    require_once 'Utils/Errors.php';
+    require_once '../Models/Login.php';
+    require_once '../Utils/Requests.php';
+    require_once '../Utils/Session.php';
+    require_once '../Utils/Connection.php';
+    require_once '../Utils/InputValidation.php';
+    require_once '../Utils/Text.php';
+    require_once '../Utils/Errors.php';
 
     interface Login {
 
@@ -58,7 +58,7 @@
             }
 
             // render view
-            require 'Views/Login.php';
+            require '../Views/Login.php';
 
         }
 

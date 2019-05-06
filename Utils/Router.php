@@ -7,8 +7,8 @@
      *
      */
 
-    require_once 'Controllers/Login.php';
-    require_once 'Controllers/Register.php';
+    require_once '../Controllers/Login.php';
+    require_once '../Controllers/Register.php';
 
     interface Path {
 
