@@ -1,110 +1,110 @@
 <?php
 
-    /**
-    *
-    * Login Controller
-    *
-    */
+/**
+ *
+ * Login Controller
+ *
+ */
 
-    require_once '../Models/Login.php';
-    require_once '../Utils/Requests.php';
-    require_once '../Utils/Session.php';
-    require_once '../Utils/Connection.php';
-    require_once '../Utils/InputValidation.php';
-    require_once '../Utils/Text.php';
-    require_once '../Utils/Errors.php';
+namespace Fragments\Controllers\Login;
 
-    interface Login {
+use Fragments\Utility\Connection\DatabaseConnection;
+use Fragments\Utility\Session\Session;
+use Fragments\Utility\Requests\ServerRequest;
+use Fragments\Utility\Filter\FilterInput;
+use Fragments\Utility\View\View;
+use Fragments\Models\Login\{FormValidation, UserExists,
+    PasswordVerify, Authentication};
 
-        public function login($username, $passwd);
+interface LoginInterface {
 
-    }
+    public function login($username, $passwd);
 
-    class LoginForm implements Login {
+}
+
+class Login implements LoginInterface {
+
+    public $feedbackText = array();
+    private $connection;
+    private $view;
+
+    public function __construct($view) {
 
         /*
-         * $feedbackText holds feedback messages and is retrieved
-         * at the login view if the login() method returns FALSE
+         * This is the controller's entry point.
+         * It will start a session and check if
+         * a POST request has already been sent.
+         * If it has, the main method will be called.
          */
 
-        public $feedbackText = array();
-        protected $connection;
+        Session::start();
 
-        public function __construct() {
+        /*
+         * The property $view is passed to this controller
+         * from the router to be reused at the view instantiation.
+         */
 
-            /*
-             * This is the controller's entry point.
-             * It will start a session and check if
-             * a POST request has already been sent.
-             * If it has, the main method will be called.
-             */
+        $this->view = $view;
 
-            Session::start();
+        if (ServerRequest::isRequestPost() === TRUE) {
 
-            if (ServerRequest::isRequestPost() === TRUE) {
+            $username = FilterInput::clean(ServerRequest::post('username'));
+            $passwd = ServerRequest::post('passwd');
 
-                $username = FilterInput::clean(ServerRequest::post('username'));
-                $passwd = ServerRequest::post('passwd');
+            $status = $this->login($username, $passwd);
 
-                $status = $this->login($username, $passwd);
+            if ($status === TRUE) {
 
-                if ($status === TRUE) {
-
-                    // redirect to next action
-                    echo 'logged in';
-
-                }
+                echo 'logged in';
 
             }
-
-            // render view
-            require '../Views/Login.php';
 
         }
 
-        public function login($username, $passwd) {
-
-            /*
-             * We call the database connection class to
-             * return a connection object that we pass to the
-             * constructor of every class that requires it.
-             */
-
-            $Connect = new DatabaseConnection;
-            $this->connection = $Connect->getConnection();
-
-            // Returns FALSE if input validation fails
-
-            $formValidation = new LoginFormValidation;
-            if ($formValidation->validate($username, $passwd) === FALSE) {
-                $this->feedbackText = $formValidation->feedbackText;
-                return FALSE;
-            }
-
-            // Returns FALSE if user is not registered
-
-            $checkExists = new UserExists($this->connection);
-            if ($checkExists->isUserRegistered($username) === FALSE) {
-                $this->feedbackText[] = $checkExists->feedbackText;
-                return FALSE;
-            }
-
-            // Returns FALSE if password verification failed
-
-            $checkPassword = new PasswordVerify($this->connection);
-            if ($checkPassword->VerifyPassword($username, $passwd) === FALSE) {
-                $this->feedbackText[] = $checkPassword->feedbackText;
-                return FALSE;
-            }
-
-            // Authenticate user and return TRUE
-
-            $authentication = new Authenticate($this->connection);
-            $authentication->setSessionVariables($username);
-            return TRUE;
-
-        }
+        $view = new View($this->feedbackText);
+        $view->render($this->view);
 
     }
+
+    public function login($username, $passwd) {
+
+        /*
+         * We call the database connection class to
+         * return a connection object that we pass to the
+         * constructor of every class that requires it.
+         */
+
+        $connect = new DatabaseConnection;
+        $this->connection = $connect->getConnection();
+
+        // Input validation
+        $formValidation = new FormValidation;
+        if ($formValidation->validate($username, $passwd) === FALSE) {
+            $this->feedbackText = $formValidation->feedbackText;
+            return FALSE;
+        }
+
+        // Is user already registered?
+        $checkExists = new UserExists($this->connection);
+        if ($checkExists->isUserRegistered($username) === FALSE) {
+            $this->feedbackText[] = $checkExists->feedbackText;
+            return FALSE;
+        }
+
+        // Password verification
+        $checkPassword = new PasswordVerify($this->connection);
+        if ($checkPassword->verifyPassword($username, $passwd) === FALSE) {
+            $this->feedbackText[] = $checkPassword->feedbackText;
+            return FALSE;
+        }
+
+        // Authenticate
+        $authentication = new Authentication($this->connection);
+        $authentication->setSessionVariables($username);
+        return TRUE;
+
+    }
+
+}
 
 ?>
