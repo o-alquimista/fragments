@@ -40,6 +40,15 @@ class Autoload implements Autoloader {
 
     public function prepare($class) {
 
+        /*
+         * Split the namespace into many parts,
+         * so we can convert it into a path
+         * to the file where the class is.
+         *
+         * $namespace holds an array with all
+         * the parts.
+         */
+
         $namespace = explode('\\', $class);
 
         $this->path = '../' . $namespace[1] . '/' .
