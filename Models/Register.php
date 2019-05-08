@@ -1,196 +1,175 @@
 <?php
 
-    /**
-    *
-    * Register Model
-    *
-    */
+/**
+ *
+ * Register Model
+ *
+ */
 
-    interface RegisterFormInterface {
+namespace Fragments\Models\Register;
 
-        public function validate($username, $passwd);
+use Fragments\Utility\InputValidation\{UsernameValidation, PasswordValidation};
+use Fragments\Utility\Feedback\Feedback;
 
-    }
+interface FormValidationInterface {
 
-    class RegisterFormValidation implements RegisterFormInterface {
+    public function validate($username, $passwd);
 
-        /*
-        property $feedbackText holds feedback messages and
-        is returned to the controller
-        */
+}
 
-        public $feedbackText = array();
+class FormValidation implements FormValidationInterface {
 
-        public function validate($username, $passwd) {
+    /*
+     * property $feedbackText holds feedback messages and
+     * is returned to the controller
+     */
 
-            $UsernameValidation = new UsernameValidation;
-            $PasswordValidation = new PasswordValidation;
+    public $feedbackText = array();
 
-            /*
-            A feedback is stored if any of the following isEmpty()
-            methods return TRUE
-            */
+    public function validate($username, $passwd) {
 
-            if ($UsernameValidation->isEmpty($username) === TRUE) {
-                $feedbackMsg = Text::get('warning', 'FEEDBACK_USERNAME_EMPTY');
-                $this->feedbackText[] = $feedbackMsg;
-            }
+        $UsernameValidation = new UsernameValidation;
+        $PasswordValidation = new PasswordValidation;
 
-            if ($PasswordValidation->isEmpty($passwd) === TRUE) {
-                $feedbackMsg = Text::get('warning', 'FEEDBACK_PASSWORD_EMPTY');
-                $this->feedbackText[] = $feedbackMsg;
-            }
-
-            /*
-            The isEmpty() methods are checked before
-            any other type of validation.
-
-            The following foreach will return FALSE if any
-            feedbacks are found in the feedback array
-            */
-
-            foreach ($this->feedbackText as $entry) {
-                if (!is_null($entry)) {
-                    return FALSE;
-                }
-            }
-
-            /*
-            A feedback is stored if any of the following isValid()
-            methods return FALSE
-            */
-
-            if ($UsernameValidation->isValid($username) === FALSE) {
-                $feedbackMsg = Text::get('warning', 'FEEDBACK_USERNAME_LENGTH');
-                $this->feedbackText[] = $feedbackMsg;
-            }
-
-            if ($PasswordValidation->isValid($passwd) === FALSE) {
-                $feedbackMsg = Text::get('warning', 'FEEDBACK_PASSWORD_LENGTH');
-                $this->feedbackText[] = $feedbackMsg;
-            }
-
-            /*
-            The following foreach will return FALSE if any
-            feedbacks are found in the feedback array
-            */
-
-            foreach ($this->feedbackText as $entry) {
-                if (!is_null($entry)) {
-                    return FALSE;
-                }
-            }
-
-            /*
-            TRUE is returned if the feedback array does not contain
-            any feedbacks
-            */
-
-            return TRUE;
-
+        if ($UsernameValidation->isEmpty($username) === TRUE) {
+            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_USERNAME_EMPTY');
+            $this->feedbackText[] = $feedbackMsg;
         }
 
-    }
-
-    interface UsernameAvailableInterface {
-
-        public function isUsernameAvailable($username);
-
-    }
-
-    class UsernameAvailable implements UsernameAvailableInterface {
-
-        /*
-        property $feedbackText holds feedback messages and
-        is returned to the controller
-        */
-
-        public $feedbackText;
-        public $connection;
-
-        public function __construct($connection) {
-            $this->connection = $connection;
+        if ($PasswordValidation->isEmpty($passwd) === TRUE) {
+            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_PASSWORD_EMPTY');
+            $this->feedbackText[] = $feedbackMsg;
         }
 
         /*
-        Method isUsernameAvailable() returns FALSE if
-        a row matching $username was found, meaning that username
-        is not available
-        */
+         * The isEmpty() methods are checked before
+         * any other type of validation.
+         *
+         * The following foreach will return FALSE if any
+         * feedbacks are found in the feedback array
+         */
 
-        public function isUsernameAvailable($username) {
-
-            $stmt = $this->connection->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
-            $stmt->bindParam(":username", $username);
-            $stmt->execute();
-            if ($stmt->fetchColumn() >= 1) {
-                $feedbackMsg = Text::get('warning', 'FEEDBACK_USERNAME_TAKEN');
-                $this->feedbackText = $feedbackMsg;
+        foreach ($this->feedbackText as $entry) {
+            if (!is_null($entry)) {
                 return FALSE;
             }
-            return TRUE;
-
         }
 
-    }
+        if ($UsernameValidation->isValid($username) === FALSE) {
+            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_USERNAME_LENGTH');
+            $this->feedbackText[] = $feedbackMsg;
+        }
 
-    interface Write {
+        if ($PasswordValidation->isValid($passwd) === FALSE) {
+            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_PASSWORD_LENGTH');
+            $this->feedbackText[] = $feedbackMsg;
+        }
 
-        public function insertData($username, $hash);
-
-    }
-
-    class WriteData implements Write {
-
-        /*
-        property $feedbackText holds feedback messages and
-        is returned to the controller
-        */
-
-        public $feedbackText;
-        public $connection;
-
-        public function __construct($connection) {
-            $this->connection = $connection;
+        foreach ($this->feedbackText as $entry) {
+            if (!is_null($entry)) {
+                return FALSE;
+            }
         }
 
         /*
-        Method insertData() writes the form data to the database
-        and stores a 'success' feedback
-        */
+         * TRUE is returned if the feedback array does
+         * not contain any feedbacks
+         */
 
-        public function insertData($username, $hash) {
+        return TRUE;
 
-            $stmt = $this->connection->prepare("INSERT INTO users (username, hash)
-                VALUES (:username, :hash)");
-            $stmt->bindParam(":username", $username);
-            $stmt->bindParam(":hash", $hash);
-            $stmt->execute();
+    }
 
-            $feedbackMsg = Text::get('success', 'FEEDBACK_REGISTRATION_COMPLETE');
+}
+
+interface UsernameAvailableInterface {
+
+    public function isUsernameAvailable($username);
+
+}
+
+class UsernameAvailable implements UsernameAvailableInterface {
+
+    public $feedbackText;
+    public $connection;
+
+    public function __construct($connection) {
+        $this->connection = $connection;
+    }
+
+    public function isUsernameAvailable($username) {
+
+        /*
+         * Method isUsernameAvailable() returns FALSE if
+         * a row matching $username was found, meaning that
+         * the username is not available
+         */
+
+        $stmt = $this->connection->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
+        $stmt->bindParam(":username", $username);
+        $stmt->execute();
+        if ($stmt->fetchColumn() >= 1) {
+            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_USERNAME_TAKEN');
             $this->feedbackText = $feedbackMsg;
-
+            return FALSE;
         }
+        return TRUE;
 
     }
 
-    interface Hash {
+}
 
-        public function hashPassword($passwd);
+interface Write {
 
+    public function insertData($username, $hash);
+
+}
+
+class WriteData implements Write {
+
+    public $feedbackText;
+    public $connection;
+
+    public function __construct($connection) {
+        $this->connection = $connection;
     }
 
-    class PasswordHash implements Hash {
+    public function insertData($username, $hash) {
 
         /*
-        Method hashPassword() returns a hash of $passwd
-        */
+         * Method insertData() writes the form data to the database
+         */
 
-        public function hashPassword($passwd) {
-            $hash = password_hash($passwd, PASSWORD_DEFAULT);
-            return $hash;
-        }
+        $stmt = $this->connection->prepare("INSERT INTO users (username, hash)
+            VALUES (:username, :hash)");
+        $stmt->bindParam(":username", $username);
+        $stmt->bindParam(":hash", $hash);
+        $stmt->execute();
+
+        $feedbackMsg = Feedback::get('success', 'FEEDBACK_REGISTRATION_COMPLETE');
+        $this->feedbackText = $feedbackMsg;
 
     }
+
+}
+
+interface Hash {
+
+    public function hashPassword($passwd);
+
+}
+
+class PasswordHash implements Hash {
+
+    /*
+     * Method hashPassword() returns a hash of $passwd
+     */
+
+    public function hashPassword($passwd) {
+        $hash = password_hash($passwd, PASSWORD_DEFAULT);
+        return $hash;
+    }
+
+}
 
 ?>

@@ -1,196 +1,186 @@
 <?php
 
-    /**
-    *
-    * Login Model
-    *
-    */
+/**
+ *
+ * Login Model
+ *
+ */
 
-    interface LoginFormInterface {
+namespace Fragments\Models\Login;
 
-        public function validate($username, $passwd);
+use Fragments\Utility\InputValidation\{UsernameValidation, PasswordValidation};
+use Fragments\Utility\Feedback\Feedback;
+use Fragments\Utility\Session\SessionID;
+use Fragments\Utility\SessionTools\SessionData;
 
-    }
+interface FormValidationInterface {
 
-    class LoginFormValidation implements LoginFormInterface {
+    public function validate($username, $passwd);
 
-        /*
-        property $feedbackText holds feedback messages and
-        is returned to the controller
-        */
+}
 
-        public $feedbackText = array();
+class FormValidation implements FormValidationInterface {
 
-        public function validate($username, $passwd) {
+    /*
+     * property $feedbackText holds feedback messages and
+     * is returned to the controller
+     */
 
-            $UsernameValidation = new UsernameValidation;
-            $PasswordValidation = new PasswordValidation;
+    public $feedbackText = array();
 
-            /*
-            A feedback is stored if any of the following isEmpty()
-            methods return TRUE
-            */
+    public function validate($username, $passwd) {
 
-            if ($UsernameValidation->isEmpty($username) === TRUE) {
-                $feedbackMsg = Text::get('warning', 'FEEDBACK_USERNAME_EMPTY');
-                $this->feedbackText[] = $feedbackMsg;
-            }
+        $UsernameValidation = new UsernameValidation;
+        $PasswordValidation = new PasswordValidation;
 
-            if ($PasswordValidation->isEmpty($passwd) === TRUE) {
-                $feedbackMsg = Text::get('warning', 'FEEDBACK_PASSWORD_EMPTY');
-                $this->feedbackText[] = $feedbackMsg;
-            }
-
-            /*
-            This foreach will cause validate() to return FALSE
-            if any of the array's entries contain a feedback
-            */
-
-            foreach ($this->feedbackText as $entry) {
-                if (!is_null($entry)) {
-                    return FALSE;
-                }
-            }
-
-            /*
-            TRUE is returned if the feedback array does not contain any feedbacks
-            */
-
-            return TRUE;
-
+        if ($UsernameValidation->isEmpty($username) === TRUE) {
+            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_USERNAME_EMPTY');
+            $this->feedbackText[] = $feedbackMsg;
         }
 
-    }
-
-    interface UserExistsInterface {
-
-        public function isUserRegistered($username);
-
-    }
-
-    class UserExists implements UserExistsInterface {
-
-        /*
-        property $feedbackText holds feedback messages and
-        is returned to the controller
-        */
-
-        public $feedbackText;
-        public $connection;
-
-        public function __construct($connection) {
-            $this->connection = $connection;
+        if ($PasswordValidation->isEmpty($passwd) === TRUE) {
+            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_PASSWORD_EMPTY');
+            $this->feedbackText[] = $feedbackMsg;
         }
 
         /*
-        Method isUserRegistered() returns FALSE if no rows matching
-        the value of $username were found
-        */
+         * The following foreach will cause validate() to return
+         * FALSE if any of the array's entries contain
+         * a feedback message
+         */
 
-        public function isUserRegistered($username) {
-
-            $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = :username");
-            $stmt->bindParam(":username", $username);
-            $stmt->execute();
-
-            if ($stmt->fetchColumn() == 0) {
-                $feedbackMsg = Text::get('warning', 'FEEDBACK_NOT_REGISTERED');
-                $this->feedbackText = $feedbackMsg;
+        foreach ($this->feedbackText as $entry) {
+            if (!is_null($entry)) {
                 return FALSE;
             }
-            return TRUE;
-
         }
 
-    }
-
-    interface PasswordVerifyInterface {
-
-        public function VerifyPassword($username, $passwd);
+        return TRUE;
 
     }
 
-    class PasswordVerify implements PasswordVerifyInterface {
+}
+
+interface UserExistsInterface {
+
+    public function isUserRegistered($username);
+
+}
+
+class UserExists implements UserExistsInterface {
+
+    public $feedbackText;
+    public $connection;
+
+    public function __construct($connection) {
+        $this->connection = $connection;
+    }
+
+    public function isUserRegistered($username) {
 
         /*
-        property $feedbackText holds feedback messages and
-        is returned to the controller
-        */
+         * Method isUserRegistered() returns FALSE if no rows matching
+         * the value of $username were found
+         */
 
-        public $feedbackText;
-        public $connection;
+        $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = :username");
+        $stmt->bindParam(":username", $username);
+        $stmt->execute();
 
-        public function __construct($connection) {
-            $this->connection = $connection;
+        if ($stmt->fetchColumn() == 0) {
+            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_NOT_REGISTERED');
+            $this->feedbackText = $feedbackMsg;
+            return FALSE;
         }
+        return TRUE;
+
+    }
+
+}
+
+interface PasswordVerifyInterface {
+
+    public function verifyPassword($username, $passwd);
+
+}
+
+class PasswordVerify implements PasswordVerifyInterface {
+
+    public $feedbackText;
+    public $connection;
+
+    public function __construct($connection) {
+        $this->connection = $connection;
+    }
+
+    public function verifyPassword($username, $passwd) {
 
         /*
-        method VerifyPassword() retrieves the hash from
-        database and verifies it against $passwd.
-        Returns FALSE if they don't match.
-        */
+         * Method VerifyPassword() returns TRUE if
+         * the password input is equivalent to the
+         * stored hash
+         */
 
-        public function VerifyPassword($username, $passwd) {
+        $stmt = $this->connection->prepare("SELECT hash FROM users WHERE username = :username");
+        $stmt->bindParam(":username", $username);
+        $stmt->execute();
 
-            $stmt = $this->connection->prepare("SELECT hash FROM users WHERE username = :username");
-            $stmt->bindParam(":username", $username);
-            $stmt->execute();
+        while ($result = $stmt->fetchObject()) {
+            $hash = $result->hash;
+        }
 
-            while ($result = $stmt->fetchObject()) {
-                $hash = $result->hash;
-            }
+        if (!password_verify($passwd, $hash)) {
+            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_INCORRECT_PASSWD');
+            $this->feedbackText = $feedbackMsg;
+            return FALSE;
+        }
+        return TRUE;
 
-            if (!password_verify($passwd, $hash)) {
-                $feedbackMsg = Text::get('warning', 'FEEDBACK_INCORRECT_PASSWD');
-                $this->feedbackText = $feedbackMsg;
-                return FALSE;
-            }
-            return TRUE;
+    }
 
+}
+
+interface AuthenticationInterface {
+
+    public function setSessionVariables($username);
+
+}
+
+class Authentication implements AuthenticationInterface {
+
+    public $feedbackText;
+    public $connection;
+
+    public function __construct($connection) {
+        $this->connection = $connection;
+    }
+
+    public function setSessionVariables($username) {
+
+        /*
+         * Method setSessionVariables() sets authentication
+         * flags and user data to the current session
+         */
+
+        $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = :username");
+        $stmt->bindParam(":username", $username);
+        $stmt->execute();
+
+        /*
+         * Regenerate a new session ID before setting
+         * the session variables, in order to prevent
+         * a stolen session ID from obtaining authentication
+         */
+
+        SessionID::regenerate();
+
+        while ($result = $stmt->fetchObject()) {
+            SessionData::set('login', '');
+            SessionData::set('username', $result->username);
         }
 
     }
 
-    interface AuthenticateInterface {
-
-        public function setSessionVariables($username);
-
-    }
-
-    class Authenticate implements AuthenticateInterface {
-
-        /*
-        property $feedbackText holds feedback messages and
-        is returned to the controller
-        */
-
-        public $feedbackText;
-        public $connection;
-
-        public function __construct($connection) {
-            $this->connection = $connection;
-        }
-
-        /*
-        Method setSessionVariables() sets authentication flags and user data to the current session
-        */
-
-        public function setSessionVariables($username) {
-
-            $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = :username");
-            $stmt->bindParam(":username", $username);
-            $stmt->execute();
-
-            // Regenerate a new session ID before setting the session variables
-            SessionID::regenerate();
-
-            while ($result = $stmt->fetchObject()) {
-                SessionData::set('login', '');
-                SessionData::set('username', $result->username);
-            }
-
-        }
-
-    }
+}
 
 ?>
