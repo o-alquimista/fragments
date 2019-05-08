@@ -1,17 +1,23 @@
 <?php
 
-    /*
-     * Index
-     *
-     * The entry point of the application.
-     * This file instantiates the router.
-     */
+/**
+ * Index
+ *
+ * The entry point of the application.
+ * This file instantiates the router
+ * and the autoloader.
+ */
 
-    require_once '../Utils/Router.php';
+require '../Utility/Autoloading.php';
 
-    $path = new PathFinder;
-    $router = new Router($path);
+use Fragments\Utility\Routing\{PathFinder, Router};
+use Fragments\Utility\Autoloading\Autoload;
 
-    $router->interpreter();
+new Autoload;
+
+$path = new PathFinder;
+$router = new Router($path);
+
+$router->interpreter();
 
 ?>
