@@ -1,56 +1,59 @@
 <?php
 
-    /**
-     *
-     * Register View
-     *
-     * Holds the HTML content,
-     * and displays feedback messages
-     *
-     */
+/**
+ *
+ * Register View
+ *
+ * Holds the HTML content,
+ * and displays feedback messages
+ *
+ */
 
-    RenderFeedback::render($this);
+$this->renderFeedback();
 
 ?>
 
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Fragments - Register</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta charset="utf-8">
-        <link rel="stylesheet"
-            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-            crossorigin="anonymous">
-    </head>
-    <body>
+<html lang="en-US">
 
-        <div class='container'>
+<head>
+  <title>Fragments - Register</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <link rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    crossorigin="anonymous" />
+</head>
 
-            <h4>Register</h4>
+<body>
+  <div class='container'>
 
-            <form method='post' action='/register'>
-                <div class='form-group'>
-                    <input type='text' name='username' class='form-control' minlength='5'
-                        placeholder='Username' autocapitalize=off required autofocus>
-                </div>
+    <h4>Register</h4>
+    <form method='post' action='/register'>
 
-                <div class='form-group'>
-                    <input type='password' name='passwd' class='form-control'
-                        id='pwd' placeholder='Password' minlength='8'
-                        title='Must be longer than 8 characters' autocapitalize=off
-                        autocomplete=off required>
-                </div>
+      <div class='form-group'>
+        <input type='text' name='username' class='form-control' minlength='5'
+          placeholder='Username' autocapitalize='off' required='required'
+          autofocus='autofocus' />
+      </div>
 
-                <div class='form-group'>
-                    <button type='submit' id='form-btn' class='btn btn-success btn-block'>
-                        Create an account
-                    </button>
-                </div>
-            </form>
+      <div class='form-group'>
+        <input type='password' name='passwd' class='form-control'
+          id='pwd' placeholder='Password' minlength='8'
+          title='Must be longer than 8 characters' autocapitalize='off'
+          autocomplete='off' required='required' />
+      </div>
 
-        </div>
+      <div class='form-group'>
+        <button type='submit' id='form-btn' class='btn btn-success btn-block'>
+            Create an account
+        </button>
+      </div>
 
-    </body>
+    </form>
+
+  </div>
+</body>
+
 </html>
