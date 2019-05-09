@@ -78,15 +78,12 @@ class Feedback implements FeedbackTools {
 
         /*
          * Method format() inserts $feedback into the
-         * specified Bootstrap alert type and returns it
-         *
-         * FIXME: replace Bootstrap with your own
-         * css styling
+         * specified alert type and returns it
          */
 
         ob_start();
 
-        echo "<div class='alert alert-" . $type . "' role='alert'>
+        echo "<div class='alert alert-" . $type . "'>
             " . $feedback . "
             </div>";
 
