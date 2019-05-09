@@ -19,6 +19,11 @@ class View implements ViewTools {
 
     private $feedbackText = array();
 
+    /*
+     * FIXME: instead of $viewIndex, have multiple
+     * render classes for each View.
+     */
+
     private $viewIndex = array(
         'login' => '../Views/Login.php',
         'register' => '../Views/Register.php',
