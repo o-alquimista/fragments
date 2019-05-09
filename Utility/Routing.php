@@ -73,11 +73,11 @@ class Router {
 
         if ($this->path == 'login') {
 
-            new Login($this->path);
+            new Login;
 
         } elseif ($this->path == 'register') {
 
-            new Register($this->path);
+            new Register;
 
         } else {
 

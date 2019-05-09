@@ -12,7 +12,7 @@ use Fragments\Utility\Connection\DatabaseConnection;
 use Fragments\Utility\Session\Session;
 use Fragments\Utility\Requests\ServerRequest;
 use Fragments\Utility\Filter\FilterInput;
-use Fragments\Utility\View\View;
+use Fragments\Utility\View\RegisterView;
 use Fragments\Models\Register\{FormValidation,
     UsernameAvailable, PasswordHash, WriteData};
 
@@ -26,9 +26,8 @@ class Register implements RegisterInterface {
 
     public $feedbackText = array();
     private $connection;
-    private $view;
 
-    public function __construct($view) {
+    public function __construct() {
 
         /*
          * This is the controller's entry point.
@@ -39,13 +38,6 @@ class Register implements RegisterInterface {
 
         Session::start();
 
-        /*
-         * The property $view is passed to this controller
-         * from the router to be reused at the view instantiation.
-         */
-
-        $this->view = $view;
-
         if (ServerRequest::isRequestPost() === TRUE) {
 
             $username = FilterInput::clean(ServerRequest::post('username'));
@@ -55,8 +47,8 @@ class Register implements RegisterInterface {
 
         }
 
-        $view = new View($this->feedbackText);
-        $view->render($this->view);
+        $view = new RegisterView($this->feedbackText);
+        $view->render();
 
     }
 

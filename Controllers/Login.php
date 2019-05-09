@@ -12,7 +12,7 @@ use Fragments\Utility\Connection\DatabaseConnection;
 use Fragments\Utility\Session\Session;
 use Fragments\Utility\Requests\ServerRequest;
 use Fragments\Utility\Filter\FilterInput;
-use Fragments\Utility\View\View;
+use Fragments\Utility\View\LoginView;
 use Fragments\Models\Login\{FormValidation, UserExists,
     PasswordVerify, Authentication};
 
@@ -26,9 +26,8 @@ class Login implements LoginInterface {
 
     public $feedbackText = array();
     private $connection;
-    private $view;
 
-    public function __construct($view) {
+    public function __construct() {
 
         /*
          * This is the controller's entry point.
@@ -38,13 +37,6 @@ class Login implements LoginInterface {
          */
 
         Session::start();
-
-        /*
-         * The property $view is passed to this controller
-         * from the router to be reused at the view instantiation.
-         */
-
-        $this->view = $view;
 
         if (ServerRequest::isRequestPost() === TRUE) {
 
@@ -61,8 +53,8 @@ class Login implements LoginInterface {
 
         }
 
-        $view = new View($this->feedbackText);
-        $view->render($this->view);
+        $view = new LoginView($this->feedbackText);
+        $view->render();
 
     }
 

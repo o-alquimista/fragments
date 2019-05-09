@@ -3,46 +3,25 @@
 /**
  * View Utility
  *
- * Performs rendering functions for a View
+ * Performs rendering functions for views
  */
 
 namespace Fragments\Utility\View;
 
 interface ViewTools {
 
-    public function render($view);
+    public function render();
     public function renderFeedback();
 
 }
 
-class View implements ViewTools {
+abstract class View implements ViewTools {
 
     private $feedbackText = array();
-
-    /*
-     * FIXME: instead of $viewIndex, have multiple
-     * render classes for each View.
-     */
-
-    private $viewIndex = array(
-        'login' => '../Views/Login.php',
-        'register' => '../Views/Register.php',
-    );
 
     public function __construct($feedback) {
 
         $this->feedbackText = $feedback;
-
-    }
-
-    public function render($view) {
-
-        /*
-         * Method render() displays a view.
-         */
-
-        $path = $this->viewIndex[$view];
-        require $path;
 
     }
 
@@ -60,6 +39,26 @@ class View implements ViewTools {
             echo $text;
 
         }
+
+    }
+
+}
+
+class LoginView extends View {
+
+    public function render() {
+
+        require '../Views/Login.php';
+
+    }
+
+}
+
+class RegisterView extends View {
+
+    public function render() {
+
+        require '../Views/Register.php';
 
     }
 
