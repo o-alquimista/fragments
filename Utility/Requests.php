@@ -13,7 +13,6 @@ namespace Fragments\Utility\Requests;
 
 interface Requests {
 
-    public static function isRequestPost();
     public static function getURI();
     public static function post($value);
     public static function get($value);
@@ -21,20 +20,6 @@ interface Requests {
 }
 
 class ServerRequest implements Requests {
-
-    public static function isRequestPost() {
-
-        /*
-         * Method isRequestPost() returns TRUE if
-         * 'REQUEST_METHOD' is 'POST'
-         */
-
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            return TRUE;
-        }
-        return FALSE;
-
-    }
 
     public static function getURI() {
 
@@ -50,13 +35,21 @@ class ServerRequest implements Requests {
 
     public static function post($value) {
 
-        return $_POST[$value];
+        if (isset($_POST[$value])) {
+
+            return $_POST[$value];
+
+        }
 
     }
 
     public static function get($value) {
 
-        return $_GET[$value];
+        if (isset($_GET[$value])) {
+
+            return $_GET[$value];
+
+        }
 
     }
 
