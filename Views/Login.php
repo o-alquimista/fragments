@@ -28,7 +28,7 @@ $this->renderFeedback();
 
     <h4>Login</h4>
 
-    <form method='post' action='/login'>
+    <form method='post' action='/login/post'>
 
       <input type='text' class='form-input' name='username' minlength='5'
         placeholder='Username' autocapitalize='off' required='required'

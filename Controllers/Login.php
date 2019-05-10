@@ -27,34 +27,31 @@ class Login implements LoginInterface {
     public $feedbackText = array();
     private $connection;
 
-    public function __construct() {
+    public function renderForm() {
 
-        /*
-         * This is the controller's entry point.
-         * It will start a session and check if
-         * a POST request has already been sent.
-         * If it has, the main method will be called.
-         */
-
-        Session::start();
-
-        if (ServerRequest::isRequestPost() === TRUE) {
-
-            $username = FilterInput::clean(ServerRequest::post('username'));
-            $passwd = ServerRequest::post('passwd');
-
-            $status = $this->login($username, $passwd);
-
-            if ($status === TRUE) {
-
-                echo 'logged in';
-
-            }
-
+        if (session_status() == PHP_SESSION_NONE) {
+            Session::start();
         }
 
         $view = new LoginView($this->feedbackText);
         $view->render();
+
+    }
+
+    public function startLogin() {
+
+        $username = FilterInput::clean(ServerRequest::post('username'));
+        $passwd = ServerRequest::post('passwd');
+
+        $status = $this->login($username, $passwd);
+
+        if ($status === TRUE) {
+
+            echo 'logged in';
+
+        }
+
+        $this->renderForm();
 
     }
 

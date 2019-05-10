@@ -28,7 +28,7 @@ $this->renderFeedback();
 
     <h4>Register</h4>
 
-    <form method='post' action='/register'>
+    <form method='post' action='/register/post'>
 
       <input type='text' class='form-input' name='username' minlength='5'
         placeholder='Username' autocapitalize='off' required='required'

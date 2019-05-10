@@ -21,21 +21,22 @@ interface Path {
 
 class PathFinder implements Path {
 
-    public $fragments;
+    public $fragments = array();
 
     public function __construct() {
 
         /*
-         * Grab the URI and remove all slashes.
-         * The result is stored in the
-         * property $fragments.
-         *
-         * FIXME: implement the "/controller/action" mechanism
+         * Grab the URI and separate it
+         * into multiple parts, so we
+         * can determine what controller
+         * to call and what action to
+         * perform.
          */
 
         $uri = ServerRequest::getURI();
-        $uri = str_replace('/', '', $uri);
-        $this->fragments = $uri;
+        $exploded = explode('/', $uri);
+        $parts = array_filter($exploded, 'strlen');
+        $this->fragments = $parts;
 
     }
 
@@ -55,7 +56,9 @@ interface Routing {
 
 class Router {
 
-    public $path;
+    private $path = array();
+    private $controller;
+    private $action;
 
     public function __construct($path) {
 
@@ -67,21 +70,104 @@ class Router {
 
         /*
          * Method interpreter() checks which controller
-         * the request is about, and instantiates that
-         * controller.
+         * the request is about, and then calls the
+         * action handler to check the action that
+         * follows it (if any).
+         *
+         * FIXME: the multiple conditional checks in this
+         * file should be replaced with a more OOP approach
          */
 
-        if ($this->path == 'login') {
+        $this->controller = array_shift($this->path);
+        $this->action = array_shift($this->path);
 
-            new Login;
+        if ($this->controller == 'login') {
 
-        } elseif ($this->path == 'register') {
+            $route = new LoginAction($this->action);
+            $route->handler();
 
-            new Register;
+        } elseif ($this->controller == 'register') {
+
+            $route = new RegisterAction($this->action);
+            $route->handler();
 
         } else {
 
-            echo 'not found';
+            echo 'Error 404: not found';
+
+        }
+
+    }
+
+}
+
+interface ActionInterface {
+
+    public function handler();
+
+}
+
+abstract class ActionHandler implements ActionInterface {
+
+    /*
+     * This is the action handler. It will
+     * determine what the action is and
+     * execute it on the instance. If no
+     * action is specified, the default action
+     * for the view in question is executed.
+     */
+
+    protected $action;
+
+    public function __construct($action) {
+
+        $this->action = $action;
+
+    }
+
+}
+
+class LoginAction extends ActionHandler {
+
+    public function handler() {
+
+        if (empty($this->action)) {
+
+            $login = new Login;
+            $login->renderForm();
+
+        } elseif ($this->action == 'post') {
+
+            $login = new Login;
+            $login->startLogin();
+
+        } else {
+
+            echo 'Error 404: not found';
+
+        }
+
+    }
+
+}
+
+class RegisterAction extends ActionHandler {
+
+    public function handler() {
+
+        if (empty($this->action)) {
+
+            $register = new Register;
+            $register->renderForm();
+
+        } elseif ($this->action == 'post') {
+
+            $register = new Register;
+            $register->startRegister();
+
+        } else {
+
+            echo 'Error 404: not found';
 
         }
 

@@ -18,7 +18,7 @@ use Fragments\Models\Register\{FormValidation,
 
 interface RegisterInterface {
 
-    public function registerUser($username, $passwd);
+    public function register($username, $passwd);
 
 }
 
@@ -27,24 +27,10 @@ class Register implements RegisterInterface {
     public $feedbackText = array();
     private $connection;
 
-    public function __construct() {
+    public function renderForm() {
 
-        /*
-         * This is the controller's entry point.
-         * It will start a session and check if
-         * a POST request has already been sent.
-         * If it has, the main method will be called.
-         */
-
-        Session::start();
-
-        if (ServerRequest::isRequestPost() === TRUE) {
-
-            $username = FilterInput::clean(ServerRequest::post('username'));
-            $passwd = ServerRequest::post('passwd');
-
-            $this->registerUser($username, $passwd);
-
+        if (session_status() == PHP_SESSION_NONE) {
+            Session::start();
         }
 
         $view = new RegisterView($this->feedbackText);
@@ -52,7 +38,18 @@ class Register implements RegisterInterface {
 
     }
 
-    public function registerUser($username, $passwd) {
+    public function startRegister() {
+
+        $username = FilterInput::clean(ServerRequest::post('username'));
+        $passwd = ServerRequest::post('passwd');
+
+        $this->register($username, $passwd);
+
+        $this->renderForm();
+
+    }
+
+    public function register($username, $passwd) {
 
         /*
          * We call the database connection class to
