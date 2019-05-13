@@ -3,10 +3,7 @@
 /**
  * Autoloader Utility
  *
- * Loads classes on request. Relies on
- * namespaces to find files. Namespaces
- * must be named according to directory
- * and file paths.
+ * A namespace based autoloader
  */
 
 namespace Fragments\Utility\Autoloading;
@@ -41,18 +38,27 @@ class Autoload implements Autoloader {
     public function prepare($class) {
 
         /*
-         * Split the namespace into many parts,
-         * so we can convert it into a path
-         * to the file where the class is.
-         *
-         * $namespace holds an array with all
-         * the parts.
+         * Turn the fully qualified class name into
+         * an array divided by the namespace
+         * separator.
          */
 
         $namespace = explode('\\', $class);
 
-        $this->path = '../' . $namespace[1] . '/' .
-            $namespace[2] . '.php';
+        // Remove first item 'Fragments' from it
+        array_shift($namespace);
+
+        // Remove last item, which is the class name, from it
+        array_pop($namespace);
+
+        /*
+         * Turn it into a string divided
+         * by the directory separator
+         */
+
+        $namespace = implode('/', $namespace);
+
+        $this->path = '../' . $namespace . '.php';
 
         $this->load();
 
