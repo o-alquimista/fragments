@@ -18,14 +18,28 @@ use Fragments\Models\Register\{FormValidation,
 
 interface RegisterInterface {
 
-    public function register($username, $passwd);
+    public function renderForm();
+    public function startRegister();
+    public function register();
 
 }
 
 class Register implements RegisterInterface {
 
     public $feedbackText = array();
+
     private $connection;
+
+    private $username;
+
+    private $passwd;
+
+    public function __construct() {
+
+        $this->username = FilterInput::clean(ServerRequest::post('username'));
+        $this->passwd = ServerRequest::post('passwd');
+
+    }
 
     public function renderForm() {
 
@@ -40,16 +54,12 @@ class Register implements RegisterInterface {
 
     public function startRegister() {
 
-        $username = FilterInput::clean(ServerRequest::post('username'));
-        $passwd = ServerRequest::post('passwd');
-
-        $this->register($username, $passwd);
-
+        $this->register();
         $this->renderForm();
 
     }
 
-    public function register($username, $passwd) {
+    public function register() {
 
         /*
          * We call the database connection class to
@@ -61,26 +71,39 @@ class Register implements RegisterInterface {
         $this->connection = $Connect->getConnection();
 
         // Input validation
-        $FormValidation = new FormValidation;
-        if ($FormValidation->validate($username, $passwd) === FALSE) {
-            $this->feedbackText = $FormValidation->feedbackText;
+        $formValidation = new FormValidation($this->username, $this->passwd);
+        if ($formValidation->validate() === FALSE) {
+
+            /*
+             * Object $formValidation gives us an array of
+             * feedback messages. We must merge that with the
+             * local array.
+             */
+
+            $this->feedbackText = array_merge(
+                $this->feedbackText,
+                $formValidation->feedbackText
+            );
             return FALSE;
+
         }
 
         // Is username available?
         $UsernameAvailable = new UsernameAvailable($this->connection);
-        if ($UsernameAvailable->isUsernameAvailable($username) === FALSE) {
+        if ($UsernameAvailable->isUsernameAvailable($this->username) === FALSE) {
+
             $this->feedbackText[] = $UsernameAvailable->feedbackText;
             return FALSE;
+
         }
 
         // Hash the password
         $passwordHash = new PasswordHash;
-        $hash = $passwordHash->hashPassword($passwd);
+        $hash = $passwordHash->hashPassword($this->passwd);
 
         // Register to database
         $writeData = new WriteData($this->connection);
-        $writeData->insertData($username, $hash);
+        $writeData->insertData($this->username, $hash);
         $this->feedbackText[] = $writeData->feedbackText;
         return TRUE;
 

@@ -8,12 +8,13 @@
 
 namespace Fragments\Models\Register;
 
-use Fragments\Utility\InputValidation\{UsernameValidation, PasswordValidation};
 use Fragments\Utility\Feedback\Feedback;
 
 interface FormValidationInterface {
 
-    public function validate($username, $passwd);
+    public function validate();
+    public function validateUsername();
+    public function validatePassword();
 
 }
 
@@ -26,55 +27,75 @@ class FormValidation implements FormValidationInterface {
 
     public $feedbackText = array();
 
-    public function validate($username, $passwd) {
+    private $username;
 
-        $UsernameValidation = new UsernameValidation;
-        $PasswordValidation = new PasswordValidation;
+    private $passwd;
 
-        if ($UsernameValidation->isEmpty($username) === TRUE) {
+    public function __construct($username, $passwd) {
+
+        $this->username = $username;
+        $this->passwd = $passwd;
+
+    }
+
+    public function validate() {
+
+        $validationUsername = $this->validateUsername();
+        $validationPassword = $this->validatePassword();
+
+        if ($validationUsername && $validationPassword === TRUE) {
+
+            return TRUE;
+
+        }
+
+        return FALSE;
+
+    }
+
+    public function validateUsername() {
+
+        if (empty($this->username)) {
+
             $feedbackMsg = Feedback::get('warning', 'FEEDBACK_USERNAME_EMPTY');
             $this->feedbackText[] = $feedbackMsg;
+
+            return FALSE;
+
         }
 
-        if ($PasswordValidation->isEmpty($passwd) === TRUE) {
-            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_PASSWORD_EMPTY');
-            $this->feedbackText[] = $feedbackMsg;
-        }
+        if (strlen($this->username) < 4) {
 
-        /*
-         * The isEmpty() methods are checked before
-         * any other type of validation.
-         *
-         * The following foreach will return FALSE if any
-         * feedbacks are found in the feedback array
-         */
-
-        foreach ($this->feedbackText as $entry) {
-            if (!is_null($entry)) {
-                return FALSE;
-            }
-        }
-
-        if ($UsernameValidation->isValid($username) === FALSE) {
             $feedbackMsg = Feedback::get('warning', 'FEEDBACK_USERNAME_LENGTH');
             $this->feedbackText[] = $feedbackMsg;
+
+            return FALSE;
+
         }
 
-        if ($PasswordValidation->isValid($passwd) === FALSE) {
+        return TRUE;
+
+    }
+
+    public function validatePassword() {
+
+        if (empty($this->passwd)) {
+
+            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_PASSWORD_EMPTY');
+            $this->feedbackText[] = $feedbackMsg;
+
+            return FALSE;
+
+        }
+
+        if (strlen($this->passwd) <= 7) {
+
             $feedbackMsg = Feedback::get('warning', 'FEEDBACK_PASSWORD_LENGTH');
             $this->feedbackText[] = $feedbackMsg;
-        }
 
-        foreach ($this->feedbackText as $entry) {
-            if (!is_null($entry)) {
-                return FALSE;
-            }
-        }
+            return FALSE;
 
-        /*
-         * TRUE is returned if the feedback array does
-         * not contain any feedbacks
-         */
+        }
 
         return TRUE;
 
@@ -91,10 +112,13 @@ interface UsernameAvailableInterface {
 class UsernameAvailable implements UsernameAvailableInterface {
 
     public $feedbackText;
+
     public $connection;
 
     public function __construct($connection) {
+
         $this->connection = $connection;
+
     }
 
     public function isUsernameAvailable($username) {
@@ -108,11 +132,15 @@ class UsernameAvailable implements UsernameAvailableInterface {
         $stmt = $this->connection->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
         $stmt->bindParam(":username", $username);
         $stmt->execute();
+
         if ($stmt->fetchColumn() >= 1) {
+
             $feedbackMsg = Feedback::get('warning', 'FEEDBACK_USERNAME_TAKEN');
             $this->feedbackText = $feedbackMsg;
             return FALSE;
+
         }
+
         return TRUE;
 
     }
@@ -128,10 +156,13 @@ interface Write {
 class WriteData implements Write {
 
     public $feedbackText;
+
     public $connection;
 
     public function __construct($connection) {
+
         $this->connection = $connection;
+
     }
 
     public function insertData($username, $hash) {
@@ -166,8 +197,10 @@ class PasswordHash implements Hash {
      */
 
     public function hashPassword($passwd) {
+
         $hash = password_hash($passwd, PASSWORD_DEFAULT);
         return $hash;
+
     }
 
 }

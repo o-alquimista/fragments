@@ -8,14 +8,15 @@
 
 namespace Fragments\Models\Login;
 
-use Fragments\Utility\InputValidation\{UsernameValidation, PasswordValidation};
 use Fragments\Utility\Feedback\Feedback;
 use Fragments\Utility\Session\SessionID;
 use Fragments\Utility\SessionTools\SessionData;
 
 interface FormValidationInterface {
 
-    public function validate($username, $passwd);
+    public function validate();
+    public function validateUsername();
+    public function validatePassword();
 
 }
 
@@ -28,31 +29,56 @@ class FormValidation implements FormValidationInterface {
 
     public $feedbackText = array();
 
-    public function validate($username, $passwd) {
+    private $username;
 
-        $UsernameValidation = new UsernameValidation;
-        $PasswordValidation = new PasswordValidation;
+    private $passwd;
 
-        if ($UsernameValidation->isEmpty($username) === TRUE) {
+    public function __construct($username, $passwd) {
+
+        $this->username = $username;
+        $this->passwd = $passwd;
+
+    }
+
+    public function validate() {
+
+        $validationUsername = $this->validateUsername();
+        $validationPassword = $this->validatePassword();
+
+        if ($validationUsername && $validationPassword === TRUE) {
+
+            return TRUE;
+
+        }
+
+        return FALSE;
+
+    }
+
+    public function validateUsername() {
+
+        if (empty($this->username)) {
+
             $feedbackMsg = Feedback::get('warning', 'FEEDBACK_USERNAME_EMPTY');
             $this->feedbackText[] = $feedbackMsg;
+
+            return FALSE;
+
         }
 
-        if ($PasswordValidation->isEmpty($passwd) === TRUE) {
+        return TRUE;
+
+    }
+
+    public function validatePassword() {
+
+        if (empty($this->passwd)) {
+
             $feedbackMsg = Feedback::get('warning', 'FEEDBACK_PASSWORD_EMPTY');
             $this->feedbackText[] = $feedbackMsg;
-        }
 
-        /*
-         * The following foreach will cause validate() to return
-         * FALSE if any of the array's entries contain
-         * a feedback message
-         */
+            return FALSE;
 
-        foreach ($this->feedbackText as $entry) {
-            if (!is_null($entry)) {
-                return FALSE;
-            }
         }
 
         return TRUE;
@@ -70,10 +96,13 @@ interface UserExistsInterface {
 class UserExists implements UserExistsInterface {
 
     public $feedbackText;
+
     public $connection;
 
     public function __construct($connection) {
+
         $this->connection = $connection;
+
     }
 
     public function isUserRegistered($username) {
@@ -88,10 +117,13 @@ class UserExists implements UserExistsInterface {
         $stmt->execute();
 
         if ($stmt->fetchColumn() == 0) {
+
             $feedbackMsg = Feedback::get('warning', 'FEEDBACK_NOT_REGISTERED');
             $this->feedbackText = $feedbackMsg;
             return FALSE;
+
         }
+
         return TRUE;
 
     }
@@ -107,10 +139,13 @@ interface PasswordVerifyInterface {
 class PasswordVerify implements PasswordVerifyInterface {
 
     public $feedbackText;
+
     public $connection;
 
     public function __construct($connection) {
+
         $this->connection = $connection;
+
     }
 
     public function verifyPassword($username, $passwd) {
@@ -126,14 +161,19 @@ class PasswordVerify implements PasswordVerifyInterface {
         $stmt->execute();
 
         while ($result = $stmt->fetchObject()) {
+
             $hash = $result->hash;
+
         }
 
         if (!password_verify($passwd, $hash)) {
+
             $feedbackMsg = Feedback::get('warning', 'FEEDBACK_INCORRECT_PASSWD');
             $this->feedbackText = $feedbackMsg;
             return FALSE;
+
         }
+
         return TRUE;
 
     }
@@ -149,10 +189,13 @@ interface AuthenticationInterface {
 class Authentication implements AuthenticationInterface {
 
     public $feedbackText;
+
     public $connection;
 
     public function __construct($connection) {
+
         $this->connection = $connection;
+
     }
 
     public function setSessionVariables($username) {
@@ -175,8 +218,10 @@ class Authentication implements AuthenticationInterface {
         SessionID::regenerate();
 
         while ($result = $stmt->fetchObject()) {
+
             SessionData::set('login', '');
             SessionData::set('username', $result->username);
+
         }
 
     }

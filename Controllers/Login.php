@@ -18,14 +18,28 @@ use Fragments\Models\Login\{FormValidation, UserExists,
 
 interface LoginInterface {
 
-    public function login($username, $passwd);
+    public function renderForm();
+    public function startLogin();
+    public function login();
 
 }
 
 class Login implements LoginInterface {
 
     public $feedbackText = array();
+
     private $connection;
+
+    private $username;
+
+    private $passwd;
+
+    public function __construct() {
+
+        $this->username = FilterInput::clean(ServerRequest::post('username'));
+        $this->passwd = ServerRequest::post('passwd');
+
+    }
 
     public function renderForm() {
 
@@ -40,10 +54,7 @@ class Login implements LoginInterface {
 
     public function startLogin() {
 
-        $username = FilterInput::clean(ServerRequest::post('username'));
-        $passwd = ServerRequest::post('passwd');
-
-        $status = $this->login($username, $passwd);
+        $status = $this->login();
 
         if ($status === TRUE) {
 
@@ -55,7 +66,7 @@ class Login implements LoginInterface {
 
     }
 
-    public function login($username, $passwd) {
+    public function login() {
 
         /*
          * We call the database connection class to
@@ -67,29 +78,44 @@ class Login implements LoginInterface {
         $this->connection = $connect->getConnection();
 
         // Input validation
-        $formValidation = new FormValidation;
-        if ($formValidation->validate($username, $passwd) === FALSE) {
-            $this->feedbackText = $formValidation->feedbackText;
+        $formValidation = new FormValidation($this->username, $this->passwd);
+        if ($formValidation->validate() === FALSE) {
+
+            /*
+             * Object $formValidation gives us an array of
+             * feedback messages. We must merge that with the
+             * local array.
+             */
+
+            $this->feedbackText = array_merge(
+                $this->feedbackText,
+                $formValidation->feedbackText
+            );
             return FALSE;
+
         }
 
         // Is user already registered?
         $checkExists = new UserExists($this->connection);
-        if ($checkExists->isUserRegistered($username) === FALSE) {
+        if ($checkExists->isUserRegistered($this->username) === FALSE) {
+
             $this->feedbackText[] = $checkExists->feedbackText;
             return FALSE;
+
         }
 
         // Password verification
         $checkPassword = new PasswordVerify($this->connection);
-        if ($checkPassword->verifyPassword($username, $passwd) === FALSE) {
+        if ($checkPassword->verifyPassword($this->username, $this->passwd) === FALSE) {
+
             $this->feedbackText[] = $checkPassword->feedbackText;
             return FALSE;
+
         }
 
         // Authenticate
         $authentication = new Authentication($this->connection);
-        $authentication->setSessionVariables($username);
+        $authentication->setSessionVariables($this->username);
         return TRUE;
 
     }
