@@ -10,14 +10,12 @@
 
 require '../Utility/Autoloading.php';
 
-use Fragments\Utility\Routing\{PathFinder, Router};
 use Fragments\Utility\Autoloading\Autoload;
+use Fragments\Utility\Routing\Router;
 
 new Autoload;
 
-$path = new PathFinder;
-$router = new Router($path);
-
+$router = new Router;
 $router->interpreter();
 
 ?>
