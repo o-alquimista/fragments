@@ -22,13 +22,17 @@ interface Routing {
 
 class Router implements Routing {
 
-    /*
-     * FIXME: catch likely developer errors with exceptions
-     */
-
     private $uri;
     private $id;
+
+    /*
+     * Property $routes is where you write
+     * new routes, associated with a controller:
+     * 'controller_name' => 'URI'
+     */
+
     private $routes = array(
+        'Index' => '/',
         'Login' => '/login',
         'Register' => '/register',
     );
@@ -93,17 +97,23 @@ class RouteControl implements Routing {
          * Method interpreter() will determine
          * which controller the request is about,
          * and call the appropriate action controller.
+         *
+         * When a new route is created, the associated
+         * controller check must be inserted here in
+         * another 'elseif'.
          */
 
-        if ($this->controller === 'Login') {
+        if ($this->controller === 'Index') {
 
-            $loginRoute = new LoginRoute;
-            $loginRoute->actionHandler();
+            new IndexRoute;
 
-        } elseif ($this->controller === 'Register') {
+        } elseif ($this->controller == 'Login') {
 
-            $registerRoute = new RegisterRoute;
-            $registerRoute->actionHandler();
+            new LoginRoute;
+
+        } elseif ($this->controller == 'Register') {
+
+            new RegisterRoute;
 
         }
 
@@ -117,7 +127,33 @@ interface RouteAction {
 
 }
 
-class LoginRoute implements RouteAction {
+abstract class ActionHandler implements RouteAction {
+
+    /*
+     * New route classes must be created
+     * whenever a new route is written.
+     */
+
+    public function __construct() {
+
+        $this->actionHandler();
+
+    }
+
+}
+
+class IndexRoute extends ActionHandler {
+
+    public function actionHandler() {
+
+        $index = new Index;
+        $index->renderPage();
+
+    }
+
+}
+
+class LoginRoute extends ActionHandler {
 
     public function actionHandler() {
 
@@ -137,7 +173,7 @@ class LoginRoute implements RouteAction {
 
 }
 
-class RegisterRoute implements RouteAction {
+class RegisterRoute extends ActionHandler {
 
     public function actionHandler() {
 
