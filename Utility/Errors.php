@@ -39,7 +39,6 @@ class HardException extends Exception implements HardErrors {
         $errDetailed = "Error on line " . $this->getLine() . " at "
             . $this->getFile() . " >> " . "'" . $this->getMessage()
             . "'" . " is not a valid argument for init().";
-
         error_log($errDetailed);
 
         return $this->errFeedback;
@@ -68,7 +67,6 @@ class SoftException extends Exception implements SoftErrors {
         $errDetailed = "Error on line " . $this->getLine() . " at " .
             $this->getFile() . " >> " . "'" . $this->getMessage() . "'" .
             " is an invalid feedback type. A neutral type has been used instead";
-
         error_log($errDetailed);
 
     }

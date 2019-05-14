@@ -23,6 +23,7 @@ interface Routing {
 class Router implements Routing {
 
     private $uri;
+
     private $id;
 
     /*

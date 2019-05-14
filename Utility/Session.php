@@ -174,8 +174,11 @@ class Session extends SessionInit implements SessionStart {
     private static function isSetNewSessionID() {
 
         if (NULL === SessionData::get('new_session_id')) {
+
             return FALSE;
+
         }
+
         return TRUE;
 
     }

@@ -22,10 +22,14 @@ interface Connection {
 
 class DatabaseConnection implements Connection {
 
-    private $username = "";
-    private $password = "";
+    private $username = "alq";
+
+    private $password = "alq";
+
     private $host = "localhost";
+
     private $database = "fragments";
+
     protected $connection;
 
     public function __construct() {
@@ -47,12 +51,10 @@ class DatabaseConnection implements Connection {
              */
 
             $errDetailed = $err->getMessage() . ' at line ' . $err->getLine();
-
             error_log($errDetailed);
 
             $errFeedback = 'Something went wrong. This event will be reported. Error code: '
                 . $err->getCode();
-
             echo $errFeedback;
 
             exit;
