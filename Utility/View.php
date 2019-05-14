@@ -44,6 +44,22 @@ abstract class View implements ViewTools {
 
 }
 
+class IndexView extends View {
+
+    public function __construct() {
+
+        // This overrides the abstract constructor
+
+    }
+
+    public function render() {
+
+        require '../Views/Index.php';
+
+    }
+
+}
+
 class LoginView extends View {
 
     public function render() {

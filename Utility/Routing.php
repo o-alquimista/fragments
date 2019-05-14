@@ -9,6 +9,7 @@
 
 namespace Fragments\Utility\Routing;
 
+use Fragments\Controllers\Index\Index;
 use Fragments\Controllers\Login\Login;
 use Fragments\Controllers\Register\Register;
 use Fragments\Utility\Requests\ServerRequest;
