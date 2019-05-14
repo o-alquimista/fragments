@@ -21,6 +21,13 @@ abstract class View implements ViewTools {
 
     public function __construct($feedback) {
 
+        /*
+         * If the view does not display
+         * any feedback messages, you can
+         * override this constructor at the
+         * respective View class below.
+         */
+
         $this->feedbackText = $feedback;
 
     }
