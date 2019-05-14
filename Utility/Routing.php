@@ -13,87 +13,96 @@ use Fragments\Controllers\Login\Login;
 use Fragments\Controllers\Register\Register;
 use Fragments\Utility\Requests\ServerRequest;
 
-interface Path {
-
-    public function getPath();
-
-}
-
-class PathFinder implements Path {
-
-    public $fragments = array();
-
-    public function __construct() {
-
-        /*
-         * Grab the URI and separate it
-         * into multiple parts, so we
-         * can determine what controller
-         * to call and what action to
-         * perform.
-         */
-
-        $uri = ServerRequest::getURI();
-        $exploded = explode('/', $uri);
-        $parts = array_filter($exploded, 'strlen');
-        $this->fragments = $parts;
-
-    }
-
-    public function getPath() {
-
-        return $this->fragments;
-
-    }
-
-}
-
 interface Routing {
 
     public function interpreter();
 
 }
 
-class Router {
+class Router implements Routing {
 
-    private $path = array();
-    private $controller;
-    private $action;
+    /*
+     * FIXME: catch likely developer errors with exceptions
+     */
 
-    public function __construct($path) {
+    private $uri;
+    private $id;
+    private $routes = array(
+        'Login' => '/login',
+        'Register' => '/register',
+    );
 
-        $this->path = $path->getPath();
+    public function __construct() {
+
+        $uri = ServerRequest::getURI();
+        $this->uri = $uri;
 
     }
 
     public function interpreter() {
 
         /*
-         * Method interpreter() checks which controller
-         * the request is about, and then calls the
-         * action handler to check the action that
-         * follows it (if any).
-         *
-         * FIXME: the multiple conditional checks in this
-         * file should be replaced with a more OOP approach
+         * The foreach saves the array key of
+         * the matching route, if any.
          */
 
-        $this->controller = array_shift($this->path);
-        $this->action = array_shift($this->path);
+        foreach ($this->routes as $id => $route) {
 
-        if ($this->controller == 'login') {
+            if ($this->uri === $route) {
 
-            $route = new LoginAction($this->action);
-            $route->handler();
+                $this->id = $id;
 
-        } elseif ($this->controller == 'register') {
+            }
 
-            $route = new RegisterAction($this->action);
-            $route->handler();
+        }
 
-        } else {
+        /*
+         * Now we check if the foreach saved an
+         * array key in there. RouteControl
+         * will be initiated if it's not empty.
+         */
 
-            echo 'Error 404: not found';
+        if (is_null($this->id)) {
+
+            echo "Error 404: not found";
+            return;
+
+        }
+
+        $routeControl = new RouteControl($this->id);
+        $routeControl->interpreter();
+
+    }
+
+}
+
+class RouteControl implements Routing {
+
+    protected $controller;
+
+    public function __construct($id) {
+
+        $this->controller = $id;
+
+    }
+
+    public function interpreter() {
+
+        /*
+         * Method interpreter() will determine
+         * which controller the request is about,
+         * and call the appropriate action controller.
+         */
+
+        if ($this->controller === 'Login') {
+
+            $loginRoute = new LoginRoute;
+            $loginRoute->actionHandler();
+
+        } elseif ($this->controller === 'Register') {
+
+            $registerRoute = new RegisterRoute;
+            $registerRoute->actionHandler();
 
         }
 
@@ -101,49 +110,25 @@ class Router {
 
 }
 
-interface ActionInterface {
+interface RouteAction {
 
-    public function handler();
-
-}
-
-abstract class ActionHandler implements ActionInterface {
-
-    /*
-     * This is the action handler. It will
-     * determine what the action is and
-     * execute it on the instance. If no
-     * action is specified, the default action
-     * for the view in question is executed.
-     */
-
-    protected $action;
-
-    public function __construct($action) {
-
-        $this->action = $action;
-
-    }
+    public function actionHandler();
 
 }
 
-class LoginAction extends ActionHandler {
+class LoginRoute implements RouteAction {
 
-    public function handler() {
+    public function actionHandler() {
 
-        if (empty($this->action)) {
+        $login = new Login;
 
-            $login = new Login;
-            $login->renderForm();
+        if (ServerRequest::requestMethod() == 'POST') {
 
-        } elseif ($this->action == 'post') {
-
-            $login = new Login;
             $login->startLogin();
 
         } else {
 
-            echo 'Error 404: not found';
+            $login->renderForm();
 
         }
 
@@ -151,23 +136,19 @@ class LoginAction extends ActionHandler {
 
 }
 
-class RegisterAction extends ActionHandler {
+class RegisterRoute implements RouteAction {
 
-    public function handler() {
+    public function actionHandler() {
 
-        if (empty($this->action)) {
+        $register = new Register;
 
-            $register = new Register;
-            $register->renderForm();
+        if (ServerRequest::requestMethod() == 'POST') {
 
-        } elseif ($this->action == 'post') {
-
-            $register = new Register;
             $register->startRegister();
 
         } else {
 
-            echo 'Error 404: not found';
+            $register->renderForm();
 
         }
 
