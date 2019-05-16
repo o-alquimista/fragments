@@ -3,24 +3,16 @@
 /**
  * Router Utility
  *
- * Determines what controller will be in charge
+ * Determines the controller and action requested
  *
  */
 
 namespace Fragments\Utility\Routing;
 
-use Fragments\Controllers\Index\Index;
-use Fragments\Controllers\Login\Login;
-use Fragments\Controllers\Register\Register;
+use Fragments\Controllers;
 use Fragments\Utility\Requests\ServerRequest;
 
-interface Routing {
-
-    public function interpreter();
-
-}
-
-class Router implements Routing {
+class Router {
 
     private $uri;
 
@@ -48,7 +40,7 @@ class Router implements Routing {
     public function interpreter() {
 
         /*
-         * The foreach saves the array key of
+         * The foreach saves the route ID of
          * the matching route, if any.
          */
 
@@ -63,9 +55,9 @@ class Router implements Routing {
         }
 
         /*
-         * Now we check if the foreach saved an
-         * array key in there. RouteControl
-         * will be initiated if it's not empty.
+         * Now we check if the foreach saved a route
+         * ID in there. RouteControl will be initiated
+         * if it's not empty.
          */
 
         if (is_null($this->id)) {
@@ -82,7 +74,7 @@ class Router implements Routing {
 
 }
 
-class RouteControl implements Routing {
+class RouteControl {
 
     protected $controller;
 
@@ -147,7 +139,7 @@ class IndexRoute extends ActionHandler {
 
     public function actionHandler() {
 
-        $index = new Index;
+        $index = new Controllers\Index\Index;
         $index->renderPage();
 
     }
@@ -158,7 +150,7 @@ class LoginRoute extends ActionHandler {
 
     public function actionHandler() {
 
-        $login = new Login;
+        $login = new Controllers\Login\Login;
 
         if (ServerRequest::requestMethod() == 'POST') {
 
@@ -178,7 +170,7 @@ class RegisterRoute extends ActionHandler {
 
     public function actionHandler() {
 
-        $register = new Register;
+        $register = new Controllers\Register\Register;
 
         if (ServerRequest::requestMethod() == 'POST') {
 
