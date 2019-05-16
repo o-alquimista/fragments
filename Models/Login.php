@@ -9,10 +9,9 @@
 namespace Fragments\Models\Login;
 
 use Fragments\Utility\Connection\DatabaseConnection;
-use Fragments\Utility\Feedback\Feedback;
-use Fragments\Utility\Filter\FilterInput;
+use Fragments\Utility\Feedback\WarningFeedback;
 use Fragments\Utility\Requests\ServerRequest;
-use Fragments\Utility\Session\SessionID;
+use Fragments\Utility\Session\RegenerateSessionID;
 use Fragments\Utility\SessionTools\SessionData;
 
 class LoginService {
@@ -64,8 +63,8 @@ class LoginService {
 
         if (empty($this->username)) {
 
-            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_USERNAME_EMPTY');
-            $this->feedbackText[] = $feedbackMsg;
+            $feedback = new WarningFeedback('FEEDBACK_USERNAME_EMPTY');
+            $this->feedbackText[] = $feedback->get();
 
             return FALSE;
 
@@ -79,8 +78,8 @@ class LoginService {
 
         if (empty($this->passwd)) {
 
-            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_PASSWORD_EMPTY');
-            $this->feedbackText[] = $feedbackMsg;
+            $feedback = new WarningFeedback('FEEDBACK_PASSWORD_EMPTY');
+            $this->feedbackText[] = $feedback->get();
 
             return FALSE;
 
@@ -110,8 +109,8 @@ class LoginService {
 
         if ($stmt->fetchColumn() == 0) {
 
-            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_NOT_REGISTERED');
-            $this->feedbackText[] = $feedbackMsg;
+            $feedback = new WarningFeedback('FEEDBACK_NOT_REGISTERED');
+            $this->feedbackText[] = $feedback->get();
 
             return FALSE;
 
@@ -137,8 +136,8 @@ class LoginService {
 
         if (!password_verify($this->passwd, $hash)) {
 
-            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_INCORRECT_PASSWD');
-            $this->feedbackText[] = $feedbackMsg;
+            $feedback = new WarningFeedback('FEEDBACK_INCORRECT_PASSWD');
+            $this->feedbackText[] = $feedback->get();
 
             return FALSE;
 
@@ -156,7 +155,7 @@ class LoginService {
         $stmt->bindParam(":username", $this->username);
         $stmt->execute();
 
-        SessionID::regenerate();
+        new RegenerateSessionID;
 
         while ($result = $stmt->fetchObject()) {
 
