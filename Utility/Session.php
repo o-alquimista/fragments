@@ -13,7 +13,7 @@
 namespace Fragments\Utility\Session;
 
 use Fragments\Utility\SessionTools\SessionData;
-use Fragments\Utility\Errors\{SoftException};
+use Fragments\Utility\Errors\SoftException;
 
 abstract class SessionInit {
 
