@@ -9,8 +9,7 @@
 namespace Fragments\Models\Register;
 
 use Fragments\Utility\Connection\DatabaseConnection;
-use Fragments\Utility\Feedback\Feedback;
-use Fragments\Utility\Filter\FilterInput;
+use Fragments\Utility\Feedback\{WarningFeedback, SuccessFeedback};
 use Fragments\Utility\Requests\ServerRequest;
 
 class RegisterService {
@@ -62,8 +61,8 @@ class RegisterService {
 
         if (empty($this->username)) {
 
-            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_USERNAME_EMPTY');
-            $this->feedbackText[] = $feedbackMsg;
+            $feedback = new WarningFeedback('FEEDBACK_USERNAME_EMPTY');
+            $this->feedbackText[] = $feedback->get();
 
             return FALSE;
 
@@ -71,8 +70,8 @@ class RegisterService {
 
         if (strlen($this->username) < 4) {
 
-            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_USERNAME_LENGTH');
-            $this->feedbackText[] = $feedbackMsg;
+            $feedback = new WarningFeedback('FEEDBACK_USERNAME_LENGTH');
+            $this->feedbackText[] = $feedback->get();
 
             return FALSE;
 
@@ -86,8 +85,8 @@ class RegisterService {
 
         if (empty($this->passwd)) {
 
-            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_PASSWORD_EMPTY');
-            $this->feedbackText[] = $feedbackMsg;
+            $feedback = new WarningFeedback('FEEDBACK_PASSWORD_EMPTY');
+            $this->feedbackText[] = $feedback->get();
 
             return FALSE;
 
@@ -95,8 +94,8 @@ class RegisterService {
 
         if (strlen($this->passwd) <= 7) {
 
-            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_PASSWORD_LENGTH');
-            $this->feedbackText[] = $feedbackMsg;
+            $feedback = new WarningFeedback('FEEDBACK_PASSWORD_LENGTH');
+            $this->feedbackText[] = $feedback->get();
 
             return FALSE;
 
@@ -126,8 +125,8 @@ class RegisterService {
 
         if ($stmt->fetchColumn() >= 1) {
 
-            $feedbackMsg = Feedback::get('warning', 'FEEDBACK_USERNAME_TAKEN');
-            $this->feedbackText[] = $feedbackMsg;
+            $feedback = new WarningFeedback('FEEDBACK_USERNAME_TAKEN');
+            $this->feedbackText[] = $feedback->get();
 
             return FALSE;
 
@@ -154,8 +153,8 @@ class RegisterService {
         $stmt->bindParam(":hash", $safePassword);
         $stmt->execute();
 
-        $feedbackMsg = Feedback::get('success', 'FEEDBACK_REGISTRATION_COMPLETE');
-        $this->feedbackText[] = $feedbackMsg;
+        $feedback = new SuccessFeedback('FEEDBACK_REGISTRATION_COMPLETE');
+        $this->feedbackText[] = $feedback->get();
 
     }
 
