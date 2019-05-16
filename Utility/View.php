@@ -8,14 +8,7 @@
 
 namespace Fragments\Utility\View;
 
-interface ViewTools {
-
-    public function render();
-    public function renderFeedback();
-
-}
-
-abstract class View implements ViewTools {
+abstract class View {
 
     private $feedbackText = array();
 
@@ -34,13 +27,6 @@ abstract class View implements ViewTools {
 
     public function renderFeedback() {
 
-        /*
-         * Method renderFeedback() echoes all
-         * feedback messages contained in the
-         * $feedbackText array. This should be
-         * called at the view.
-         */
-
         foreach ($this->feedbackText as $text) {
 
             echo $text;
@@ -55,7 +41,7 @@ class IndexView extends View {
 
     public function __construct() {
 
-        // This overrides the abstract constructor
+        // This overrides the abstract class constructor
 
     }
 
