@@ -66,15 +66,17 @@ abstract class Feedback {
 
 class DangerFeedback extends Feedback {
 
+    protected $feedbackType = 'danger';
+
     protected $feedbackText = array(
         'EXCEPTION_SESSION_EXPIRED' => 'This session has expired',
     );
 
-    protected $feedbackType = 'danger';
-
 }
 
 class WarningFeedback extends Feedback {
+
+    protected $feedbackType = 'warning';
 
     protected $feedbackText = array(
         'FEEDBACK_USERNAME_EMPTY' => 'Username was left empty',
@@ -86,17 +88,15 @@ class WarningFeedback extends Feedback {
         'FEEDBACK_USERNAME_TAKEN' => 'Username already taken',
     );
 
-    protected $feedbackType = 'warning';
-
 }
 
 class SuccessFeedback extends Feedback {
 
+    protected $feedbackType = 'success';
+
     protected $feedbackText = array(
         'FEEDBACK_REGISTRATION_COMPLETE' => 'Registration complete',
     );
-
-    protected $feedbackType = 'success';
 
 }
 
