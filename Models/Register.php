@@ -8,33 +8,40 @@
 
 namespace Fragments\Models\Register;
 
+use Fragments\Utility\Connection\DatabaseConnection;
 use Fragments\Utility\Feedback\Feedback;
+use Fragments\Utility\Filter\FilterInput;
+use Fragments\Utility\Requests\ServerRequest;
 
-interface FormValidationInterface {
+class RegisterService {
 
-    public function validate();
-    public function validateUsername();
-    public function validatePassword();
-
-}
-
-class FormValidation implements FormValidationInterface {
-
-    /*
-     * property $feedbackText holds feedback messages and
-     * is returned to the controller
+    /**
+     * Holds feedback messages
+     * @var array $feedbackText
      */
 
     public $feedbackText = array();
+
+    /**
+     * Holds the database connection object
+     * @var object $connection
+     */
+
+    private $connection;
 
     private $username;
 
     private $passwd;
 
-    public function __construct($username, $passwd) {
+    private $hashedPassword;
 
-        $this->username = $username;
-        $this->passwd = $passwd;
+    public function __construct() {
+
+        $connection = new DatabaseConnection;
+        $this->connection = $connection->getConnection();
+
+        $this->username = FilterInput::clean(ServerRequest::post('username'));
+        $this->passwd = ServerRequest::post('passwd');
 
     }
 
@@ -53,7 +60,7 @@ class FormValidation implements FormValidationInterface {
 
     }
 
-    public function validateUsername() {
+    private function validateUsername() {
 
         if (empty($this->username)) {
 
@@ -77,7 +84,7 @@ class FormValidation implements FormValidationInterface {
 
     }
 
-    public function validatePassword() {
+    private function validatePassword() {
 
         if (empty($this->passwd)) {
 
@@ -101,42 +108,19 @@ class FormValidation implements FormValidationInterface {
 
     }
 
-}
+    public function isUsernameAvailable() {
 
-interface UsernameAvailableInterface {
-
-    public function isUsernameAvailable($username);
-
-}
-
-class UsernameAvailable implements UsernameAvailableInterface {
-
-    public $feedbackText;
-
-    public $connection;
-
-    public function __construct($connection) {
-
-        $this->connection = $connection;
-
-    }
-
-    public function isUsernameAvailable($username) {
-
-        /*
-         * Method isUsernameAvailable() returns FALSE if
-         * a row matching $username was found, meaning that
-         * the username is not available
-         */
-
-        $stmt = $this->connection->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
-        $stmt->bindParam(":username", $username);
+        $stmt = $this->connection->prepare(
+            "SELECT COUNT(*) FROM users WHERE username = :username"
+        );
+        $stmt->bindParam(":username", $this->username);
         $stmt->execute();
 
         if ($stmt->fetchColumn() >= 1) {
 
             $feedbackMsg = Feedback::get('warning', 'FEEDBACK_USERNAME_TAKEN');
-            $this->feedbackText = $feedbackMsg;
+            $this->feedbackText[] = $feedbackMsg;
+
             return FALSE;
 
         }
@@ -145,61 +129,23 @@ class UsernameAvailable implements UsernameAvailableInterface {
 
     }
 
-}
+    public function hashPassword() {
 
-interface Write {
-
-    public function insertData($username, $hash);
-
-}
-
-class WriteData implements Write {
-
-    public $feedbackText;
-
-    public $connection;
-
-    public function __construct($connection) {
-
-        $this->connection = $connection;
+        $hash = password_hash($this->passwd, PASSWORD_DEFAULT);
+        $this->hashedPassword = $hash;
 
     }
 
-    public function insertData($username, $hash) {
-
-        /*
-         * Method insertData() writes the form data to the database
-         */
+    public function insertData() {
 
         $stmt = $this->connection->prepare("INSERT INTO users (username, hash)
             VALUES (:username, :hash)");
-        $stmt->bindParam(":username", $username);
-        $stmt->bindParam(":hash", $hash);
+        $stmt->bindParam(":username", $this->username);
+        $stmt->bindParam(":hash", $this->hashedPassword);
         $stmt->execute();
 
         $feedbackMsg = Feedback::get('success', 'FEEDBACK_REGISTRATION_COMPLETE');
-        $this->feedbackText = $feedbackMsg;
-
-    }
-
-}
-
-interface Hash {
-
-    public function hashPassword($passwd);
-
-}
-
-class PasswordHash implements Hash {
-
-    /*
-     * Method hashPassword() returns a hash of $passwd
-     */
-
-    public function hashPassword($passwd) {
-
-        $hash = password_hash($passwd, PASSWORD_DEFAULT);
-        return $hash;
+        $this->feedbackText[] = $feedbackMsg;
 
     }
 

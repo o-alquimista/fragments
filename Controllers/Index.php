@@ -10,13 +10,7 @@ namespace Fragments\Controllers\Index;
 
 use Fragments\Utility\View\IndexView;
 
-interface IndexInterface {
-
-    public function renderPage();
-
-}
-
-class Index implements IndexInterface {
+class Index {
 
     public function renderPage() {
 
