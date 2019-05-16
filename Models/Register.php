@@ -33,8 +33,6 @@ class RegisterService {
 
     private $passwd;
 
-    private $hashedPassword;
-
     public function __construct() {
 
         $connection = new DatabaseConnection;
@@ -45,7 +43,7 @@ class RegisterService {
 
     }
 
-    public function validate() {
+    public function formValidate() {
 
         $validationUsername = $this->validateUsername();
         $validationPassword = $this->validatePassword();
@@ -129,19 +127,21 @@ class RegisterService {
 
     }
 
-    public function hashPassword() {
+    private function hashPassword() {
 
         $hash = password_hash($this->passwd, PASSWORD_DEFAULT);
-        $this->hashedPassword = $hash;
+        return $hash;
 
     }
 
     public function insertData() {
 
+        $safePassword = $this->hashPassword();
+
         $stmt = $this->connection->prepare("INSERT INTO users (username, hash)
             VALUES (:username, :hash)");
         $stmt->bindParam(":username", $this->username);
-        $stmt->bindParam(":hash", $this->hashedPassword);
+        $stmt->bindParam(":hash", $safePassword);
         $stmt->execute();
 
         $feedbackMsg = Feedback::get('success', 'FEEDBACK_REGISTRATION_COMPLETE');

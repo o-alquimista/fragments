@@ -59,7 +59,7 @@ class Register {
 
         $this->register = new RegisterService;
 
-        $formValidation = $this->register->validate();
+        $formValidation = $this->register->formValidate();
         if ($formValidation === FALSE) {
 
             $this->getFeedback();
@@ -77,7 +77,6 @@ class Register {
 
         }
 
-        $this->register->hashPassword();
         $this->register->insertData();
 
         $this->getFeedback();

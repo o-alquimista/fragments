@@ -66,7 +66,7 @@ class Login {
 
         $this->login = new LoginService;
 
-        $formValidation = $this->login->validate();
+        $formValidation = $this->login->formValidate();
         if ($formValidation === FALSE) {
 
             $this->getFeedback();

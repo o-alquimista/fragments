@@ -45,7 +45,7 @@ class LoginService {
 
     }
 
-    public function validate() {
+    public function formValidate() {
 
         $validationUsername = $this->validateUsername();
         $validationPassword = $this->validatePassword();
