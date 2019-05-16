@@ -10,10 +10,10 @@
 
 require '../Utility/Autoloading.php';
 
-use Fragments\Utility\Autoloading\Autoload;
+use Fragments\Utility\Autoloading\Autoloader;
 use Fragments\Utility\Routing\Router;
 
-new Autoload;
+new Autoloader;
 
 $router = new Router;
 $router->interpreter();
