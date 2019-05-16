@@ -13,68 +13,57 @@ namespace Fragments\Utility\Errors;
 use Exception;
 use Fragments\Utility\Feedback\Feedback;
 
-interface HardErrors {
+/**
+ * Hard Exceptions
+ *
+ * They are used for critical errors where
+ * the application would not function properly if
+ * execution were to continue.
+ */
 
-    public function invalidInitParameter();
+class HardException extends Exception {
 
-}
-
-class HardException extends Exception implements HardErrors {
-
-    /*
-     * Hard exceptions are used for critical errors where
-     * the application would not function properly if
-     * execution were to continue.
-     */
-
-    private $errFeedback = 'Something went wrong. This event will be reported.';
+    private $userFeedback = 'Something went wrong. This event will be reported.';
 
     public function invalidInitParameter() {
 
-        /*
-         * $errFeedback is displayed to the user
-         * $errDetailed is logged for the administrator
-         */
-
-        $errDetailed = "Error on line " . $this->getLine() . " at "
+        $technicalError = "Error on line " . $this->getLine() . " at "
             . $this->getFile() . " >> " . "'" . $this->getMessage()
             . "'" . " is not a valid argument for init().";
-        error_log($errDetailed);
 
-        return $this->errFeedback;
+        error_log($technicalError);
+
+        return $this->userFeedback;
 
     }
 
 }
 
-interface SoftErrors {
+/**
+ * Soft Exceptions
+ *
+ * They are used for events that are not critical to the successful
+ * execution of the program.
+ * In some cases, the program will fallback to a predefined value.
+ */
 
-    public function invalidFeedbackType();
-    public function sessionExpired();
-
-}
-
-class SoftException extends Exception implements SoftErrors {
-
-    /*
-     * Soft exceptions are not critical to the proper
-     * execution of code. In some cases, a default
-     * action is taken
-     */
+class SoftException extends Exception {
 
     public function invalidFeedbackType() {
 
-        $errDetailed = "Error on line " . $this->getLine() . " at " .
+        $technicalError = "Error on line " . $this->getLine() . " at " .
             $this->getFile() . " >> " . "'" . $this->getMessage() . "'" .
             " is an invalid feedback type. A neutral type has been used instead";
-        error_log($errDetailed);
+
+        error_log($technicalError);
 
     }
 
     public function sessionExpired() {
 
-        $errFeedback = Feedback::get('danger', 'EXCEPTION_SESSION_EXPIRED');
-        return $errFeedback;
+        $userFeedback = Feedback::get('danger', 'EXCEPTION_SESSION_EXPIRED');
+
+        return $userFeedback;
 
     }
 
