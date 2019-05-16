@@ -11,35 +11,15 @@
 
 namespace Fragments\Utility\Requests;
 
-interface Requests {
-
-    public static function getURI();
-    public static function requestMethod();
-    public static function post($value);
-    public static function get($value);
-
-}
-
-class ServerRequest implements Requests {
+class ServerRequest {
 
     public static function getURI() {
-
-        /*
-         * Method getURI() returns the URI used
-         * to access the current page, for
-         * example: "/dashboard/settings"
-         */
 
         return $_SERVER['REQUEST_URI'];
 
     }
 
     public static function requestMethod() {
-
-        /*
-         * Method getRequestType() returns the
-         * request method
-         */
 
         return $_SERVER['REQUEST_METHOD'];
 
