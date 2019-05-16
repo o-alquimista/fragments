@@ -9,8 +9,8 @@
  */
 
 /*
- * FIXME: Create separate templates for the HTML
- * parts that always repeat
+ * FIXME: Create template files for, say, header and footer,
+ * then put everything together and render it.
  */
 
 ?>

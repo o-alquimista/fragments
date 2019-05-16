@@ -30,14 +30,11 @@ $this->renderFeedback();
 
     <form method='post' action='/login'>
 
-      <input type='text' class='form-input' name='username' minlength='5'
-        placeholder='Username' autocapitalize='off' required='required'
-        autofocus='autofocus' />
+      <input type='text' class='form-input' name='username' placeholder='Username'
+        autocapitalize='off' autofocus='autofocus' required='required' />
 
-      <input type='password' class='form-input' name='passwd'
-        placeholder='Password' minlength='8'
-        title='Must be longer than 8 characters' autocapitalize='off'
-        autocomplete='off' required='required' />
+      <input type='password' class='form-input' name='passwd' placeholder='Password'
+        autocapitalize='off' autocomplete='off' required='required' />
 
       <button type='submit' class='form-submit'>
         Sign In
