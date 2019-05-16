@@ -8,28 +8,16 @@
 
 namespace Fragments\Utility\Autoloading;
 
-interface Autoloader {
+class Autoloader {
 
-    public function prepare($class);
-
-}
-
-class Autoload implements Autoloader {
+    /**
+     * The path to the class file
+     * @var string $path
+     */
 
     private $path;
 
     public function __construct() {
-
-        $this->register();
-
-    }
-
-    private function register() {
-
-        /*
-         * Register the prepare() method as the
-         * autoloader function
-         */
 
         spl_autoload_register(array($this, 'prepare'));
 
@@ -38,22 +26,27 @@ class Autoload implements Autoloader {
     public function prepare($class) {
 
         /*
-         * Turn the fully qualified class name into
-         * an array divided by the namespace
-         * separator.
+         * We must split the fully qualified class name into
+         * multiple pieces before we can manipulate it.
          */
 
         $namespace = explode('\\', $class);
 
-        // Remove first item 'Fragments' from it
+        /*
+         * The first and last items must be removed. They are not necessary to
+         * locate the class files.
+         *
+         * They are 'Fragments', the top-level namespace; and the class name
+         * itself, respectively.
+         */
+
         array_shift($namespace);
 
-        // Remove last item, which is the class name, from it
         array_pop($namespace);
 
         /*
-         * Turn it into a string divided
-         * by the directory separator
+         * Turn the $namespace array into a string,
+         * separating each item with the directory separator.
          */
 
         $namespace = implode('/', $namespace);
