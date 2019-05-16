@@ -5,7 +5,7 @@
  * Session Utility
  *
  * Handles starting a session and regenerating
- * a new session ID, while attempting to avoid
+ * a new session ID while attempting to avoid
  * lost sessions due to unstable connections
  *
  */
@@ -13,85 +13,73 @@
 namespace Fragments\Utility\Session;
 
 use Fragments\Utility\SessionTools\SessionData;
-use Fragments\Utility\Errors\{SoftException, HardException};
+use Fragments\Utility\Errors\{SoftException};
 
 abstract class SessionInit {
 
-    /*
-     * Method init() has two modes: 'strict' and 'unsafe'.
-     *
-     * When it is called with 'strict', session option
-     * 'use_strict_mode' is enabled, blocking all
-     * uninitialized session IDs.
-     *
-     * When it is called with 'unsafe', strict mode
-     * is disabled, allowing us to set an uninitialized ID,
-     * useful for ID regeneration.
-     */
+    protected $options = array(
+        'use_only_cookies' => 1,
+        'use_trans_sid' => 0,
+        'cookie_httponly' => 1,
 
-    protected static function init($mode) {
+        /*
+         * 'cookie_samesite' => 1
+         *
+         * The 'samesite' option support starts
+         * with PHP 7.3
+         */
 
-        $options = array(
-            'use_only_cookies' => 1,
-            'use_trans_sid' => 0,
-            'cookie_httponly' => 1,
+        /*
+         * 'session.cookie_secure' => 1
+         *
+         * The 'cookie_secure' option can only
+         * be enabled when SSL is configured
+         */
+    );
 
-            /*
-             * 'cookie_samesite' => 1
-             *
-             * The 'samesite' option support starts
-             * with PHP 7.3
-             */
+    protected function init() {
 
-            /*
-             * 'session.cookie_secure' => 1
-             *
-             * The 'cookie_secure' option can only
-             * be enabled when SSL is configured
-             */
-        );
-
-        try {
-
-            if ($mode === 'strict') {
-
-                $options['use_strict_mode'] = 1;
-
-            } elseif ($mode === 'unsafe') {
-
-                $options['use_strict_mode'] = 0;
-
-            } else {
-
-                throw new HardException($mode);
-
-            }
-
-        } catch(HardException $err) {
-
-            echo $err->invalidInitParameter();
-
-            exit;
-
-        }
-
-        session_start($options);
+        session_start($this->options);
 
     }
 
 }
 
-interface SessionStart {
+class SessionStrict extends SessionInit {
 
-    public static function start();
+    public function __construct() {
+
+        $this->options['use_strict_mode'] = 1;
+
+        $this->init();
+
+    }
 
 }
 
-class Session extends SessionInit implements SessionStart {
+class SessionUnsafe extends SessionInit {
 
-    public static function start() {
+    public function __construct() {
 
-        self::init('strict');
+        $this->options['use_strict_mode'] = 0;
+
+        $this->init();
+
+    }
+
+}
+
+class Session {
+
+    public function __construct() {
+
+        if (session_status() != PHP_SESSION_NONE) {
+
+            return;
+
+        }
+
+        new SessionStrict;
 
         /*
          * If session is destroyed, this method
@@ -105,40 +93,30 @@ class Session extends SessionInit implements SessionStart {
          * be made.
          */
 
-        $isDestroyed = self::isDestroyed();
+        $isDestroyed = $this->isDestroyed();
         if ($isDestroyed === FALSE) {
             return;
         }
 
-        $isExpired = self::isExpired();
+        $isExpired = $this->isExpired();
         if ($isExpired === TRUE) {
             return;
         }
 
-        $isSetNewSessionID = self::isSetNewSessionID();
+        $isSetNewSessionID = $this->isSetNewSessionID();
         if ($isSetNewSessionID === FALSE) {
             return;
         }
 
-        // Close session
         session_commit();
 
-        // Set ID from session variable 'new_session_id'
         session_id(SessionData::get('new_session_id'));
 
-        // Start session
-        self::init('strict');
+        new SessionStrict;
 
     }
 
-    private static function isDestroyed() {
-
-        /*
-         * If we use isset() here, it will trigger a
-         * fatal error. To work around it, we use
-         * 'NULL === <expression>' to check if the
-         * expression is NULL.
-         */
+    private function isDestroyed() {
 
         if (NULL === SessionData::get('destroyed')) {
             return FALSE;
@@ -147,7 +125,7 @@ class Session extends SessionInit implements SessionStart {
 
     }
 
-    private static function isExpired() {
+    private function isExpired() {
 
         /*
          * Method isExpired() wipes all session variables
@@ -157,21 +135,26 @@ class Session extends SessionInit implements SessionStart {
         try {
 
             if (SessionData::get('destroyed') < time() - 300) {
+
                 SessionData::destroyAll();
+
                 throw new SoftException();
+
             }
+
             return FALSE;
 
         } catch(SoftException $err) {
 
             echo $err->sessionExpired();
+
             return TRUE;
 
         }
 
     }
 
-    private static function isSetNewSessionID() {
+    private function isSetNewSessionID() {
 
         if (NULL === SessionData::get('new_session_id')) {
 
@@ -185,34 +168,23 @@ class Session extends SessionInit implements SessionStart {
 
 }
 
-interface RegenerateID {
+class RegenerateSessionID {
 
-    public static function regenerate();
+    private $newID;
 
-}
+    public function __construct() {
 
-class SessionID extends SessionInit implements RegenerateID {
-
-    /*
-     * Property $newID holds the newly generated session ID
-     */
-
-    private static $newID;
-
-    public static function regenerate() {
-
-        // Generate a new session ID
-        self::createNewID();
+        $this->createNewID();
 
         /*
-         * Set the session variable 'destroyed'
-         * with current timestamp as its value
-         * for the current session
+         * We mark the current session ID as 'destroyed'
+         * and store the current timestamp in this
+         * session variable, so we can count the time
+         * until this session expires.
          */
 
         SessionData::set('destroyed', time());
 
-        // Close current session
         session_commit();
 
         /*
@@ -220,46 +192,38 @@ class SessionID extends SessionInit implements RegenerateID {
          * (uninitialized)
          */
 
-        session_id(self::$newID);
+        session_id($this->newID);
 
-        // Initialize the new ID
-        self::initializeID();
+        $this->initializeID();
 
-        // Destroy unnecessary session variables
-        self::unsetSessionVariables();
+        $this->unsetSessionVariables();
 
     }
 
-    private static function createNewID() {
+    private function createNewID() {
 
-        /*
-         * Method createNewID() generates a new session ID
-         * and stores it in the property $newID
-         */
-
-        self::$newID = session_create_id();
-        SessionData::set('new_session_id', self::$newID);
+        $this->newID = session_create_id();
+        SessionData::set('new_session_id', $this->newID);
 
     }
 
-    private static function initializeID() {
-
-        // Start session without strict mode
-        self::init('unsafe');
+    private function initializeID() {
 
         /*
-         * In order to enable strict mode again,
-         * we close the session and start it again
-         * with strict mode enabled. The ID we generated
-         * is now initialized and will be accepted.
+         * The session must be started with strict_mode disabled, closed
+         * and then started again with strict_mode enabled. This way
+         * the new session ID is initialized and accepted.
          */
+
+        new SessionUnsafe;
 
         session_commit();
-        self::init('strict');
+
+        new SessionStrict;
 
     }
 
-    private static function unsetSessionVariables() {
+    private function unsetSessionVariables() {
 
         /*
          * The newly generated session ID doesn't need
