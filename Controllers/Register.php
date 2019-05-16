@@ -30,9 +30,7 @@ class Register {
 
     public function renderForm() {
 
-        if (session_status() == PHP_SESSION_NONE) {
-            Session::start();
-        }
+        new Session;
 
         $view = new RegisterView($this->feedbackText);
         $view->render();
