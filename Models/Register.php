@@ -38,7 +38,7 @@ class RegisterService {
         $connection = new DatabaseConnection;
         $this->connection = $connection->getConnection();
 
-        $this->username = FilterInput::clean(ServerRequest::post('username'));
+        $this->username = $this->clean(ServerRequest::post('username'));
         $this->passwd = ServerRequest::post('passwd');
 
     }
@@ -103,6 +103,16 @@ class RegisterService {
         }
 
         return TRUE;
+
+    }
+
+    private function clean($input) {
+
+        $input = trim($input);
+        $input = stripslashes($input);
+        $input = htmlspecialchars($input);
+
+        return $input;
 
     }
 

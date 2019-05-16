@@ -40,7 +40,7 @@ class LoginService {
         $connection = new DatabaseConnection;
         $this->connection = $connection->getConnection();
 
-        $this->username = FilterInput::clean(ServerRequest::post('username'));
+        $this->username = $this->clean(ServerRequest::post('username'));
         $this->passwd = ServerRequest::post('passwd');
 
     }
@@ -87,6 +87,16 @@ class LoginService {
         }
 
         return TRUE;
+
+    }
+
+    private function clean($input) {
+
+        $input = trim($input);
+        $input = stripslashes($input);
+        $input = htmlspecialchars($input);
+
+        return $input;
 
     }
 
