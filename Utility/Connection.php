@@ -5,7 +5,6 @@
  * Connection Utility
  *
  * Creates a database connection object.
- * It can be retrieved with the method getConnection()
  *
  */
 
@@ -14,13 +13,13 @@ namespace Fragments\Utility\Connection;
 use PDOException;
 use PDO;
 
-interface Connection {
+interface Database {
 
     public function getConnection();
 
 }
 
-class DatabaseConnection implements Connection {
+class DatabaseConnection implements Database {
 
     private $username = "alq";
 
@@ -30,7 +29,12 @@ class DatabaseConnection implements Connection {
 
     private $database = "fragments";
 
-    protected $connection;
+    /**
+     * Holds the database connection object
+     * @var object $connection
+     */
+
+    private $connection;
 
     public function __construct() {
 
@@ -40,22 +44,20 @@ class DatabaseConnection implements Connection {
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             );
 
-            $this->connection = new PDO("mysql:host=$this->host;dbname=$this->database",
-                $this->username, $this->password, $options);
+            $this->connection = new PDO(
+                "mysql:host=$this->host;dbname=$this->database",
+                $this->username, $this->password, $options
+            );
 
         } catch(PDOException $err) {
 
-            /*
-             * $errDetailed stores error information to be logged for the administrator
-             * $errFeedback stores a feedback message to be displayed to the user
-             */
+            $userFeedback = 'Something went wrong. This event will be reported.';
 
-            $errDetailed = $err->getMessage() . ' at line ' . $err->getLine();
-            error_log($errDetailed);
+            $technicalError = $err->getMessage() . ' at line ' . $err->getLine();
 
-            $errFeedback = 'Something went wrong. This event will be reported. Error code: '
-                . $err->getCode();
-            echo $errFeedback;
+            error_log($technicalError);
+
+            echo $userFeedback;
 
             exit;
 
