@@ -11,7 +11,7 @@
 namespace Fragments\Utility\Errors;
 
 use Exception;
-use Fragments\Utility\Feedback\Feedback;
+use Fragments\Utility\Feedback\DangerFeedback;
 
 /**
  * Hard Exceptions
@@ -23,19 +23,7 @@ use Fragments\Utility\Feedback\Feedback;
 
 class HardException extends Exception {
 
-    private $userFeedback = 'Something went wrong. This event will be reported.';
-
-    public function invalidInitParameter() {
-
-        $technicalError = "Error on line " . $this->getLine() . " at "
-            . $this->getFile() . " >> " . "'" . $this->getMessage()
-            . "'" . " is not a valid argument for init().";
-
-        error_log($technicalError);
-
-        return $this->userFeedback;
-
-    }
+    //
 
 }
 
@@ -49,21 +37,11 @@ class HardException extends Exception {
 
 class SoftException extends Exception {
 
-    public function invalidFeedbackType() {
-
-        $technicalError = "Error on line " . $this->getLine() . " at " .
-            $this->getFile() . " >> " . "'" . $this->getMessage() . "'" .
-            " is an invalid feedback type. A neutral type has been used instead";
-
-        error_log($technicalError);
-
-    }
-
     public function sessionExpired() {
 
-        $userFeedback = Feedback::get('danger', 'EXCEPTION_SESSION_EXPIRED');
+        $feedback = new DangerFeedback('EXCEPTION_SESSION_EXPIRED');
 
-        return $userFeedback;
+        return $feedback->get();
 
     }
 
