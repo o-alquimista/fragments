@@ -6,7 +6,7 @@
  *
  * Handles starting a session and regenerating
  * a new session ID while attempting to avoid
- * lost sessions due to unstable connections
+ * lost sessions due to unstable connections.
  *
  */
 
@@ -73,7 +73,7 @@ class Session {
 
     public function __construct() {
 
-        if (session_status() != PHP_SESSION_NONE) {
+        if (session_status() == PHP_SESSION_ACTIVE) {
 
             return;
 
