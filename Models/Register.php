@@ -42,7 +42,75 @@ class RegisterService {
 
     }
 
-    public function formValidate() {
+    public function register() {
+
+        $formInput = new FormValidation($this->username, $this->passwd);
+
+        if ($formInput->validate() === FALSE) {
+
+            $this->getFeedback($formInput);
+
+            return FALSE;
+
+        }
+
+        $credential = new CredentialHandler($this->connection, $this->username);
+
+        if ($credential->usernameAvailable() === FALSE) {
+
+            $this->getFeedback($credential);
+
+            return FALSE;
+
+        }
+
+        $user = new User($this->connection, $this->username, $this->passwd);
+
+        $user->createUser();
+
+        $this->getFeedback($user);
+
+        return TRUE;
+
+    }
+
+    private function clean($input) {
+
+        $input = trim($input);
+        $input = stripslashes($input);
+        $input = htmlspecialchars($input);
+
+        return $input;
+
+    }
+
+    private function getFeedback($object) {
+
+        $this->feedbackText = array_merge(
+            $this->feedbackText,
+            $object->feedbackText
+        );
+
+    }
+
+}
+
+class FormValidation {
+
+    public $feedbackText = array();
+
+    private $username;
+
+    private $passwd;
+
+    public function __construct($username, $passwd) {
+
+        $this->username = $username;
+        $this->passwd = $passwd;
+
+    }
+
+    public function validate() {
 
         $validationUsername = $this->validateUsername();
         $validationPassword = $this->validatePassword();
@@ -105,17 +173,24 @@ class RegisterService {
 
     }
 
-    private function clean($input) {
+}
 
-        $input = trim($input);
-        $input = stripslashes($input);
-        $input = htmlspecialchars($input);
+class CredentialHandler {
 
-        return $input;
+    public $feedbackText = array();
+
+    private $connection;
+
+    private $username;
+
+    public function __construct($connection, $username) {
+
+        $this->connection = $connection;
+        $this->username = $username;
 
     }
 
-    public function isUsernameAvailable() {
+    public function usernameAvailable() {
 
         $stmt = $this->connection->prepare(
             "SELECT COUNT(*) FROM users WHERE username = :username"
@@ -136,14 +211,28 @@ class RegisterService {
 
     }
 
-    private function hashPassword() {
+}
 
-        $hash = password_hash($this->passwd, PASSWORD_DEFAULT);
-        return $hash;
+class User {
+
+    public $feedbackText = array();
+
+    private $connection;
+
+    private $username;
+
+    private $passwd;
+
+    public function __construct($connection, $username, $passwd) {
+
+        $this->connection = $connection;
+
+        $this->username = $username;
+        $this->passwd = $passwd;
 
     }
 
-    public function insertData() {
+    public function createUser() {
 
         $safePassword = $this->hashPassword();
 
@@ -155,6 +244,14 @@ class RegisterService {
 
         $feedback = new SuccessFeedback('FEEDBACK_REGISTRATION_COMPLETE');
         $this->feedbackText[] = $feedback->get();
+
+    }
+
+    private function hashPassword() {
+
+        $hash = password_hash($this->passwd, PASSWORD_DEFAULT);
+
+        return $hash;
 
     }
 

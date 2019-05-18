@@ -44,7 +44,85 @@ class LoginService {
 
     }
 
-    public function formValidate() {
+    public function login() {
+
+        $input = new FormValidation($this->username, $this->passwd);
+
+        if ($input->validate() === FALSE) {
+
+            $this->getFeedback($input);
+
+            return FALSE;
+
+        }
+
+        $user = new User($this->connection, $this->username);
+
+        if ($user->isRegistered() === FALSE) {
+
+            $this->getFeedback($user);
+
+            return FALSE;
+
+        }
+
+        $credentials = new CredentialHandler(
+            $this->connection, $this->username, $this->passwd
+        );
+
+        if ($credentials->verifyPassword() === FALSE) {
+
+            $this->getFeedback($credentials);
+
+            return FALSE;
+
+        }
+
+        $authentication = new Authentication($this->connection, $this->username);
+
+        $authentication->login();
+
+        return TRUE;
+
+    }
+
+    private function getFeedback($object) {
+
+        $this->feedbackText = array_merge(
+            $this->feedbackText,
+            $object->feedbackText
+        );
+
+    }
+
+    private function clean($input) {
+
+        $input = trim($input);
+        $input = stripslashes($input);
+        $input = htmlspecialchars($input);
+
+        return $input;
+
+    }
+
+}
+
+class FormValidation {
+
+    public $feedbackText = array();
+
+    private $username;
+
+    private $passwd;
+
+    public function __construct($username, $passwd) {
+
+        $this->username = $username;
+        $this->passwd = $passwd;
+
+    }
+
+    public function validate() {
 
         $validationUsername = $this->validateUsername();
         $validationPassword = $this->validatePassword();
@@ -89,17 +167,25 @@ class LoginService {
 
     }
 
-    private function clean($input) {
+}
 
-        $input = trim($input);
-        $input = stripslashes($input);
-        $input = htmlspecialchars($input);
+class User {
 
-        return $input;
+    public $feedbackText = array();
+
+    private $connection;
+
+    private $username;
+
+    public function __construct($connection, $username) {
+
+        $this->connection = $connection;
+
+        $this->username = $username;
 
     }
 
-    public function isUserRegistered() {
+    public function isRegistered() {
 
         $stmt = $this->connection->prepare(
             "SELECT * FROM users WHERE username = :username"
@@ -120,6 +206,27 @@ class LoginService {
 
     }
 
+}
+
+class CredentialHandler {
+
+    public $feedbackText = array();
+
+    private $connection;
+
+    private $username;
+
+    private $passwd;
+
+    public function __construct($connection, $username, $passwd) {
+
+        $this->connection = $connection;
+
+        $this->username = $username;
+        $this->passwd = $passwd;
+
+    }
+
     public function verifyPassword() {
 
         $stmt = $this->connection->prepare(
@@ -128,11 +235,9 @@ class LoginService {
         $stmt->bindParam(":username", $this->username);
         $stmt->execute();
 
-        while ($result = $stmt->fetchObject()) {
+        $result = $stmt->fetchObject();
 
-            $hash = $result->hash;
-
-        }
+        $hash = $result->hash;
 
         if (!password_verify($this->passwd, $hash)) {
 
@@ -147,7 +252,25 @@ class LoginService {
 
     }
 
-    public function setSessionVariables() {
+}
+
+class Authentication {
+
+    public $feedbackText = array();
+
+    private $connection;
+
+    private $username;
+
+    public function __construct($connection, $username) {
+
+        $this->connection = $connection;
+
+        $this->username = $username;
+
+    }
+
+    public function login() {
 
         $stmt = $this->connection->prepare(
             "SELECT * FROM users WHERE username = :username"
@@ -157,12 +280,10 @@ class LoginService {
 
         new RegenerateSessionID;
 
-        while ($result = $stmt->fetchObject()) {
+        $result = $stmt->fetchObject();
 
-            SessionData::set('login', '');
-            SessionData::set('username', $result->username);
-
-        }
+        SessionData::set('login', TRUE);
+        SessionData::set('username', $result->username);
 
     }
 

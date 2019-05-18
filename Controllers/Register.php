@@ -22,13 +22,13 @@ class Register {
     private $feedbackText = array();
 
     /**
-     * Holds the Model object
-     * @var object $register
+     * Holds the service Model object
+     * @var object $service
      */
 
-    private $register;
+    private $service;
 
-    public function renderForm() {
+    public function renderPage() {
 
         new Session;
 
@@ -39,8 +39,13 @@ class Register {
 
     public function startRegister() {
 
-        $this->register();
-        $this->renderForm();
+        $this->service = new RegisterService;
+
+        $this->service->register();
+
+        $this->getFeedback();
+
+        $this->renderPage();
 
     }
 
@@ -48,38 +53,8 @@ class Register {
 
         $this->feedbackText = array_merge(
             $this->feedbackText,
-            $this->register->feedbackText
+            $this->service->feedbackText
         );
-
-    }
-
-    public function register() {
-
-        $this->register = new RegisterService;
-
-        $formValidation = $this->register->formValidate();
-        if ($formValidation === FALSE) {
-
-            $this->getFeedback();
-
-            return FALSE;
-
-        }
-
-        $usernameAvailable = $this->register->isUsernameAvailable();
-        if ($usernameAvailable === FALSE) {
-
-            $this->getFeedback();
-
-            return FALSE;
-
-        }
-
-        $this->register->insertData();
-
-        $this->getFeedback();
-
-        return TRUE;
 
     }
 

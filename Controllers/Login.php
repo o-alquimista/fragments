@@ -22,13 +22,13 @@ class Login {
     private $feedbackText = array();
 
     /**
-     * Holds the Model object
-     * @var object $login
+     * Holds the service Model object
+     * @var object $service
      */
 
-    private $login;
+    private $service;
 
-    public function renderForm() {
+    public function renderPage() {
 
         new Session;
 
@@ -39,15 +39,19 @@ class Login {
 
     public function startLogin() {
 
-        $status = $this->login();
+        $this->service = new LoginService;
 
-        if ($status === TRUE) {
+        $login = $this->service->login();
+
+        if ($login === TRUE) {
 
             echo 'logged in';
 
         }
 
-        $this->renderForm();
+        $this->getFeedback();
+
+        $this->renderPage();
 
     }
 
@@ -55,45 +59,8 @@ class Login {
 
         $this->feedbackText = array_merge(
             $this->feedbackText,
-            $this->login->feedbackText
+            $this->service->feedbackText
         );
-
-    }
-
-    public function login() {
-
-        $this->login = new LoginService;
-
-        $formValidation = $this->login->formValidate();
-        if ($formValidation === FALSE) {
-
-            $this->getFeedback();
-
-            return FALSE;
-
-        }
-
-        $userExists = $this->login->isUserRegistered();
-        if ($userExists === FALSE) {
-
-            $this->getFeedback();
-
-            return FALSE;
-
-        }
-
-        $verifyPass = $this->login->verifyPassword();
-        if ($verifyPass === FALSE) {
-
-            $this->getFeedback();
-
-            return FALSE;
-
-        }
-
-        $this->login->setSessionVariables();
-
-        return TRUE;
 
     }
 
