@@ -9,8 +9,8 @@
  */
 
 /*
- * FIXME: Create template files for, say, header and footer,
- * then put everything together and render it.
+ * FIXME: Create template files for header, footer and the specific view
+ * content, and combine everything together at the Views
  */
 
 ?>
