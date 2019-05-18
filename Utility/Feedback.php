@@ -10,13 +10,9 @@
 
 namespace Fragments\Utility\Feedback;
 
-abstract class Feedback {
+use Fragments\Utility\Errors\SoftException;
 
-    /*
-     * FIXME: if the feedbackID is invalid, throw a soft exception
-     * and pick a generic message explaining that something went wrong
-     * with the validation, then log the error.
-     */
+abstract class Feedback {
 
     private $feedbackID;
 
@@ -33,6 +29,20 @@ abstract class Feedback {
     public function get() {
 
         $message = $this->feedbackText[$this->feedbackID];
+
+        try {
+
+            if (is_null($message)) {
+
+                throw new SoftException($this->feedbackID);
+
+            }
+
+        } catch(SoftException $err) {
+
+            $message = $err->invalidFeedbackID();
+
+        }
 
         $message = $this->format($message);
 
