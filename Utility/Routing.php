@@ -158,7 +158,7 @@ class LoginRoute extends ActionHandler {
 
         } else {
 
-            $login->renderForm();
+            $login->renderPage();
 
         }
 
@@ -178,7 +178,7 @@ class RegisterRoute extends ActionHandler {
 
         } else {
 
-            $register->renderForm();
+            $register->renderPage();
 
         }
 
