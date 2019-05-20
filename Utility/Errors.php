@@ -37,16 +37,15 @@ class HardException extends Exception {
 
 class SoftException extends Exception {
 
-    private $genericFeedback = "Oops, something isn't right! " .
-        "This event has been logged.";
-
     public function invalidFeedbackID() {
+
+        $userFeedback = "Oops, something isn't right!";
 
         $detailedError = $this->getMessage() . ' is an invalid feedback ID.';
 
         error_log($detailedError);
 
-        return $this->genericFeedback;
+        return $userFeedback;
 
     }
 
