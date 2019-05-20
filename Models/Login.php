@@ -173,9 +173,9 @@ class User {
 
     public $feedbackText = array();
 
-    private $connection;
+    protected $connection;
 
-    private $username;
+    protected $username;
 
     public function __construct($connection, $username) {
 
@@ -187,13 +187,11 @@ class User {
 
     public function isRegistered() {
 
-        $stmt = $this->connection->prepare(
-            "SELECT * FROM users WHERE username = :username"
-        );
-        $stmt->bindParam(":username", $this->username);
-        $stmt->execute();
+        $storage = new UserMapper($this->connection, $this->username);
 
-        if ($stmt->fetchColumn() == 0) {
+        $matchingRows = $storage->retrieveCount();
+
+        if ($matchingRows == 0) {
 
             $feedback = new WarningFeedback('FEEDBACK_NOT_REGISTERED');
             $this->feedbackText[] = $feedback->get();
@@ -208,15 +206,31 @@ class User {
 
 }
 
+class UserMapper extends User {
+
+    public function retrieveCount() {
+
+        $query = "SELECT COUNT(id) FROM users WHERE username = :username";
+
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(":username", $this->username);
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
+
+    }
+
+}
+
 class CredentialHandler {
 
     public $feedbackText = array();
 
-    private $connection;
+    protected $connection;
 
-    private $username;
+    protected $username;
 
-    private $passwd;
+    protected $passwd;
 
     public function __construct($connection, $username, $passwd) {
 
@@ -229,15 +243,11 @@ class CredentialHandler {
 
     public function verifyPassword() {
 
-        $stmt = $this->connection->prepare(
-            "SELECT hash FROM users WHERE username = :username"
+        $storage = new CredentialHandlerMapper(
+            $this->connection, $this->username, $this->passwd
         );
-        $stmt->bindParam(":username", $this->username);
-        $stmt->execute();
 
-        $result = $stmt->fetchObject();
-
-        $hash = $result->hash;
+        $hash = $storage->retrieveHash();
 
         if (!password_verify($this->passwd, $hash)) {
 
@@ -254,13 +264,32 @@ class CredentialHandler {
 
 }
 
+class CredentialHandlerMapper extends CredentialHandler {
+
+    public function retrieveHash() {
+
+        $query = "SELECT hash FROM users WHERE username = :username";
+
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(":username", $this->username);
+        $stmt->execute();
+
+        $registry = $stmt->fetchObject();
+        $hash = $registry->hash;
+
+        return $hash;
+
+    }
+
+}
+
 class Authentication {
 
     public $feedbackText = array();
 
-    private $connection;
+    protected $connection;
 
-    private $username;
+    protected $username;
 
     public function __construct($connection, $username) {
 
@@ -272,18 +301,32 @@ class Authentication {
 
     public function login() {
 
-        $stmt = $this->connection->prepare(
-            "SELECT * FROM users WHERE username = :username"
-        );
+        new RegenerateSessionID;
+
+        $storage = new AuthenticationMapper($this->connection, $this->username);
+
+        $data = $storage->retrieve();
+
+        SessionData::set('login', TRUE);
+        SessionData::set('username', $data->username);
+
+    }
+
+}
+
+class AuthenticationMapper extends Authentication {
+
+    public function retrieve() {
+
+        $query = "SELECT * FROM users WHERE username = :username";
+
+        $stmt = $this->connection->prepare($query);
         $stmt->bindParam(":username", $this->username);
         $stmt->execute();
 
-        new RegenerateSessionID;
+        $data = $stmt->fetchObject();
 
-        $result = $stmt->fetchObject();
-
-        SessionData::set('login', TRUE);
-        SessionData::set('username', $result->username);
+        return $data;
 
     }
 

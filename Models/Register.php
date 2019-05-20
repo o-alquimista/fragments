@@ -54,7 +54,9 @@ class RegisterService {
 
         }
 
-        $credential = new CredentialHandler($this->connection, $this->username);
+        $credential = new CredentialHandler(
+            $this->connection, $this->username, $this->passwd
+        );
 
         if ($credential->usernameAvailable() === FALSE) {
 
@@ -64,7 +66,9 @@ class RegisterService {
 
         }
 
-        $user = new User($this->connection, $this->username, $this->passwd);
+        $hashedPassword = $credential->hashPassword();
+
+        $user = new User($this->connection, $this->username, $hashedPassword);
 
         $user->createUser();
 
@@ -179,26 +183,30 @@ class CredentialHandler {
 
     public $feedbackText = array();
 
-    private $connection;
+    protected $connection;
 
-    private $username;
+    protected $username;
 
-    public function __construct($connection, $username) {
+    protected $passwd;
+
+    public function __construct($connection, $username, $passwd) {
 
         $this->connection = $connection;
+
         $this->username = $username;
+        $this->passwd = $passwd;
 
     }
 
     public function usernameAvailable() {
 
-        $stmt = $this->connection->prepare(
-            "SELECT COUNT(*) FROM users WHERE username = :username"
+        $storage = new CredentialHandlerMapper(
+            $this->connection, $this->username, $this->passwd
         );
-        $stmt->bindParam(":username", $this->username);
-        $stmt->execute();
 
-        if ($stmt->fetchColumn() >= 1) {
+        $matchingRows = $storage->retrieveCount();
+
+        if ($matchingRows >= 1) {
 
             $feedback = new WarningFeedback('FEEDBACK_USERNAME_TAKEN');
             $this->feedbackText[] = $feedback->get();
@@ -211,17 +219,41 @@ class CredentialHandler {
 
     }
 
+    public function hashPassword() {
+
+        $hash = password_hash($this->passwd, PASSWORD_DEFAULT);
+
+        return $hash;
+
+    }
+
+}
+
+class CredentialHandlerMapper extends CredentialHandler {
+
+    public function retrieveCount() {
+
+        $query = "SELECT COUNT(id) FROM users WHERE username = :username";
+
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(":username", $this->username);
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
+
+    }
+
 }
 
 class User {
 
     public $feedbackText = array();
 
-    private $connection;
+    protected $connection;
 
-    private $username;
+    protected $username;
 
-    private $passwd;
+    protected $passwd;
 
     public function __construct($connection, $username, $passwd) {
 
@@ -234,24 +266,29 @@ class User {
 
     public function createUser() {
 
-        $safePassword = $this->hashPassword();
+        $storage = new UserMapper(
+            $this->connection, $this->username, $this->passwd
+        );
 
-        $stmt = $this->connection->prepare("INSERT INTO users (username, hash)
-            VALUES (:username, :hash)");
-        $stmt->bindParam(":username", $this->username);
-        $stmt->bindParam(":hash", $safePassword);
-        $stmt->execute();
+        $storage->saveData();
 
         $feedback = new SuccessFeedback('FEEDBACK_REGISTRATION_COMPLETE');
         $this->feedbackText[] = $feedback->get();
 
     }
 
-    private function hashPassword() {
+}
 
-        $hash = password_hash($this->passwd, PASSWORD_DEFAULT);
+class UserMapper extends User {
 
-        return $hash;
+    public function saveData() {
+
+        $query = "INSERT INTO users (username, hash) VALUES (:username, :hash)";
+
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(":username", $this->username);
+        $stmt->bindParam(":hash", $this->passwd);
+        $stmt->execute();
 
     }
 
