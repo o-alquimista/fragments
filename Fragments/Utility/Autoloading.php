@@ -33,14 +33,9 @@ class Autoloader {
         $namespace = explode('\\', $class);
 
         /*
-         * The first and last items must be removed. They are not necessary to
-         * locate the class files.
-         *
-         * They are 'Fragments', the top-level namespace; and the class name
-         * itself, respectively.
+         * The last item must be removed. It contains the class name
+         * itself and is not necessary for us to find its location
          */
-
-        array_shift($namespace);
 
         array_pop($namespace);
 

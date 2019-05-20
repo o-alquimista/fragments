@@ -47,7 +47,7 @@ class IndexView extends View {
 
     public function render() {
 
-        require '../Views/Index.php';
+        require '../Fragments/Views/Index.php';
 
     }
 
@@ -57,7 +57,7 @@ class LoginView extends View {
 
     public function render() {
 
-        require '../Views/Login.php';
+        require '../Fragments/Views/Login.php';
 
     }
 
@@ -67,7 +67,7 @@ class RegisterView extends View {
 
     public function render() {
 
-        require '../Views/Register.php';
+        require '../Fragments/Views/Register.php';
 
     }
 

@@ -8,7 +8,7 @@
  * and the autoloader.
  */
 
-require '../Utility/Autoloading.php';
+require '../Fragments/Utility/Autoloading.php';
 
 use Fragments\Utility\Autoloading\Autoloader;
 use Fragments\Utility\Routing\Router;
