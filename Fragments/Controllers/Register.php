@@ -9,7 +9,7 @@
 namespace Fragments\Controllers\Register;
 
 use Fragments\Utility\Session\Session;
-use Fragments\Utility\View\RegisterView;
+use Fragments\Views\Register\Register\RegisterView;
 use Fragments\Models\Register\RegisterService;
 
 class Register {
@@ -33,7 +33,7 @@ class Register {
         new Session;
 
         $view = new RegisterView($this->feedbackText);
-        $view->render();
+        $view->composePage();
 
     }
 

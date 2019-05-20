@@ -9,7 +9,7 @@
 namespace Fragments\Controllers\Login;
 
 use Fragments\Utility\Session\Session;
-use Fragments\Utility\View\LoginView;
+use Fragments\Views\Login\Login\LoginView;
 use Fragments\Models\Login\LoginService;
 
 class Login {
@@ -33,7 +33,7 @@ class Login {
         new Session;
 
         $view = new LoginView($this->feedbackText);
-        $view->render();
+        $view->composePage();
 
     }
 
