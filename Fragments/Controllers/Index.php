@@ -8,13 +8,13 @@
 
 namespace Fragments\Controllers\Index;
 
-use Fragments\Views\Index\Composing\IndexView;
+use Fragments\Views\Index\Composing\View;
 
 class Index {
 
     public function renderPage() {
 
-        $view = new IndexView;
+        $view = new View;
         $view->composePage();
 
     }

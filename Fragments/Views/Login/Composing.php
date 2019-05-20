@@ -10,7 +10,7 @@
 
 namespace Fragments\Views\Login\Composing;
 
-class LoginView {
+class View {
 
     private $feedbackText = array();
 

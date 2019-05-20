@@ -10,7 +10,7 @@
 
 namespace Fragments\Views\Index\Composing;
 
-class IndexView {
+class View {
 
     public $title = 'Fragments';
 

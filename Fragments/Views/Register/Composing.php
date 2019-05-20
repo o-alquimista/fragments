@@ -10,7 +10,7 @@
 
 namespace Fragments\Views\Register\Composing;
 
-class RegisterView {
+class View {
 
     private $feedbackText = array();
 
