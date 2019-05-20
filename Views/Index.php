@@ -10,7 +10,9 @@
 
 /*
  * FIXME: Create template files for header, footer and the specific view
- * content, and combine everything together at the Views
+ * content. The Views must be in charge of combining everything together
+ * and execute rendering functions, such as feedback rendering.
+ * The View Utility must be deleted.
  */
 
 ?>
