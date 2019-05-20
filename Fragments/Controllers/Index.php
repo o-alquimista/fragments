@@ -8,7 +8,7 @@
 
 namespace Fragments\Controllers\Index;
 
-use Fragments\Views\Index\Index\IndexView;
+use Fragments\Views\Index\Composing\IndexView;
 
 class Index {
 

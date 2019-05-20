@@ -9,7 +9,7 @@
 namespace Fragments\Controllers\Register;
 
 use Fragments\Utility\Session\Session;
-use Fragments\Views\Register\Register\RegisterView;
+use Fragments\Views\Register\Composing\RegisterView;
 use Fragments\Models\Register\RegisterService;
 
 class Register {

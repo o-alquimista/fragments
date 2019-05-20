@@ -9,7 +9,7 @@
 namespace Fragments\Controllers\Login;
 
 use Fragments\Utility\Session\Session;
-use Fragments\Views\Login\Login\LoginView;
+use Fragments\Views\Login\Composing\LoginView;
 use Fragments\Models\Login\LoginService;
 
 class Login {

@@ -8,11 +8,13 @@
  *
  */
 
-namespace Fragments\Views\Login\Login;
+namespace Fragments\Views\Login\Composing;
 
 class LoginView {
 
     private $feedbackText = array();
+
+    public $title = 'Fragments - Login';
 
     public function __construct($feedback) {
 
@@ -32,14 +34,13 @@ class LoginView {
 
     public function composePage() {
 
-        require '../Fragments/Views/Login/templates/header.php';
+        require '../Fragments/Views/_templates/header.php';
 
         $this->renderFeedback();
 
         require '../Fragments/Views/Login/templates/loginForm.php';
 
-        require '../Fragments/Views/Login/templates/footer.php';
-
+        require '../Fragments/Views/_templates/footer.php';
 
     }
 

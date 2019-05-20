@@ -8,11 +8,13 @@
  *
  */
 
-namespace Fragments\Views\Register\Register;
+namespace Fragments\Views\Register\Composing;
 
 class RegisterView {
 
     private $feedbackText = array();
+
+    public $title = 'Fragments - Register';
 
     public function __construct($feedback) {
 
@@ -32,14 +34,13 @@ class RegisterView {
 
     public function composePage() {
 
-        require '../Fragments/Views/Register/templates/header.php';
+        require '../Fragments/Views/_templates/header.php';
 
         $this->renderFeedback();
 
         require '../Fragments/Views/Register/templates/registerForm.php';
 
-        require '../Fragments/Views/Register/templates/footer.php';
-
+        require '../Fragments/Views/_templates/footer.php';
 
     }
 
