@@ -16,18 +16,28 @@ class Router {
 
     private $uri;
 
-    private $id;
+    private $routeName;
 
     /*
-     * Property $routes is where you write
-     * new routes, associated with a controller:
-     * 'controller_name' => 'URI'
+     * New routes are written as URIs in the $routes array property,
+     * associated to a key that holds the namespaced route class
+     * name. This class, normally named "<Controller_name>Route",
+     * is responsible for instantiating the specific controller
+     * and calling an action on it. It is defined in this file.
+     *
+     * The full namespace is required at the key because we use a
+     * variable to instantiate such class. The use of a variable
+     * here, where namespaces are used, will cause the autoloader
+     * to fail in finding the class.
+     *
+     * Route example:
+     * 'namespaced_route_class_name' => 'URI'
      */
 
     private $routes = array(
-        'Index' => '/',
-        'Login' => '/login',
-        'Register' => '/register',
+        'Fragments\\Utility\\Routing\\IndexRoute' => '/',
+        'Fragments\\Utility\\Routing\\LoginRoute' => '/login',
+        'Fragments\\Utility\\Routing\\RegisterRoute' => '/register',
     );
 
     public function __construct() {
@@ -40,15 +50,15 @@ class Router {
     public function interpreter() {
 
         /*
-         * The foreach saves the route ID of
+         * The foreach saves the route name of
          * the matching route, if any.
          */
 
-        foreach ($this->routes as $id => $route) {
+        foreach ($this->routes as $name => $route) {
 
             if ($this->uri === $route) {
 
-                $this->id = $id;
+                $this->routeName = $name;
 
             }
 
@@ -56,57 +66,50 @@ class Router {
 
         /*
          * Now we check if the foreach saved a route
-         * ID in there. RouteControl will be initiated
-         * if it's not empty.
+         * name in there, instantiating the specific route
+         * class if one is found.
          */
 
-        if (is_null($this->id)) {
+        if (is_null($this->routeName)) {
 
             echo "Error 404: not found";
             return;
 
         }
 
-        $routeControl = new RouteControl($this->id);
-        $routeControl->interpreter();
+        $controller = new $this->routeName();
+
+        $controller->actionHandler();
 
     }
 
 }
 
-class RouteControl {
+class IndexRoute {
 
-    protected $controller;
+    public function actionHandler() {
 
-    public function __construct($id) {
+        $controller = new Controllers\Index\Index;
 
-        $this->controller = $id;
+        $controller->renderPage();
 
     }
 
-    public function interpreter() {
+}
 
-        /*
-         * Method interpreter() will determine
-         * which controller the request is about,
-         * and call the appropriate action controller.
-         *
-         * When a new route is created, the associated
-         * controller check must be inserted here in
-         * another 'elseif'.
-         */
+class LoginRoute {
 
-        if ($this->controller === 'Index') {
+    public function actionHandler() {
 
-            new IndexRoute;
+        $controller = new Controllers\Login\Login;
 
-        } elseif ($this->controller == 'Login') {
+        if (ServerRequest::requestMethod() == 'POST') {
 
-            new LoginRoute;
+            $controller->startLogin();
 
-        } elseif ($this->controller == 'Register') {
+        } else {
 
-            new RegisterRoute;
+            $controller->renderPage();
 
         }
 
@@ -114,71 +117,19 @@ class RouteControl {
 
 }
 
-interface RouteAction {
-
-    public function actionHandler();
-
-}
-
-abstract class ActionHandler implements RouteAction {
-
-    /*
-     * New route classes must be created
-     * whenever a new route is written.
-     */
-
-    public function __construct() {
-
-        $this->actionHandler();
-
-    }
-
-}
-
-class IndexRoute extends ActionHandler {
+class RegisterRoute {
 
     public function actionHandler() {
 
-        $index = new Controllers\Index\Index;
-        $index->renderPage();
-
-    }
-
-}
-
-class LoginRoute extends ActionHandler {
-
-    public function actionHandler() {
-
-        $login = new Controllers\Login\Login;
+        $controller = new Controllers\Register\Register;
 
         if (ServerRequest::requestMethod() == 'POST') {
 
-            $login->startLogin();
+            $controller->startRegister();
 
         } else {
 
-            $login->renderPage();
-
-        }
-
-    }
-
-}
-
-class RegisterRoute extends ActionHandler {
-
-    public function actionHandler() {
-
-        $register = new Controllers\Register\Register;
-
-        if (ServerRequest::requestMethod() == 'POST') {
-
-            $register->startRegister();
-
-        } else {
-
-            $register->renderPage();
+            $controller->renderPage();
 
         }
 
