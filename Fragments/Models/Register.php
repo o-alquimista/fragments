@@ -1,297 +1,283 @@
 <?php
 
-/**
- *
- * Register Model
- *
- */
-
 namespace Fragments\Models\Register;
 
 use Fragments\Utility\Connection\DatabaseConnection;
 use Fragments\Utility\Feedback\{WarningFeedback, SuccessFeedback};
 use Fragments\Utility\Requests\ServerRequest;
 
-class RegisterService {
-
+/**
+ * Register service
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
+ */
+class RegisterService
+{
     /**
-     * Holds feedback messages
-     * @var array $feedbackText
+     * @var array Holds feedback messages
      */
-
     public $feedbackText = array();
-
-    /**
-     * Holds the database connection object
-     * @var object $connection
-     */
-
-    private $connection;
 
     private $username;
 
     private $passwd;
 
-    public function __construct() {
-
-        $connection = new DatabaseConnection;
-        $this->connection = $connection->getConnection();
-
+    public function __construct()
+    {
         $this->username = $this->clean(ServerRequest::post('username'));
         $this->passwd = ServerRequest::post('passwd');
-
     }
 
-    public function register() {
-
+    public function register()
+    {
         $formInput = new FormValidation($this->username, $this->passwd);
 
-        if ($formInput->validate() === FALSE) {
-
+        if ($formInput->validate() === false) {
             $this->getFeedback($formInput);
 
-            return FALSE;
-
+            return false;
         }
 
-        $credential = new CredentialHandler(
-            $this->connection, $this->username, $this->passwd
-        );
+        $credential = new CredentialHandler($this->username, $this->passwd);
 
-        if ($credential->usernameAvailable() === FALSE) {
-
+        if ($credential->usernameAvailable() === false) {
             $this->getFeedback($credential);
 
-            return FALSE;
-
+            return false;
         }
 
         $hashedPassword = $credential->hashPassword();
 
-        $user = new User($this->connection, $this->username, $hashedPassword);
-
+        $user = new User($this->username, $hashedPassword);
         $user->createUser();
 
         $this->getFeedback($user);
 
-        return TRUE;
-
+        return true;
     }
 
-    private function clean($input) {
-
+    private function clean($input)
+    {
         $input = trim($input);
         $input = stripslashes($input);
         $input = htmlspecialchars($input);
 
         return $input;
-
     }
 
-    private function getFeedback($object) {
-
+    private function getFeedback($object)
+    {
         $this->feedbackText = array_merge(
             $this->feedbackText,
             $object->feedbackText
         );
-
     }
-
 }
 
-class FormValidation {
-
+/**
+ * Input validation
+ *
+ * Performs validation of form data, but should never
+ * have to use a data mapper.
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
+ */
+class FormValidation
+{
     public $feedbackText = array();
 
     private $username;
 
     private $passwd;
 
-    public function __construct($username, $passwd) {
-
+    public function __construct($username, $passwd)
+    {
         $this->username = $username;
         $this->passwd = $passwd;
-
     }
 
-    public function validate() {
-
+    public function validate()
+    {
         $validationUsername = $this->validateUsername();
         $validationPassword = $this->validatePassword();
 
-        if ($validationUsername && $validationPassword === TRUE) {
-
-            return TRUE;
-
+        if ($validationUsername && $validationPassword === true) {
+            return true;
         }
 
-        return FALSE;
-
+        return false;
     }
 
-    private function validateUsername() {
-
+    private function validateUsername()
+    {
         if (empty($this->username)) {
-
             $feedback = new WarningFeedback('FEEDBACK_USERNAME_EMPTY');
             $this->feedbackText[] = $feedback->get();
 
-            return FALSE;
-
+            return false;
         }
 
         if (strlen($this->username) < 4) {
-
             $feedback = new WarningFeedback('FEEDBACK_USERNAME_LENGTH');
             $this->feedbackText[] = $feedback->get();
 
-            return FALSE;
-
+            return false;
         }
 
-        return TRUE;
-
+        return true;
     }
 
-    private function validatePassword() {
-
+    private function validatePassword()
+    {
         if (empty($this->passwd)) {
-
             $feedback = new WarningFeedback('FEEDBACK_PASSWORD_EMPTY');
             $this->feedbackText[] = $feedback->get();
 
-            return FALSE;
-
+            return false;
         }
 
         if (strlen($this->passwd) <= 7) {
-
             $feedback = new WarningFeedback('FEEDBACK_PASSWORD_LENGTH');
             $this->feedbackText[] = $feedback->get();
 
-            return FALSE;
-
+            return false;
         }
 
-        return TRUE;
-
+        return true;
     }
-
 }
 
-class CredentialHandler {
-
-    public $feedbackText = array();
-
+/**
+ * Data mapper
+ *
+ * Creates resources used by mappers
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
+ */
+abstract class DataMapper
+{
+    /**
+     * @var object database connection object (PDO)
+     */
     protected $connection;
 
-    protected $username;
+    public function __construct()
+    {
+        $connection = new DatabaseConnection;
+        $this->connection = $connection->getConnection();
+    }
+}
 
-    protected $passwd;
+/**
+ * Credential handler
+ *
+ * Tasks that concern the treatment of login credentials
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
+ */
+class CredentialHandler
+{
+    public $feedbackText = array();
 
-    public function __construct($connection, $username, $passwd) {
+    private $username;
 
-        $this->connection = $connection;
+    private $passwd;
 
+    public function __construct($username, $passwd)
+    {
         $this->username = $username;
         $this->passwd = $passwd;
-
     }
 
-    public function usernameAvailable() {
-
-        $storage = new CredentialHandlerMapper(
-            $this->connection, $this->username, $this->passwd
-        );
-
-        $matchingRows = $storage->retrieveCount();
+    public function usernameAvailable()
+    {
+        $storage = new CredentialHandlerMapper;
+        $matchingRows = $storage->retrieveCount($this->username);
 
         if ($matchingRows >= 1) {
-
             $feedback = new WarningFeedback('FEEDBACK_USERNAME_TAKEN');
             $this->feedbackText[] = $feedback->get();
 
-            return FALSE;
-
+            return false;
         }
 
-        return TRUE;
-
+        return true;
     }
 
-    public function hashPassword() {
-
+    public function hashPassword()
+    {
         $hash = password_hash($this->passwd, PASSWORD_DEFAULT);
 
         return $hash;
-
     }
-
 }
 
-class CredentialHandlerMapper extends CredentialHandler {
-
-    public function retrieveCount() {
-
+class CredentialHandlerMapper extends DataMapper
+{
+    /**
+     * @param string $username
+     * @return string
+     */
+    public function retrieveCount($username)
+    {
         $query = "SELECT COUNT(id) FROM users WHERE username = :username";
-
         $stmt = $this->connection->prepare($query);
-        $stmt->bindParam(":username", $this->username);
+
+        $stmt->bindParam(":username", $username);
+
         $stmt->execute();
 
         return $stmt->fetchColumn();
-
     }
-
 }
 
-class User {
-
+/**
+ * User operations
+ *
+ * Any user related task that doesn't fit anywhere else
+ * should be implemented here.
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
+ */
+class User
+{
     public $feedbackText = array();
 
-    protected $connection;
+    private $username;
 
-    protected $username;
+    private $passwd;
 
-    protected $passwd;
-
-    public function __construct($connection, $username, $passwd) {
-
-        $this->connection = $connection;
-
+    public function __construct($username, $passwd)
+    {
         $this->username = $username;
         $this->passwd = $passwd;
-
     }
 
-    public function createUser() {
-
-        $storage = new UserMapper(
-            $this->connection, $this->username, $this->passwd
-        );
-
-        $storage->saveData();
+    public function createUser()
+    {
+        $storage = new UserMapper;
+        $storage->saveData($this->username, $this->passwd);
 
         $feedback = new SuccessFeedback('FEEDBACK_REGISTRATION_COMPLETE');
         $this->feedbackText[] = $feedback->get();
-
     }
-
 }
 
-class UserMapper extends User {
-
-    public function saveData() {
-
+class UserMapper extends DataMapper
+{
+    /**
+     * @param string $username
+     * @param string $passwd
+     */
+    public function saveData($username, $passwd)
+    {
         $query = "INSERT INTO users (username, hash) VALUES (:username, :hash)";
 
         $stmt = $this->connection->prepare($query);
-        $stmt->bindParam(":username", $this->username);
-        $stmt->bindParam(":hash", $this->passwd);
+
+        $stmt->bindParam(":username", $username);
+        $stmt->bindParam(":hash", $passwd);
+
         $stmt->execute();
-
     }
-
 }
-
-?>

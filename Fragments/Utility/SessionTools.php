@@ -1,45 +1,41 @@
 <?php
 
-/**
- *
- * Session Tools
- *
- * Handles retrieval and manipulation of session data
- *
- */
-
 namespace Fragments\Utility\SessionTools;
 
-class SessionData {
-
-    public static function get($name) {
-
+/**
+ * Tools for manipulating and retrieving session variable data
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
+ */
+class SessionData
+{
+    public static function get($name)
+    {
         if (isset($_SESSION[$name])) {
-
             return $_SESSION[$name];
-
         }
-
     }
 
-    public static function set($name, $value) {
-
+    public static function set($name, $value)
+    {
         $_SESSION[$name] = $value;
-
     }
 
-    public static function destroy($name) {
-
+    /**
+     * Unset the specified session variable.
+     *
+     * @param string $name
+     */
+    public static function destroy($name)
+    {
         unset($_SESSION[$name]);
-
     }
 
-    public static function destroyAll() {
-
+    /**
+     * Unset all session variables.
+     */
+    public static function destroyAll()
+    {
         $_SESSION = array();
-
     }
-
 }
-
-?>

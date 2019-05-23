@@ -1,21 +1,33 @@
 <?php
 
-/**
- *
- * Session Utility
- *
- * Handles starting a session and regenerating
- * a new session ID while attempting to avoid
- * lost sessions due to unstable connections.
- *
- */
-
 namespace Fragments\Utility\Session;
 
 use Fragments\Utility\SessionTools\SessionData;
 use Fragments\Utility\Errors\SoftException;
 
-abstract class SessionInit {
+/**
+ * Session Utility
+ *
+ * Handles starting a session and regenerating
+ * a new session ID while attempting to avoid
+ * lost sessions due to unstable connections.
+ */
+
+/**
+ * Session initialization
+ *
+ * Important: This is only meant to be used within the
+ * Session Utility. To start a new session at the
+ * controllers, refer to the Session class in this file.
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
+ */
+abstract class SessionInit
+{
+    protected function init()
+    {
+        session_start($this->options);
+    }
 
     protected $options = array(
         'use_only_cookies' => 1,
@@ -36,75 +48,63 @@ abstract class SessionInit {
          * be enabled when SSL is configured
          */
     );
-
-    protected function init() {
-
-        session_start($this->options);
-
-    }
-
 }
 
-class SessionStrict extends SessionInit {
-
-    public function __construct() {
-
+class SessionStrict extends SessionInit
+{
+    public function __construct()
+    {
         $this->options['use_strict_mode'] = 1;
-
         $this->init();
-
     }
-
 }
 
-class SessionUnsafe extends SessionInit {
-
-    public function __construct() {
-
+class SessionUnsafe extends SessionInit
+{
+    public function __construct()
+    {
         $this->options['use_strict_mode'] = 0;
-
         $this->init();
-
     }
-
 }
 
-class Session {
-
-    public function __construct() {
-
+/**
+ * Session start
+ *
+ * Starts a session when this class is instantiated.
+ *
+ * If the session contains the flag 'destroyed',
+ * we will check if it has expired. If it has,
+ * all session variables will be wiped and a session
+ * expired exception will be thrown.
+ *
+ * If it hasn't expired yet, an attempt to reset the
+ * newly generated ID will be made.
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
+ */
+class Session
+{
+    public function __construct()
+    {
         if (session_status() == PHP_SESSION_ACTIVE) {
-
             return;
-
         }
 
         new SessionStrict;
 
-        /*
-         * If session is destroyed, this method
-         * will check if it's expired. If it expired,
-         * all session variables will be wiped and
-         * a session expired exception will be
-         * thrown.
-         *
-         * If it hasn't expired yet, an attempt
-         * to reset the newly generated ID will
-         * be made.
-         */
-
         $isDestroyed = $this->isDestroyed();
-        if ($isDestroyed === FALSE) {
+        if ($isDestroyed === false) {
             return;
         }
 
         $isExpired = $this->isExpired();
-        if ($isExpired === TRUE) {
+        if ($isExpired === true) {
             return;
         }
 
         $isSetNewSessionID = $this->isSetNewSessionID();
-        if ($isSetNewSessionID === FALSE) {
+        if ($isSetNewSessionID === true) {
             return;
         }
 
@@ -113,67 +113,72 @@ class Session {
         session_id(SessionData::get('new_session_id'));
 
         new SessionStrict;
-
     }
 
-    private function isDestroyed() {
-
-        if (NULL === SessionData::get('destroyed')) {
-            return FALSE;
+    /**
+     * Returns true if the current session contains the 'destroyed' flag.
+     *
+     * @return boolean
+     */
+    private function isDestroyed()
+    {
+        if (null === SessionData::get('destroyed')) {
+            return false;
         }
-        return TRUE;
 
+        return true;
     }
 
-    private function isExpired() {
-
-        /*
-         * Method isExpired() wipes all session variables
-         * if 'destroyed' has been set for more than 5 minutes
-         */
-
+    /**
+     * Wipes all session variables if the flag 'destroyed' has
+     * been set for more than 5 minutes.
+     *
+     * @throws SoftException
+     * @return boolean
+     */
+    private function isExpired()
+    {
         try {
-
             if (SessionData::get('destroyed') < time() - 300) {
-
                 SessionData::destroyAll();
 
                 throw new SoftException();
-
             }
 
-            return FALSE;
-
+            return false;
         } catch(SoftException $err) {
-
             echo $err->sessionExpired();
 
-            return TRUE;
-
+            return true;
         }
-
     }
 
-    private function isSetNewSessionID() {
-
-        if (NULL === SessionData::get('new_session_id')) {
-
-            return FALSE;
-
+    /**
+     * Returns true if the session variable 'new_session_id' is set.
+     *
+     * @return boolean
+     */
+    private function isSetNewSessionID()
+    {
+        if (null === SessionData::get('new_session_id')) {
+            return false;
         }
 
-        return TRUE;
-
+        return true;
     }
-
 }
 
-class RegenerateSessionID {
-
+/**
+ * Session ID Regeneration
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
+ */
+class RegenerateSessionID
+{
     private $newID;
 
-    public function __construct() {
-
+    public function __construct()
+    {
         $this->createNewID();
 
         /*
@@ -182,59 +187,46 @@ class RegenerateSessionID {
          * session variable, so we can count the time
          * until this session expires.
          */
-
         SessionData::set('destroyed', time());
 
         session_commit();
 
         /*
-         * Set session ID to the one we generated
-         * (uninitialized)
+         * Set session ID to the one we generated (uninitialized)
          */
-
         session_id($this->newID);
-
         $this->initializeID();
 
-        $this->unsetSessionVariables();
-
+        $this->sessionCleanup();
     }
 
-    private function createNewID() {
-
+    private function createNewID()
+    {
         $this->newID = session_create_id();
         SessionData::set('new_session_id', $this->newID);
-
     }
 
-    private function initializeID() {
-
-        /*
-         * The session must be started with strict_mode disabled, closed
-         * and then started again with strict_mode enabled. This way
-         * the new session ID is initialized and accepted.
-         */
-
+    /**
+     * The session must be started with strict_mode disabled, closed
+     * and then started again with strict_mode enabled.
+     *
+     * This method ensures the new session ID is initialized and accepted.
+     */
+    private function initializeID()
+    {
         new SessionUnsafe;
 
         session_commit();
 
         new SessionStrict;
-
     }
 
-    private function unsetSessionVariables() {
-
-        /*
-         * The newly generated session ID doesn't need
-         * these session variables associated to it
-         */
-
+    /**
+     * Removes leftover session variables from the ID regeneration process
+     */
+    private function sessionCleanup()
+    {
         SessionData::destroy('destroyed');
         SessionData::destroy('new_session_id');
-
     }
-
 }
-
-?>

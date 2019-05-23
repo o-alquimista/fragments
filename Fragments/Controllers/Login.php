@@ -1,69 +1,53 @@
 <?php
 
-/**
- *
- * Login Controller
- *
- */
-
 namespace Fragments\Controllers\Login;
 
 use Fragments\Utility\Session\Session;
 use Fragments\Views\Login\Composing\View;
 use Fragments\Models\Login\LoginService;
 
-class Login {
-
+/**
+ * Login controller
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
+ */
+class Login
+{
     /**
-     * Holds feedback messages
-     * @var array $feedbackText
+     * @var array Holds feedback messages
      */
-
     private $feedbackText = array();
 
-    /**
-     * Holds the service Model object
-     * @var object $service
-     */
-
-    private $service;
-
-    public function renderPage() {
-
+    public function renderPage()
+    {
         new Session;
 
         $view = new View($this->feedbackText);
         $view->composePage();
-
     }
 
-    public function startLogin() {
-
-        $this->service = new LoginService;
-
-        $login = $this->service->login();
+    public function startLogin()
+    {
+        $service = new LoginService;
+        $login = $service->login();
 
         if ($login === TRUE) {
-
             echo 'logged in';
-
         }
 
-        $this->getFeedback();
+        $this->getFeedback($service);
 
         $this->renderPage();
-
     }
 
-    private function getFeedback() {
-
+    /**
+     * Retrieves feedback messages from the service object.
+     */
+    private function getFeedback($service)
+    {
         $this->feedbackText = array_merge(
             $this->feedbackText,
-            $this->service->feedbackText
+            $service->feedbackText
         );
-
     }
-
 }
-
-?>

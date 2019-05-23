@@ -1,26 +1,19 @@
 <?php
 
-/**
- *
- * Connection Utility
- *
- * Creates a database connection object.
- *
- */
-
 namespace Fragments\Utility\Connection;
 
 use PDOException;
 use PDO;
 
-interface Database {
-
-    public function getConnection();
-
-}
-
-class DatabaseConnection implements Database {
-
+/**
+ * Connection Utility
+ *
+ * Creates a database connection object.
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
+ */
+class DatabaseConnection
+{
     private $username = "alq";
 
     private $password = "alq";
@@ -30,16 +23,18 @@ class DatabaseConnection implements Database {
     private $database = "fragments";
 
     /**
-     * Holds the database connection object
-     * @var object $connection
+     * @var object database connection object (PDO)
      */
-
     private $connection;
 
-    public function __construct() {
-
+    /**
+     * Builds a PDO object.
+     *
+     * @throws PDOException
+     */
+    public function __construct()
+    {
         try {
-
             $options = array(
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             );
@@ -48,11 +43,8 @@ class DatabaseConnection implements Database {
                 "mysql:host=$this->host;dbname=$this->database",
                 $this->username, $this->password, $options
             );
-
         } catch(PDOException $err) {
-
             $userFeedback = 'Something went wrong. This event will be reported.';
-
             $technicalError = $err->getMessage() . ' at line ' . $err->getLine();
 
             error_log($technicalError);
@@ -60,17 +52,16 @@ class DatabaseConnection implements Database {
             echo $userFeedback;
 
             exit;
-
         }
-
     }
 
-    public function getConnection() {
-
+    /**
+     * Retrieves the PDO object.
+     *
+     * @return object
+     */
+    public function getConnection()
+    {
         return $this->connection;
-
     }
-
 }
-
-?>

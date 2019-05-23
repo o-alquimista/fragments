@@ -1,63 +1,75 @@
 <?php
 
-/**
- *
- * Feedback Utility
- *
- * Prepares feedback messages
- *
- */
-
 namespace Fragments\Utility\Feedback;
 
 use Fragments\Utility\Errors\SoftException;
 
-abstract class Feedback {
-
+/**
+ * Feedback Utility
+ *
+ * Retrieves, formats and returns feedback messages. To create new
+ * feedback types, a new <Type>Feedback class extending from Feedback
+ * must be created, and it must contain two properties: $feedbackType (string)
+ * and $feedbackText (array). An example for the ID (key) of a feedback
+ * message: FEEDBACK_USERNAME_EMPTY. In addition, the styling must be written
+ * at /public_html/css/style.css.
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
+ */
+abstract class Feedback
+{
     private $feedbackID;
 
     private $type;
 
-    public function __construct($feedbackID) {
-
+    /**
+     * Sets the feedback ID and retrieves its type.
+     *
+     * @param string $feedbackID The identifier of a feedback message
+     */
+    public function __construct($feedbackID)
+    {
         $this->feedbackID = $feedbackID;
 
         $this->type = $this->getType();
-
     }
 
-    public function get() {
-
+    /**
+     * Retrieves a feedback message.
+     *
+     * @throws SoftException
+     * @return string
+     */
+    public function get()
+    {
         $message = $this->feedbackText[$this->feedbackID];
 
         try {
-
             if (is_null($message)) {
-
                 throw new SoftException($this->feedbackID);
-
             }
-
         } catch(SoftException $err) {
-
             $message = $err->invalidFeedbackID();
-
         }
 
         $message = $this->format($message);
 
         return $message;
-
     }
 
-    private function getType() {
-
+    private function getType()
+    {
         return $this->feedbackType;
-
     }
 
-    private function format($message) {
-
+    /**
+     * Applies styling to a feedback message
+     *
+     * @param string $message
+     * @return string
+     */
+    private function format($message)
+    {
         ob_start();
 
         echo "<div class='alert alert-" . $this->type . "'>
@@ -69,23 +81,20 @@ abstract class Feedback {
         ob_end_clean();
 
         return $output;
-
     }
-
 }
 
-class DangerFeedback extends Feedback {
-
+class DangerFeedback extends Feedback
+{
     protected $feedbackType = 'danger';
 
     protected $feedbackText = array(
         'EXCEPTION_SESSION_EXPIRED' => 'This session has expired',
     );
-
 }
 
-class WarningFeedback extends Feedback {
-
+class WarningFeedback extends Feedback
+{
     protected $feedbackType = 'warning';
 
     protected $feedbackText = array(
@@ -97,17 +106,13 @@ class WarningFeedback extends Feedback {
         'FEEDBACK_INCORRECT_PASSWD' => 'Invalid credentials',
         'FEEDBACK_USERNAME_TAKEN' => 'Username already taken',
     );
-
 }
 
-class SuccessFeedback extends Feedback {
-
+class SuccessFeedback extends Feedback
+{
     protected $feedbackType = 'success';
 
     protected $feedbackText = array(
         'FEEDBACK_REGISTRATION_COMPLETE' => 'Registration complete',
     );
-
 }
-
-?>

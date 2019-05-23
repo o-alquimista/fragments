@@ -1,63 +1,49 @@
 <?php
 
-/**
- *
- * Register Controller
- *
- */
-
 namespace Fragments\Controllers\Register;
 
 use Fragments\Utility\Session\Session;
 use Fragments\Views\Register\Composing\View;
 use Fragments\Models\Register\RegisterService;
 
-class Register {
-
+/**
+ * Register controller
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
+ */
+class Register
+{
     /**
-     * Holds feedback messages
-     * @var array $feedbackText
+     * @var array Holds feedback messages
      */
-
     private $feedbackText = array();
 
-    /**
-     * Holds the service Model object
-     * @var object $service
-     */
-
-    private $service;
-
-    public function renderPage() {
-
+    public function renderPage()
+    {
         new Session;
 
         $view = new View($this->feedbackText);
         $view->composePage();
-
     }
 
-    public function startRegister() {
+    public function startRegister()
+    {
+        $service = new RegisterService;
+        $service->register();
 
-        $this->service = new RegisterService;
-
-        $this->service->register();
-
-        $this->getFeedback();
+        $this->getFeedback($service);
 
         $this->renderPage();
-
     }
 
-    private function getFeedback() {
-
+    /**
+     * Retrieves feedback messages from the service object.
+     */
+    private function getFeedback($service)
+    {
         $this->feedbackText = array_merge(
             $this->feedbackText,
-            $this->service->feedbackText
+            $service->feedbackText
         );
-
     }
-
 }
-
-?>
