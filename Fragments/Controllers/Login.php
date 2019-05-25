@@ -3,7 +3,8 @@
 namespace Fragments\Controllers\Login;
 
 use Fragments\Utility\Session\Session;
-use Fragments\Views\Login\Composing\View;
+use Fragments\Utility\Requests\ServerRequest;
+use Fragments\Views\Login\Composing\View as LoginView;
 use Fragments\Models\Login\LoginService;
 
 /**
@@ -18,11 +19,20 @@ class Login
      */
     private $feedbackText = array();
 
+    public function __construct()
+    {
+        if (ServerRequest::requestMethod() == 'POST') {
+            $this->startLogin();
+        } else {
+            $this->renderPage();
+        }
+    }
+
     public function renderPage()
     {
         new Session;
 
-        $view = new View($this->feedbackText);
+        $view = new LoginView($this->feedbackText);
         $view->composePage();
     }
 
@@ -32,7 +42,7 @@ class Login
         $login = $service->login();
 
         if ($login === TRUE) {
-            echo 'logged in';
+            ServerRequest::redirect('profile');
         }
 
         $this->getFeedback($service);
