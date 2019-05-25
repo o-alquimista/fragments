@@ -5,8 +5,9 @@
 <form method='post' action='/register'>
 
   <input type='text' class='form-input' name='username' minlength='4'
-    title='Must be longer than or equal to 4 characters' placeholder='Username'
-    autocapitalize='off' autofocus='autofocus' required='required' />
+    title='4 or more characters containing only letters, numbers, underscore(_) or hyphen(-)'
+    placeholder='Username' autocapitalize='off' autofocus='autofocus'
+    required='required' />
 
   <input type='password' class='form-input' name='passwd' minlength='8'
     title='Must be longer than or equal to 8 characters' placeholder='Password'
