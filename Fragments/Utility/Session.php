@@ -2,7 +2,7 @@
 
 namespace Fragments\Utility\Session;
 
-use Fragments\Utility\SessionTools\SessionData;
+use Fragments\Utility\SessionTools\SessionTools;
 use Fragments\Utility\Errors\SoftException;
 
 /**
@@ -110,7 +110,7 @@ class Session
 
         session_commit();
 
-        session_id(SessionData::get('new_session_id'));
+        session_id(SessionTools::get('new_session_id'));
 
         new SessionStrict;
     }
@@ -122,7 +122,7 @@ class Session
      */
     private function isDestroyed()
     {
-        if (null === SessionData::get('destroyed')) {
+        if (null === SessionTools::get('destroyed')) {
             return false;
         }
 
@@ -139,8 +139,8 @@ class Session
     private function isExpired()
     {
         try {
-            if (SessionData::get('destroyed') < time() - 300) {
-                SessionData::destroyAll();
+            if (SessionTools::get('destroyed') < time() - 300) {
+                SessionTools::destroyAll();
 
                 throw new SoftException();
             }
@@ -160,7 +160,7 @@ class Session
      */
     private function isSetNewSessionID()
     {
-        if (null === SessionData::get('new_session_id')) {
+        if (null === SessionTools::get('new_session_id')) {
             return false;
         }
 
@@ -187,7 +187,7 @@ class RegenerateSessionID
          * session variable, so we can count the time
          * until this session expires.
          */
-        SessionData::set('destroyed', time());
+        SessionTools::set('destroyed', time());
 
         session_commit();
 
@@ -203,7 +203,7 @@ class RegenerateSessionID
     private function createNewID()
     {
         $this->newID = session_create_id();
-        SessionData::set('new_session_id', $this->newID);
+        SessionTools::set('new_session_id', $this->newID);
     }
 
     /**
@@ -226,7 +226,7 @@ class RegenerateSessionID
      */
     private function sessionCleanup()
     {
-        SessionData::destroy('destroyed');
-        SessionData::destroy('new_session_id');
+        SessionTools::destroy('destroyed');
+        SessionTools::destroy('new_session_id');
     }
 }

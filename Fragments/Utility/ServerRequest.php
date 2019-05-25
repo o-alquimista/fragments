@@ -1,6 +1,6 @@
 <?php
 
-namespace Fragments\Utility\Requests;
+namespace Fragments\Utility\ServerRequest;
 
 /**
  * Server Request Utility
@@ -35,6 +35,11 @@ class ServerRequest
         }
     }
 
+    /**
+     * Redirects the web browser to the specified URI
+     *
+     * @param string $where
+     */
     public static function redirect($where)
     {
         /*

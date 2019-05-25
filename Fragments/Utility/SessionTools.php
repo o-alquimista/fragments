@@ -7,7 +7,7 @@ namespace Fragments\Utility\SessionTools;
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class SessionData
+class SessionTools
 {
     public static function get($name)
     {

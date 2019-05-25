@@ -2,7 +2,7 @@
 
 namespace Fragments\Views\Profile\Composing;
 
-use Fragments\Utility\SessionTools\SessionData;
+use Fragments\Utility\SessionTools\SessionTools;
 
 /**
  * Profile view
@@ -16,7 +16,7 @@ class View
     public $username;
 
     public function __construct() {
-        $this->username = SessionData::get('username');
+        $this->username = SessionTools::get('username');
     }
 
     public function composePage()

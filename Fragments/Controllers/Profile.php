@@ -12,6 +12,12 @@ use Fragments\Utility\Session\Session;
  */
 class Profile
 {
+    /**
+     * Receives the method name from the router, and
+     * executes it.
+     *
+     * @param string $action
+     */
     public function __construct($action)
     {
         if (!is_null($action)) {

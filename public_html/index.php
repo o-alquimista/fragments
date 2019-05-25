@@ -14,4 +14,4 @@ use Fragments\Utility\Routing\Router;
 new Autoloader;
 
 $router = new Router;
-$router->interpreter();
+$router->interpret();

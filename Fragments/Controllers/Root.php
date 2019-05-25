@@ -3,9 +3,9 @@
 namespace Fragments\Controllers\Root;
 
 use Fragments\Views\Root\Composing\View as RootView;
-use Fragments\Utility\SessionTools\SessionData;
+use Fragments\Utility\SessionTools\SessionTools;
 use Fragments\Utility\Session\Session;
-use Fragments\Utility\Requests\ServerRequest;
+use Fragments\Utility\ServerRequest\ServerRequest;
 
 /**
  * Root controller
@@ -14,6 +14,12 @@ use Fragments\Utility\Requests\ServerRequest;
  */
 class Root
 {
+    /**
+     * Receives the method name from the router, and
+     * executes it.
+     *
+     * @param string $action
+     */
     public function __construct($action)
     {
         if (!is_null($action)) {
@@ -33,7 +39,7 @@ class Root
     {
         new Session;
 
-        SessionData::destroyAll();
+        SessionTools::destroyAll();
 
         ServerRequest::redirect('');
     }

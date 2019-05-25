@@ -4,9 +4,9 @@ namespace Fragments\Models\Login;
 
 use Fragments\Utility\Connection\DatabaseConnection;
 use Fragments\Utility\Feedback\WarningFeedback;
-use Fragments\Utility\Requests\ServerRequest;
+use Fragments\Utility\ServerRequest\ServerRequest;
 use Fragments\Utility\Session\RegenerateSessionID;
-use Fragments\Utility\SessionTools\SessionData;
+use Fragments\Utility\SessionTools\SessionTools;
 
 /**
  * Login service
@@ -299,8 +299,8 @@ class Authentication
         $storage = new AuthenticationMapper;
         $data = $storage->retrieveData($this->username);
 
-        SessionData::set('login', true);
-        SessionData::set('username', $data->username);
+        SessionTools::set('login', true);
+        SessionTools::set('username', $data->username);
     }
 }
 

@@ -3,7 +3,7 @@
 namespace Fragments\Controllers\Login;
 
 use Fragments\Utility\Session\Session;
-use Fragments\Utility\Requests\ServerRequest;
+use Fragments\Utility\ServerRequest\ServerRequest;
 use Fragments\Views\Login\Composing\View as LoginView;
 use Fragments\Models\Login\LoginService;
 

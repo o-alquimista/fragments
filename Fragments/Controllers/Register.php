@@ -5,7 +5,7 @@ namespace Fragments\Controllers\Register;
 use Fragments\Utility\Session\Session;
 use Fragments\Views\Register\Composing\View as RegisterView;
 use Fragments\Models\Register\RegisterService;
-use Fragments\Utility\Requests\ServerRequest;
+use Fragments\Utility\ServerRequest\ServerRequest;
 
 /**
  * Register controller

@@ -4,7 +4,7 @@ namespace Fragments\Models\Register;
 
 use Fragments\Utility\Connection\DatabaseConnection;
 use Fragments\Utility\Feedback\{WarningFeedback, SuccessFeedback};
-use Fragments\Utility\Requests\ServerRequest;
+use Fragments\Utility\ServerRequest\ServerRequest;
 
 /**
  * Register service
