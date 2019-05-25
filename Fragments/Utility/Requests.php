@@ -34,4 +34,13 @@ class ServerRequest
             return $_GET[$value];
         }
     }
+
+    public static function redirect($where)
+    {
+        /*
+         * Prepend the directory separator.
+         */
+        $where = '/' . $where;
+        header('Location: ' . $where);
+    }
 }
