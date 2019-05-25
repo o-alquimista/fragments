@@ -2,7 +2,6 @@
 
 namespace Fragments\Utility\Routing;
 
-use Fragments\Controllers;
 use Fragments\Utility\Requests\ServerRequest;
 
 /**
@@ -16,30 +15,18 @@ class Router
 {
     private $uri;
 
-    private $routeName;
+    private $rawRequest;
 
-    /**
-     * New routes are written as URIs in the $routes array property,
-     * associated to a key that holds the namespaced route class
-     * name. This class, normally named "<Controller_name>Route",
-     * is responsible for instantiating the specific controller
-     * and calling an action on it. It must be created in this file,
-     * extending from RouteController.
-     *
-     * The full namespace is required at the key because we use a
-     * property value to instantiate such class. The use of a property
-     * here, where namespaces are used, will cause the autoloader
-     * to fail in finding the class.
-     *
-     * Route example:
-     * 'namespaced_route_class_name' => 'URI'
-     *
-     * @var array Contains all registered routes
-     */
+    private $controller;
+
+    private $action;
+
     private $routes = array(
-        'Fragments\\Utility\\Routing\\IndexRoute' => '/',
-        'Fragments\\Utility\\Routing\\LoginRoute' => '/login',
-        'Fragments\\Utility\\Routing\\RegisterRoute' => '/register',
+        'Root/renderPage' => '/',
+        'Root/logout' => '/logout',
+        'Login' => '/login',
+        'Register' => '/register',
+        'Profile/renderPage' => '/profile',
     );
 
     /**
@@ -59,76 +46,40 @@ class Router
     {
         /*
          * If a matching route is found, its name will be stored
-         * in the $routeName property.
+         * in the $rawRequest property.
          */
         foreach ($this->routes as $name => $route) {
             if ($this->uri === $route) {
-                $this->routeName = $name;
+                $this->rawRequest = $name;
             }
         }
 
-        /*
-         * If the $routeName property is null, it means no matching
-         * route was found. The router will give a 404 response and
-         * halt its execution.
-         */
-        if (is_null($this->routeName)) {
-            echo "Error 404: not found";
+        if (empty($this->rawRequest)) {
+            echo '404: PAGE NOT FOUND';
 
             return;
         }
 
-        new $this->routeName();
-    }
-}
+        /*
+         * If the request contains a custom action, it will instantiate the
+         * controller with the action as a constructor argument.
+         * Otherwise, the controller will be instantiated without arguments.
+         */
+        if (preg_match('/\//', $this->rawRequest)) {
+            $this->rawRequest = explode('/', $this->rawRequest);
 
-/**
- * Classes that extend from this abstract must instantiate the corresponding
- * controller and call at least one of its methods.
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
- */
-abstract class RouteController
-{
-    public function __construct()
-    {
-        $this->actionHandler();
-    }
-}
+            $this->controller = $this->rawRequest[0];
+            $this->action = $this->rawRequest[1];
 
-class IndexRoute extends RouteController
-{
-    public function actionHandler()
-    {
-        $controller = new Controllers\Index\Index;
-        $controller->renderPage();
-    }
-}
+            $this->controller = 'Fragments\\Controllers\\' . $this->controller .
+                '\\' . $this->controller;
 
-class LoginRoute extends RouteController
-{
-    public function actionHandler()
-    {
-        $controller = new Controllers\Login\Login;
-
-        if (ServerRequest::requestMethod() == 'POST') {
-            $controller->startLogin();
+            new $this->controller($this->action);
         } else {
-            $controller->renderPage();
-        }
-    }
-}
+            $this->rawRequest = 'Fragments\\Controllers\\' . $this->rawRequest .
+                '\\' . $this->rawRequest;
 
-class RegisterRoute extends RouteController
-{
-    public function actionHandler()
-    {
-        $controller = new Controllers\Register\Register;
-
-        if (ServerRequest::requestMethod() == 'POST') {
-            $controller->startRegister();
-        } else {
-            $controller->renderPage();
+            new $this->rawRequest();
         }
     }
 }
