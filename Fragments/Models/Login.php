@@ -4,9 +4,9 @@ namespace Fragments\Models\Login;
 
 use Fragments\Utility\Connection\DatabaseConnection;
 use Fragments\Utility\Feedback\WarningFeedback;
-use Fragments\Utility\ServerRequest\ServerRequest;
-use Fragments\Utility\Session\RegenerateSessionID;
-use Fragments\Utility\SessionTools\SessionTools;
+use Fragments\Utility\Server\Requests\ServerRequest;
+use Fragments\Utility\Session\Management\RegenerateSessionID;
+use Fragments\Utility\Session\Tools\SessionTools;
 
 /**
  * Login service

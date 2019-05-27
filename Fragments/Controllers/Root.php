@@ -3,9 +3,9 @@
 namespace Fragments\Controllers\Root;
 
 use Fragments\Views\Root\Composing\View as RootView;
-use Fragments\Utility\SessionTools\SessionTools;
-use Fragments\Utility\Session\Session;
-use Fragments\Utility\ServerRequest\ServerRequest;
+use Fragments\Utility\Session\Tools\SessionTools;
+use Fragments\Utility\Session\Management\Session;
+use Fragments\Utility\Server\Requests\ServerRequest;
 
 /**
  * Root controller

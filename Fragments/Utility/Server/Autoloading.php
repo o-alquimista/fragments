@@ -1,6 +1,6 @@
 <?php
 
-namespace Fragments\Utility\Autoloading;
+namespace Fragments\Utility\Server\Autoloading;
 
 /**
  * Autoloader Utility

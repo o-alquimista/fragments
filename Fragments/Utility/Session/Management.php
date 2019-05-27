@@ -1,8 +1,8 @@
 <?php
 
-namespace Fragments\Utility\Session;
+namespace Fragments\Utility\Session\Management;
 
-use Fragments\Utility\SessionTools\SessionTools;
+use Fragments\Utility\Session\Tools\SessionTools;
 use Fragments\Utility\Errors\SoftException;
 
 /**

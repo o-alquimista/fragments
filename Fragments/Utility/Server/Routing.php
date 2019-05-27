@@ -1,8 +1,8 @@
 <?php
 
-namespace Fragments\Utility\Routing;
+namespace Fragments\Utility\Server\Routing;
 
-use Fragments\Utility\ServerRequest\ServerRequest;
+use Fragments\Utility\Server\Requests\ServerRequest;
 
 /**
  * Router Utility
@@ -26,6 +26,10 @@ class Router
 
     private $action;
 
+    private $baseNamespace = 'Fragments\\Controllers\\';
+
+    private $namespaceSeparator = '\\';
+
     /**
      * This is where new routes are registered.
      *
@@ -41,7 +45,7 @@ class Router
      * @var array
      */
     private $routes = array(
-        'Root/renderPage' => '/',
+        'Root/renderPage' => '',
         'Root/logout' => '/logout',
         'Login' => '/login',
         'Register' => '/register',
@@ -54,6 +58,7 @@ class Router
     public function __construct()
     {
         $uri = ServerRequest::getURI();
+        $uri = rtrim($uri, '/');
         $this->uri = $uri;
     }
 
@@ -75,7 +80,8 @@ class Router
         }
 
         if (empty($this->rawRequest)) {
-            echo '404: PAGE NOT FOUND';
+            $error = new \Fragments\Controllers\Errors\Error404\Error404;
+            $error->renderPage();
 
             return;
         }
@@ -107,16 +113,16 @@ class Router
          * Turn the controller name into a fully qualified
          * class name before we can instantiate it.
          */
-        $this->rawRequest = 'Fragments\\Controllers\\' . $this->rawRequest .
-            '\\' . $this->rawRequest;
+        $this->rawRequest = $this->baseNamespace . $this->rawRequest .
+            $this->namespaceSeparator . $this->rawRequest;
 
         new $this->rawRequest();
     }
 
     private function makeRequestWithAction()
     {
-        $this->controller = 'Fragments\\Controllers\\' . $this->controller .
-            '\\' . $this->controller;
+        $this->controller = $this->baseNamespace . $this->controller .
+            $this->namespaceSeparator . $this->controller;
 
         new $this->controller($this->action);
     }

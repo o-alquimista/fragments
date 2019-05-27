@@ -2,7 +2,7 @@
 
 namespace Fragments\Views\Profile\Composing;
 
-use Fragments\Utility\SessionTools\SessionTools;
+use Fragments\Utility\Session\Tools\SessionTools;
 
 /**
  * Profile view

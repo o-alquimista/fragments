@@ -1,9 +1,9 @@
 <?php
 
-require '../Fragments/Utility/Autoloading.php';
+require '../Fragments/Utility/Server/Autoloading.php';
 
-use Fragments\Utility\Autoloading\Autoloader;
-use Fragments\Utility\Routing\Router;
+use Fragments\Utility\Server\Autoloading\Autoloader;
+use Fragments\Utility\Server\Routing\Router;
 
 /**
  * The entry point of the application.

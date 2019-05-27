@@ -3,7 +3,7 @@
 namespace Fragments\Controllers\Profile;
 
 use Fragments\Views\Profile\Composing\View as ProfileView;
-use Fragments\Utility\Session\Session;
+use Fragments\Utility\Session\Management\Session;
 
 /**
  * Profile controller

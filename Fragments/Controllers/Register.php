@@ -2,10 +2,10 @@
 
 namespace Fragments\Controllers\Register;
 
-use Fragments\Utility\Session\Session;
+use Fragments\Utility\Session\Management\Session;
 use Fragments\Views\Register\Composing\View as RegisterView;
 use Fragments\Models\Register\RegisterService;
-use Fragments\Utility\ServerRequest\ServerRequest;
+use Fragments\Utility\Server\Requests\ServerRequest;
 
 /**
  * Register controller

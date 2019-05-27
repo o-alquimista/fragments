@@ -1,6 +1,6 @@
 <?php
 
-namespace Fragments\Utility\SessionTools;
+namespace Fragments\Utility\Session\Tools;
 
 /**
  * Tools for manipulating and retrieving session variable data
