@@ -117,14 +117,14 @@ class FormValidation
             return false;
         }
 
-        if (strlen($this->username) < 4) {
+        if (strlen($this->username) < 4 or strlen($this->username) > 15) {
             $feedback = new WarningFeedback('FEEDBACK_USERNAME_LENGTH');
             $this->feedbackText[] = $feedback->get();
 
             return false;
         }
 
-        if (preg_match('/[^A-Za-z0-9_-]/', $this->username)) {
+        if (!preg_match('/^(?!.*__.*)[a-zA-Z0-9_]+$/', $this->username)) {
             $feedback = new WarningFeedback('FEEDBACK_USERNAME_INVALID');
             $this->feedbackText[] = $feedback->get();
 
