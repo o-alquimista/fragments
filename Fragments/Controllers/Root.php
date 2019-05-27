@@ -41,6 +41,6 @@ class Root
 
         SessionTools::destroyAll();
 
-        ServerRequest::redirect('');
+        ServerRequest::redirect('/');
     }
 }

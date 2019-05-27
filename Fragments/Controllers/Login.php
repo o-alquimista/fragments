@@ -42,7 +42,7 @@ class Login
         $login = $service->login();
 
         if ($login === TRUE) {
-            ServerRequest::redirect('profile');
+            ServerRequest::redirect('/profile');
         }
 
         $this->getFeedback($service);
