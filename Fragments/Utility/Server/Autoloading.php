@@ -13,7 +13,7 @@ class Autoloader
 {
     private $path;
 
-    public function __construct()
+    public function register()
     {
         spl_autoload_register(array($this, 'prepare'));
     }

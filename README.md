@@ -16,3 +16,5 @@ A modular web authentication solution written in PHP.
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^.*$ index.php [L,QSA]
 ```
+
+- PHP XML Extension is required. This package is called `php-xml` on Ubuntu.

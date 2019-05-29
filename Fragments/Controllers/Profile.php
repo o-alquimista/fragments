@@ -12,19 +12,6 @@ use Fragments\Utility\Session\Management\Session;
  */
 class Profile
 {
-    /**
-     * Receives the method name from the router, and
-     * executes it.
-     *
-     * @param string $action
-     */
-    public function __construct($action)
-    {
-        if (!is_null($action)) {
-            call_user_func(array($this, $action));
-        }
-    }
-
     public function renderPage()
     {
         new Session;

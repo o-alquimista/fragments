@@ -19,15 +19,6 @@ class Login
      */
     private $feedbackText = array();
 
-    public function __construct()
-    {
-        if (ServerRequest::requestMethod() == 'POST') {
-            $this->startLogin();
-        } else {
-            $this->renderPage();
-        }
-    }
-
     public function renderPage()
     {
         new Session;

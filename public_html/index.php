@@ -8,10 +8,12 @@ use Fragments\Utility\Server\Routing\Router;
 /**
  * The entry point of the application.
  *
- * This file instantiates the router and the autoloader.
+ * This file initializes the router and the autoloader.
  */
 
-new Autoloader;
+$autoloader = new Autoloader;
+$autoloader->register();
 
 $router = new Router;
-$router->interpret();
+$router->pathFinder();
+$router->execute();

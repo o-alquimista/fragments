@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routing>
+  <route>
+    <path>/login</path>
+    <controller>Fragments\Controllers\Login\Login</controller>
+    <method>GET</method>
+    <action>renderPage</action>
+  </route>
+
+  <route>
+    <path>/login</path>
+    <controller>Fragments\Controllers\Login\Login</controller>
+    <method>POST</method>
+    <action>startLogin</action>
+  </route>
+
+  <route>
+    <path>/register</path>
+    <controller>Fragments\Controllers\Register\Register</controller>
+    <method>GET</method>
+    <action>renderPage</action>
+  </route>
+
+  <route>
+    <path>/register</path>
+    <controller>Fragments\Controllers\Register\Register</controller>
+    <method>POST</method>
+    <action>startRegister</action>
+  </route>
+
+  <route>
+    <path></path>
+    <controller>Fragments\Controllers\Root\Root</controller>
+    <method>GET</method>
+    <action>renderPage</action>
+  </route>
+
+  <route>
+    <path>/logout</path>
+    <controller>Fragments\Controllers\Root\Root</controller>
+    <method>GET</method>
+    <action>logout</action>
+  </route>
+
+  <route>
+    <path>/profile</path>
+    <controller>Fragments\Controllers\Profile\Profile</controller>
+    <method>GET</method>
+    <action>renderPage</action>
+  </route>
+</routing>

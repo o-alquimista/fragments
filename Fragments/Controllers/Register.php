@@ -5,7 +5,6 @@ namespace Fragments\Controllers\Register;
 use Fragments\Utility\Session\Management\Session;
 use Fragments\Views\Register\Composing\View as RegisterView;
 use Fragments\Models\Register\RegisterService;
-use Fragments\Utility\Server\Requests\ServerRequest;
 
 /**
  * Register controller
@@ -18,15 +17,6 @@ class Register
      * @var array Holds feedback messages
      */
     private $feedbackText = array();
-
-    public function __construct()
-    {
-        if (ServerRequest::requestMethod() == 'POST') {
-            $this->startRegister();
-        } else {
-            $this->renderPage();
-        }
-    }
 
     public function renderPage()
     {
