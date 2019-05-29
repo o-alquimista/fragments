@@ -39,7 +39,7 @@ class Router
     public function __construct()
     {
         $uri = ServerRequest::getURI();
-        $uri = rtrim($uri, '/');
+        $uri = trim($uri, '/');
         $this->uri = $uri;
 
         $this->requestMethod = ServerRequest::requestMethod();
@@ -50,15 +50,18 @@ class Router
      */
     public function pathFinder()
     {
-        $xml = simplexml_load_file('../Fragments/Utility/Server/_routes.xml');
+        $routing = simplexml_load_file('../Fragments/Utility/Server/_routes.xml');
 
         /*
          * Now iterate through all registered routes to find one that matches
          * the requested path. Once it finds one, the required data is retrieved
          * from it.
          */
-        foreach ($xml->route as $route) {
-            if ($this->uri == (string)$route->path and (string)$route->method == $this->requestMethod) {
+        foreach ($routing->route as $route) {
+            $path = (string)$route->path;
+            $method = (string)$route->method;
+
+            if ($this->uri == $path and $this->requestMethod == $method) {
                 $this->controller = (string)$route->controller;
                 $this->action = (string)$route->action;
             }
