@@ -1,7 +1,7 @@
 # Fragments
 A modular web authentication solution written in PHP.
 
-Fragments is being developed for purely educational purposes and its current goal is not to become what projects such as Symfony are. It has no third-party dependency, relying solely on what PHP provides. Routing and autoloading are also developed in-house.
+Fragments is being developed for purely educational purposes and its goal is not to become what other projects such as Symfony are. Third-party dependencies will always be avoided if possible, relying solely on what PHP provides. Routing and autoloading are also developed in-house.
 
 Contributions are appreciated. Beginners looking for an entry point: I encourage you to take a look at the open issues and try to solve those tagged in purple.
 
