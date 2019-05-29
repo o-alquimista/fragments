@@ -1,6 +1,10 @@
 # Fragments
 A modular web authentication solution written in PHP.
 
+Fragments is being developed for purely educational purposes and its current goal is not to become what projects such as Symfony are. It has no third-party dependency, relying solely on what PHP provides. Routing and autoloading are also developed in-house.
+
+Contributions are appreciated. Beginners looking for an entry point: I encourage you to take a look at the open issues and try to solve those tagged in purple.
+
 - The default database name is `fragments`. Change it at `Fragments/Utility/Connection.php`. The username, password and PDO driver for the database connection can be set there as well.
 
 - Create the table: `CREATE TABLE users (id INT NOT NULL AUTO_INCREMENT, username VARCHAR(255) NOT NULL, hash VARCHAR(255) NOT NULL, PRIMARY KEY(id));`
