@@ -3,6 +3,7 @@
 namespace Fragments\Utility\Server\Routing;
 
 use Fragments\Utility\Server\Requests\ServerRequest;
+use Fragments\Controllers\Errors\Error404\Error404;
 
 /**
  * Router Utility
@@ -15,7 +16,7 @@ use Fragments\Utility\Server\Requests\ServerRequest;
 class Router
 {
     /**
-     * The requested path.
+     * The requested path. The URI.
      *
      * @var string
      */
@@ -51,6 +52,11 @@ class Router
     {
         $xml = simplexml_load_file('../Fragments/Utility/Server/_routes.xml');
 
+        /*
+         * Now iterate through all registered routes to find one that matches
+         * the requested path. Once it finds one, the required data is retrieved
+         * from it.
+         */
         foreach ($xml->route as $route) {
             if ($this->uri == (string)$route->path and (string)$route->method == $this->requestMethod) {
                 $this->controller = (string)$route->controller;
@@ -62,7 +68,7 @@ class Router
     public function execute()
     {
         if (is_null($this->controller)) {
-            $error = new \Fragments\Controllers\Errors\Error404\Error404;
+            $error = new Error404;
             $error->renderPage();
 
             return;
