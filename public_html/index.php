@@ -3,7 +3,7 @@
 require '../Fragments/Utility/Server/Autoloading.php';
 
 use Fragments\Utility\Server\Autoloading\Autoloader;
-use Fragments\Utility\Server\Routing\Router;
+use Fragments\Utility\Server\Routing\RouterController\Router;
 
 /**
  * The entry point of the application.
@@ -15,5 +15,4 @@ $autoloader = new Autoloader;
 $autoloader->register();
 
 $router = new Router;
-$router->pathFinder();
-$router->execute();
+$router->start();

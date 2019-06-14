@@ -33,7 +33,8 @@ class Login
         $login = $service->login();
 
         if ($login === TRUE) {
-            ServerRequest::redirect('/profile');
+            $username = $service->username;
+            ServerRequest::redirect('/profile/' . $username);
         }
 
         $this->getFeedback($service);

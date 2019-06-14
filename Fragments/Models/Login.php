@@ -20,7 +20,7 @@ class LoginService
      */
     public $feedbackText = array();
 
-    private $username;
+    public $username;
 
     private $passwd;
 
