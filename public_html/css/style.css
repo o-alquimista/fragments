@@ -3,18 +3,27 @@
  */
 
 body {
-    font-family: "Helvetica Neue", Arial, sans-serif;
-    font-size: 1em;
-    margin: 0;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 1em;
+  margin: 0;
 }
 
 h4 {
-    margin-top: 7px;
-    margin-bottom: 7px;
+  margin-top: 7px;
+  margin-bottom: 7px;
 
-    font-family: "Helvetica Neue", Arial, sans-serif;
-    font-size: 1.5em;
-    font-weight: 100;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.5em;
+  font-weight: 100;
+}
+
+/*
+ * Lists
+ */
+
+#listItem {
+  list-style-type: circle;
+  padding: 10px;
 }
 
 /*
@@ -22,8 +31,8 @@ h4 {
  */
 
 .container {
-    width: 85%;
-    margin: auto;
+  width: 85%;
+  margin: auto;
 }
 
 /*
@@ -31,48 +40,48 @@ h4 {
  */
 
 .form-input {
-    padding: 9px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    width: 100%;
+  padding: 9px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 100%;
 
-    box-sizing: border-box;
-    border-style: solid;
-    border-radius: 5px;
-    border-width: 0.1em;
-    border-color: #CED4DA;
+  box-sizing: border-box;
+  border-style: solid;
+  border-radius: 5px;
+  border-width: 0.1em;
+  border-color: #CED4DA;
 
-    font-family: "Helvetica Neue", Arial, sans-serif;
-    font-size: 1em;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 1em;
 }
 
 .form-input:focus {
-    box-shadow: 0px 0px 0px 3px #C0DEFF;
-    border-color: #A1CDFD;
+  box-shadow: 0px 0px 0px 3px #C0DEFF;
+  border-color: #A1CDFD;
 }
 
 .form-submit {
-    font-family: "Helvetica Neue", Arial, sans-serif;
-    font-size: 1em;
-    color: white;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 1em;
+  color: white;
 
-    cursor: pointer;
-    background-color: #28A745;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    width: 100%;
+  cursor: pointer;
+  background-color: #28A745;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 100%;
 
-    border: none;
-    border-radius: 5px;
+  border: none;
+  border-radius: 5px;
 }
 
 .form-submit:hover {
-    background-color: #218838
+  background-color: #218838
 }
 
 .form-submit:focus {
-    box-shadow: 0px 0px 0px 3px #95D4A3;
+  box-shadow: 0px 0px 0px 3px #95D4A3;
 }
 
 /*
@@ -80,28 +89,28 @@ h4 {
  */
 
 .alert {
-    font-family: "Helvetica Neue", Arial, sans-serif;
-    font-size: 1em;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 1em;
 
-    padding: 15px;
-    border-style: solid;
-    border-width: thin;
+  padding: 15px;
+  border-style: solid;
+  border-width: thin;
 }
 
 .alert-danger {
-    background-color: #F8D7DA;
-    color: #941C24;
-    border-color: #F5C6CB;
+  background-color: #F8D7DA;
+  color: #941C24;
+  border-color: #F5C6CB;
 }
 
 .alert-warning {
-    background-color: #FFF3CD;
-    color: #856404;
-    border-color: #FFEEBA;
+  background-color: #FFF3CD;
+  color: #856404;
+  border-color: #FFEEBA;
 }
 
 .alert-success {
-    background-color: #D4EDDA;
-    color: #155724;
-    border-color: #C3E6CB;
+  background-color: #D4EDDA;
+  color: #155724;
+  border-color: #C3E6CB;
 }

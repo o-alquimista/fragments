@@ -1,1 +1,1 @@
-<p><?php echo $username ?></p>
+<li id="listItem"><?php echo $username ?></li>
