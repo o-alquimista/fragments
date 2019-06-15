@@ -2,6 +2,8 @@
 
 namespace Fragments\Views\Profile\Composing;
 
+use Fragments\Utility\Session\Tools\SessionTools;
+
 /**
  * Profile view.
  *
@@ -13,8 +15,15 @@ class View
 
     public $username;
 
+    public $sessionStatus;
+
     public function __construct($username) {
         $this->username = $username;
+
+        if (SessionTools::get('login') == true) {
+            $name = SessionTools::get('username');
+            $this->sessionStatus = "You are logged in, " . $name;
+        }
     }
 
     public function composePage()
