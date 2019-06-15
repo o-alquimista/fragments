@@ -29,22 +29,18 @@ class Profile
         $view->composePage();
     }
 
+    /**
+     * Fetches a list of all registered users.
+     */
     public function renderList()
     {
-        $list = $this->listAllUsers();
+        $service = new ProfileService;
+        $list = $service->getUserList();
 
         new Session;
 
         $view = new ProfileView($this->username);
         $view->composeList($list);
-    }
-
-    private function renderError()
-    {
-        new Session;
-
-        $view = new ProfileView($this->username);
-        $view->composeError();
     }
 
     /**
@@ -71,15 +67,13 @@ class Profile
     }
 
     /**
-     * Fetches a list of all registered users.
-     *
-     * @return array
+     * Display user not found error.
      */
-    private function listAllUsers()
+    private function renderError()
     {
-        $service = new ProfileService;
-        $list = $service->getUserList();
+        new Session;
 
-        return $list;
+        $view = new ProfileView($this->username);
+        $view->composeError();
     }
 }
