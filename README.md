@@ -10,12 +10,11 @@ Contributions are appreciated. Beginners looking for an entry point: I encourage
 
 - The 'root' setting (`DocumentRoot` for Apache) of your server or virtual host must point to the `/public_html` folder.
 
-- The following code is responsible for redirecting all requests to `public_html/index.php`, which is the entry point of the application. This must go into the public_html folder's directory configuration. If you don't use Apache, this code must be converted for your webserver. We should probably write examples for other webservers here in the future.
+- Configure the root directory (Apache):
 ```
-    RewriteEngine on
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^.*$ index.php [L,QSA]
+AllowOverride None
+Require all granted
+FallbackResource /index.php
 ```
 
 ## Requirements
