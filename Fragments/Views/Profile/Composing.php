@@ -30,4 +30,17 @@ class View
         require '../Fragments/Views/Profile/templates/notFound.php';
         require '../Fragments/Views/_templates/footer.php';
     }
+
+    public function composeList($list)
+    {
+        require '../Fragments/Views/_templates/header.php';
+        require '../Fragments/Views/Profile/templates/listTemplates/openContainer.php';
+
+        foreach ($list as $username) {
+            require '../Fragments/Views/Profile/templates/listTemplates/listItem.php';
+        }
+
+        require '../Fragments/Views/Profile/templates/listTemplates/closeContainer.php';
+        require '../Fragments/Views/_templates/footer.php';
+    }
 }

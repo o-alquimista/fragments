@@ -3,6 +3,7 @@
 namespace Fragments\Models\Profile;
 
 use Fragments\Utility\Connection\DatabaseConnection;
+use PDO;
 
 /**
  * Profile service.
@@ -27,6 +28,19 @@ class ProfileService
         $this->username = $user->username;
 
         return true;
+    }
+
+    /**
+     * Returns an array containing all registered usernames.
+     *
+     * @return array
+     */
+    public function getUserList()
+    {
+        $registry = new Registry;
+        $list = $registry->retrieveUserList();
+
+        return $list;
     }
 }
 
@@ -120,5 +134,48 @@ class UserMapper extends DataMapper
         $stmt->execute();
 
         return $stmt->fetchObject();
+    }
+}
+
+/**
+ * Registry operations.
+ *
+ * Operations which do not concern a specific user.
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
+ */
+class Registry
+{
+    private $storage;
+
+    public function __construct()
+    {
+        $this->storage = new RegistryMapper;
+    }
+
+    /**
+     * Retrieve all registered usernames.
+     */
+    public function retrieveUserList()
+    {
+        $list = $this->storage->getAllUsernames();
+
+        return $list;
+    }
+}
+
+class RegistryMapper extends DataMapper
+{
+    /**
+     * @return array
+     */
+    public function getAllUsernames()
+    {
+        $query = "SELECT username FROM users";
+
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 }

@@ -29,6 +29,16 @@ class Profile
         $view->composePage();
     }
 
+    public function renderList()
+    {
+        $list = $this->listAllUsers();
+
+        new Session;
+
+        $view = new ProfileView($this->username);
+        $view->composeList($list);
+    }
+
     private function renderError()
     {
         new Session;
@@ -58,5 +68,18 @@ class Profile
         $this->username = $service->username;
 
         return true;
+    }
+
+    /**
+     * Fetches a list of all registered users.
+     *
+     * @return array
+     */
+    private function listAllUsers()
+    {
+        $service = new ProfileService;
+        $list = $service->getUserList();
+
+        return $list;
     }
 }

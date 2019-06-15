@@ -50,6 +50,14 @@
   </route>
 
   <route>
+    <id>profile</id>
+    <path>profile</path>
+    <controller>Fragments\Controllers\Profile\Profile</controller>
+    <method>GET</method>
+    <action>renderList</action>
+  </route>
+
+  <route>
     <id>public_profile</id>
     <path>profile/{alpha}</path>
     <controller>Fragments\Controllers\Profile\Profile</controller>
