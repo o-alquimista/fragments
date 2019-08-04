@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * Copyright 2019 Douglas Silva
+ *
  * This file is part of Fragments.
  *
  * Fragments is free software: you can redistribute it and/or modify
