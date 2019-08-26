@@ -21,7 +21,7 @@ FallbackResource /index.php
 - PHP XML Extension. This package is called `php-xml` on Ubuntu.
 
 ## License
-Copyright 2019 Douglas Silva
+Copyright 2019 Douglas Silva (0x9fd287d56ec107ac)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
