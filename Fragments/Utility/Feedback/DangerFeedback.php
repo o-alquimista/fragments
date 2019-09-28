@@ -23,7 +23,7 @@ namespace Fragments\Utility\Feedback;
 
 use Fragments\Utility\Feedback\AbstractFeedback;
 
-class DangerFeedback extends Feedback
+class DangerFeedback extends AbstractFeedback
 {
     protected $feedbackType = 'danger';
 
