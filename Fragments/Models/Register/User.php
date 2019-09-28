@@ -19,48 +19,39 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Requests;
+namespace Fragments\Models\Register;
+
+use Fragments\Utility\Feedback\SuccessFeedback;
+use Fragments\Models\Register\DataMappers\UserMapper;
 
 /**
- * Server Request Utility
+ * User operations
  *
- * Manipulation or retrieval of information regarding HTTP requests.
+ * Any user related task that doesn't fit anywhere else
+ * should be implemented here.
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class ServerRequest
+class User
 {
-    public static function getURI()
+    public $feedbackText = array();
+
+    private $username;
+
+    private $passwd;
+
+    public function __construct($username, $passwd)
     {
-        return $_SERVER['REQUEST_URI'];
+        $this->username = $username;
+        $this->passwd = $passwd;
     }
 
-    public static function requestMethod()
+    public function createUser()
     {
-        return $_SERVER['REQUEST_METHOD'];
-    }
+        $storage = new UserMapper;
+        $storage->saveData($this->username, $this->passwd);
 
-    public static function post($value)
-    {
-        if (isset($_POST[$value])) {
-            return $_POST[$value];
-        }
-    }
-
-    public static function get($value)
-    {
-        if (isset($_GET[$value])) {
-            return $_GET[$value];
-        }
-    }
-
-    /**
-     * Redirects the web browser to the specified URI.
-     *
-     * @param string $where
-     */
-    public static function redirect($where)
-    {
-        header('Location: ' . $where);
+        $feedback = new SuccessFeedback('FEEDBACK_REGISTRATION_COMPLETE');
+        $this->feedbackText[] = $feedback->get();
     }
 }

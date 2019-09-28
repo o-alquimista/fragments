@@ -19,13 +19,13 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing\RouterController;
+namespace Fragments\Utility\Server\Routing;
 
-use Fragments\Utility\Server\Routing\XMLParser\Loader;
-use Fragments\Utility\Server\Routing\RequestContext\RequestContext;
-use Fragments\Utility\Server\Routing\RequestMatcher\RequestMatcher;
-use Fragments\Controllers\Errors\Error404\Error404;
-use Fragments\Utility\Server\Routing\Route\Route;
+use Fragments\Utility\Server\Routing\XMLParser;
+use Fragments\Utility\Server\Routing\RequestContext;
+use Fragments\Utility\Server\Routing\RequestMatcher;
+use Fragments\Controllers\Errors\Error404;
+use Fragments\Utility\Server\Routing\Route;
 
 /**
  * The router controller.
@@ -41,7 +41,7 @@ class Router
 
     public function start()
     {
-        $routeLoader = new Loader;
+        $routeLoader = new XMLParser;
         $routeCollection = $routeLoader->getRouteCollection();
 
         $context = new RequestContext;

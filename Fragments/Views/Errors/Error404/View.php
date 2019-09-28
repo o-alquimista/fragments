@@ -19,21 +19,21 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Views\Root\Composing;
+namespace Fragments\Views\Errors\Error404;
 
 /**
- * Root view
+ * Error 404 view
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
 class View
 {
-    public $title = 'Fragments';
+    public $title = 'Page not found - Fragments';
 
     public function composePage()
     {
         require '../Fragments/Views/_templates/header.php';
-        require '../Fragments/Views/Root/templates/introduction.php';
+        require '../Fragments/Views/Errors/Error404/templates/error.php';
         require '../Fragments/Views/_templates/footer.php';
     }
 }

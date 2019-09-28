@@ -19,29 +19,40 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
+namespace Fragments\Models\Login;
 
-use Fragments\Utility\Server\Request;
+use Fragments\Utility\SessionManagement\RegenerateSessionID;
+use Fragments\Utility\SessionManagement\SessionTools;
+use Fragments\Models\Login\DataMappers\AuthenticationMapper;
 
 /**
- * Request context.
+ * Authentication
  *
- * Stores information about the HTTP request.
+ * Tasks that grant some form of authentication. Remember to
+ * regenerate the session ID before creating/modifying session
+ * variables.
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class RequestContext
+class Authentication
 {
-    public $uri;
+    public $feedbackText = array();
 
-    public $requestMethod;
+    private $username;
 
-    public function __construct()
+    public function __construct($username)
     {
-        $uri = Request::getURI();
-        $uri = trim($uri, '/');
-        $this->uri = $uri;
+        $this->username = $username;
+    }
 
-        $this->requestMethod = Request::requestMethod();
+    public function login()
+    {
+        new RegenerateSessionID;
+
+        $storage = new AuthenticationMapper;
+        $data = $storage->retrieveData($this->username);
+
+        SessionTools::set('login', true);
+        SessionTools::set('username', $data->username);
     }
 }

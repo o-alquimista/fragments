@@ -19,11 +19,11 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Controllers\Login;
+namespace Fragments\Controllers;
 
-use Fragments\Utility\Session\Management\Session;
-use Fragments\Utility\Server\Requests\ServerRequest;
-use Fragments\Views\Login\Composing\View as LoginView;
+use Fragments\Utility\SessionManagement\Session;
+use Fragments\Utility\Server\Request;
+use Fragments\Views\Login\View as LoginView;
 use Fragments\Models\Login\LoginService;
 
 /**
@@ -53,7 +53,7 @@ class Login
 
         if ($login === TRUE) {
             $username = $service->username;
-            ServerRequest::redirect('/profile/' . $username);
+            Request::redirect('/profile/' . $username);
         }
 
         $this->getFeedback($service);

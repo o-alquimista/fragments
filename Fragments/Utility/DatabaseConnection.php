@@ -19,7 +19,7 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Connection;
+namespace Fragments\Utility;
 
 use PDOException;
 use PDO;

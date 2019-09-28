@@ -19,29 +19,26 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
+namespace Fragments\Models\Login\DataMappers;
 
-use Fragments\Utility\Server\Request;
+use Fragments\Utility\DatabaseConnection;
 
 /**
- * Request context.
+ * Data mapper
  *
- * Stores information about the HTTP request.
+ * Creates resources used by mappers
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class RequestContext
+abstract class AbstractDataMapper
 {
-    public $uri;
+    /**
+     * @var object database connection object (PDO)
+     */
+    protected $connection;
 
-    public $requestMethod;
-
-    public function __construct()
-    {
-        $uri = Request::getURI();
-        $uri = trim($uri, '/');
-        $this->uri = $uri;
-
-        $this->requestMethod = Request::requestMethod();
+    public function __construct() {
+        $connection = new DatabaseConnection;
+        $this->connection = $connection->getConnection();
     }
 }

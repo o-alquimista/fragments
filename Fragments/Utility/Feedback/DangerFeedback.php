@@ -19,29 +19,15 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
+namespace Fragments\Utility\Feedback;
 
-use Fragments\Utility\Server\Request;
+use Fragments\Utility\Feedback\AbstractFeedback;
 
-/**
- * Request context.
- *
- * Stores information about the HTTP request.
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
- */
-class RequestContext
+class DangerFeedback extends Feedback
 {
-    public $uri;
+    protected $feedbackType = 'danger';
 
-    public $requestMethod;
-
-    public function __construct()
-    {
-        $uri = Request::getURI();
-        $uri = trim($uri, '/');
-        $this->uri = $uri;
-
-        $this->requestMethod = Request::requestMethod();
-    }
+    protected $feedbackText = array(
+        'EXCEPTION_SESSION_EXPIRED' => 'This session has expired',
+    );
 }

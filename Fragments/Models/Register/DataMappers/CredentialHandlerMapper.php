@@ -19,42 +19,25 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Session\Tools;
+namespace Fragments\Models\Register\DataMappers;
 
-/**
- * Tools for manipulating and retrieving session variable data
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
- */
-class SessionTools
+use Fragments\Models\Register\DataMappers\AbstractDataMapper;
+
+class CredentialHandlerMapper extends AbstractDataMapper
 {
-    public static function get($name)
-    {
-        if (isset($_SESSION[$name])) {
-            return $_SESSION[$name];
-        }
-    }
-
-    public static function set($name, $value)
-    {
-        $_SESSION[$name] = $value;
-    }
-
     /**
-     * Unset the specified session variable.
-     *
-     * @param string $name
+     * @param string $username
+     * @return string
      */
-    public static function destroy($name)
+    public function retrieveCount($username)
     {
-        unset($_SESSION[$name]);
-    }
+        $query = "SELECT COUNT(id) FROM users WHERE username = :username";
+        $stmt = $this->connection->prepare($query);
 
-    /**
-     * Unset all session variables.
-     */
-    public static function destroyAll()
-    {
-        $_SESSION = array();
+        $stmt->bindParam(":username", $username);
+
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
     }
 }

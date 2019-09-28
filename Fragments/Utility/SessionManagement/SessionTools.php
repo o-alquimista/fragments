@@ -19,50 +19,42 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Controllers;
-
-use Fragments\Utility\SessionManagement\Session;
-use Fragments\Views\Register\View as RegisterView;
-use Fragments\Models\Register\RegisterService;
+namespace Fragments\Utility\SessionManagement;
 
 /**
- * Register controller
+ * Tools for manipulating and retrieving session variable data
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class Register
+class SessionTools
 {
-    /**
-     * @var array Holds feedback messages
-     */
-    private $feedbackText = array();
-
-    public function renderPage()
+    public static function get($name)
     {
-        new Session;
-
-        $view = new RegisterView($this->feedbackText);
-        $view->composePage();
+        if (isset($_SESSION[$name])) {
+            return $_SESSION[$name];
+        }
     }
 
-    public function startRegister()
+    public static function set($name, $value)
     {
-        $service = new RegisterService;
-        $service->register();
-
-        $this->getFeedback($service);
-
-        $this->renderPage();
+        $_SESSION[$name] = $value;
     }
 
     /**
-     * Retrieves feedback messages from the service object.
+     * Unset the specified session variable.
+     *
+     * @param string $name
      */
-    private function getFeedback($service)
+    public static function destroy($name)
     {
-        $this->feedbackText = array_merge(
-            $this->feedbackText,
-            $service->feedbackText
-        );
+        unset($_SESSION[$name]);
+    }
+
+    /**
+     * Unset all session variables.
+     */
+    public static function destroyAll()
+    {
+        $_SESSION = array();
     }
 }

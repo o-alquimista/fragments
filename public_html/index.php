@@ -19,10 +19,10 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require '../Fragments/Utility/Server/Autoloading.php';
+require '../Fragments/Utility/Server/Autoloader.php';
 
-use Fragments\Utility\Server\Autoloading\Autoloader;
-use Fragments\Utility\Server\Routing\RouterController\Router;
+use Fragments\Utility\Server\Autoloader;
+use Fragments\Utility\Server\Routing\Router;
 
 /**
  * The entry point of the application.

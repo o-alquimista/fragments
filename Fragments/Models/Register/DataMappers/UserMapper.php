@@ -19,38 +19,25 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Views\Register\Composing;
+namespace Fragments\Models\Register\DataMappers;
 
-/**
- * Register view
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
- */
-class View
+use Fragments\Models\Register\DataMappers\AbstractDataMapper;
+
+class UserMapper extends AbstractDataMapper
 {
-    private $feedbackText = array();
-
-    public $title = 'Fragments - Register';
-
-    public function __construct($feedback)
+    /**
+     * @param string $username
+     * @param string $passwd
+     */
+    public function saveData($username, $passwd)
     {
-        $this->feedbackText = $feedback;
-    }
+        $query = "INSERT INTO users (username, hash) VALUES (:username, :hash)";
 
-    private function renderFeedback()
-    {
-        foreach ($this->feedbackText as $text) {
-            echo $text;
-        }
-    }
+        $stmt = $this->connection->prepare($query);
 
-    public function composePage()
-    {
-        require '../Fragments/Views/_templates/header.php';
+        $stmt->bindParam(":username", $username);
+        $stmt->bindParam(":hash", $passwd);
 
-        $this->renderFeedback();
-
-        require '../Fragments/Views/Register/templates/registerForm.php';
-        require '../Fragments/Views/_templates/footer.php';
+        $stmt->execute();
     }
 }

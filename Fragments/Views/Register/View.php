@@ -19,50 +19,38 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Controllers;
-
-use Fragments\Utility\SessionManagement\Session;
-use Fragments\Views\Register\View as RegisterView;
-use Fragments\Models\Register\RegisterService;
+namespace Fragments\Views\Register;
 
 /**
- * Register controller
+ * Register view
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class Register
+class View
 {
-    /**
-     * @var array Holds feedback messages
-     */
     private $feedbackText = array();
 
-    public function renderPage()
-    {
-        new Session;
+    public $title = 'Register - Fragments';
 
-        $view = new RegisterView($this->feedbackText);
-        $view->composePage();
+    public function __construct($feedback)
+    {
+        $this->feedbackText = $feedback;
     }
 
-    public function startRegister()
+    private function renderFeedback()
     {
-        $service = new RegisterService;
-        $service->register();
-
-        $this->getFeedback($service);
-
-        $this->renderPage();
+        foreach ($this->feedbackText as $text) {
+            echo $text;
+        }
     }
 
-    /**
-     * Retrieves feedback messages from the service object.
-     */
-    private function getFeedback($service)
+    public function composePage()
     {
-        $this->feedbackText = array_merge(
-            $this->feedbackText,
-            $service->feedbackText
-        );
+        require '../Fragments/Views/_templates/header.php';
+
+        $this->renderFeedback();
+
+        require '../Fragments/Views/Register/templates/registerForm.php';
+        require '../Fragments/Views/_templates/footer.php';
     }
 }

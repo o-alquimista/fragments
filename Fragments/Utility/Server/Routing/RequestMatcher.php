@@ -19,10 +19,10 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing\RequestMatcher;
+namespace Fragments\Utility\Server\Routing;
 
-use Fragments\Utility\Server\Routing\RequestContext\RequestContext;
-use Fragments\Utility\Server\Routing\Route\Route;
+use Fragments\Utility\Server\Routing\RequestContext;
+use Fragments\Utility\Server\Routing\Route;
 
 /**
  * Request matcher

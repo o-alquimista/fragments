@@ -19,29 +19,23 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
+namespace Fragments\Models\Profile\DataMappers;
 
-use Fragments\Utility\Server\Request;
+use Fragments\Models\Profile\DataMappers\AbstractDataMapper;
+use PDO;
 
-/**
- * Request context.
- *
- * Stores information about the HTTP request.
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
- */
-class RequestContext
+class RegistryMapper extends AbstractDataMapper
 {
-    public $uri;
-
-    public $requestMethod;
-
-    public function __construct()
+    /**
+     * @return array
+     */
+    public function getAllUsernames()
     {
-        $uri = Request::getURI();
-        $uri = trim($uri, '/');
-        $this->uri = $uri;
+        $query = "SELECT username FROM users";
 
-        $this->requestMethod = Request::requestMethod();
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 }

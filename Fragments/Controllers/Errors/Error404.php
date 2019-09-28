@@ -19,10 +19,10 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Controllers\Errors\Error404;
+namespace Fragments\Controllers\Errors;
 
-use Fragments\Views\Errors\Error404\Composing\View as Error404View;
-use Fragments\Utility\Session\Management\Session;
+use Fragments\Views\Errors\Error404\View as Error404View;
+use Fragments\Utility\SessionManagement\Session;
 
 /**
  * Error 404 controller

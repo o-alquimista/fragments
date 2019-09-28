@@ -19,51 +19,33 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Autoloading;
+namespace Fragments\Utility\Server;
 
 /**
  * Autoloader Utility
  *
- * A namespace based autoloader
+ * A PSR-4 compliant autoloader
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
 class Autoloader
 {
-    private $path;
-
     public function register()
     {
-        spl_autoload_register(array($this, 'prepare'));
+        spl_autoload_register(array($this, 'load'));
     }
 
-    public function prepare($class)
+    public function load($class)
     {
-        /*
-         * We must split the fully qualified class name into
-         * multiple pieces before we can manipulate it.
-         */
-        $namespace = explode('\\', $class);
+        // Replace namespace separators with directory separators
+        $namespace = str_replace('\\', '/', $class);
 
         /*
-         * The last item must be removed. It contains the class name
-         * itself and is not necessary for us to find its location
+         * Go back one directory to leave public_html, and append
+         * the file extension.
          */
-        array_pop($namespace);
+        $path = '../' . $namespace . '.php';
 
-        /*
-         * Turn the $namespace array into a string,
-         * separating each item with the directory separator.
-         */
-        $namespace = implode('/', $namespace);
-
-        $this->path = '../' . $namespace . '.php';
-
-        $this->load();
-    }
-
-    private function load()
-    {
-        require $this->path;
+        require $path;
     }
 }

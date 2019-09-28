@@ -19,38 +19,15 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Views\Login\Composing;
+namespace Fragments\Utility\SessionManagement\Init;
 
-/**
- * Login view
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
- */
-class View
+use Fragments\Utility\SessionManagement\Init\AbstractSessionInit;
+
+class SessionStrict extends AbstractSessionInit
 {
-    private $feedbackText = array();
-
-    public $title = 'Fragments - Login';
-
-    public function __construct($feedback)
+    public function __construct()
     {
-        $this->feedbackText = $feedback;
-    }
-
-    private function renderFeedback()
-    {
-        foreach ($this->feedbackText as $text) {
-            echo $text;
-        }
-    }
-
-    public function composePage()
-    {
-        require '../Fragments/Views/_templates/header.php';
-
-        $this->renderFeedback();
-
-        require '../Fragments/Views/Login/templates/loginForm.php';
-        require '../Fragments/Views/_templates/footer.php';
+        $this->options['use_strict_mode'] = 1;
+        $this->init();
     }
 }

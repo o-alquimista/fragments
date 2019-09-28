@@ -35,7 +35,7 @@ use Fragments\Utility\Errors\SoftException;
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-abstract class Feedback
+abstract class AbstractFeedback
 {
     private $feedbackID;
 
@@ -101,41 +101,4 @@ abstract class Feedback
 
         return $output;
     }
-}
-
-class DangerFeedback extends Feedback
-{
-    protected $feedbackType = 'danger';
-
-    protected $feedbackText = array(
-        'EXCEPTION_SESSION_EXPIRED' => 'This session has expired',
-    );
-}
-
-class WarningFeedback extends Feedback
-{
-    protected $feedbackType = 'warning';
-
-    protected $feedbackText = array(
-        'FEEDBACK_USERNAME_EMPTY' => 'Username was left empty',
-        'FEEDBACK_USERNAME_LENGTH' => 'Username must be longer than 3 and '.
-            'shorter than 16 characters',
-        'FEEDBACK_USERNAME_INVALID' => 'Username can only contain '.
-            'alphanumerical characters(a-z, A-Z, 0-9) and underscore(_). '.
-            'Two or more consecutive underscores(__) will be rejected.',
-        'FEEDBACK_PASSWORD_EMPTY' => 'Password was left empty',
-        'FEEDBACK_PASSWORD_LENGTH' => 'Minimum password length is 8 characters',
-        'FEEDBACK_NOT_REGISTERED' => 'Invalid credentials',
-        'FEEDBACK_INCORRECT_PASSWD' => 'Invalid credentials',
-        'FEEDBACK_USERNAME_TAKEN' => 'Username already taken',
-    );
-}
-
-class SuccessFeedback extends Feedback
-{
-    protected $feedbackType = 'success';
-
-    protected $feedbackText = array(
-        'FEEDBACK_REGISTRATION_COMPLETE' => 'Registration complete',
-    );
 }

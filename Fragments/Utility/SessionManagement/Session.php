@@ -19,9 +19,10 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Session\Management;
+namespace Fragments\Utility\SessionManagement;
 
-use Fragments\Utility\Session\Tools\SessionTools;
+use Fragments\Utility\SessionManagement\SessionTools;
+use Fragments\Utility\SessionManagement\Init\SessionStrict;
 use Fragments\Utility\Errors\SoftException;
 
 /**
@@ -31,61 +32,6 @@ use Fragments\Utility\Errors\SoftException;
  * a new session ID while attempting to avoid
  * lost sessions due to unstable connections.
  */
-
-/**
- * Session initialization
- *
- * Important: This is only meant to be used within the
- * Session Utility. To start a new session at the
- * controllers, refer to the Session class in this file.
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
- */
-abstract class SessionInit
-{
-    protected function init()
-    {
-        session_start($this->options);
-    }
-
-    protected $options = array(
-        'use_only_cookies' => 1,
-        'use_trans_sid' => 0,
-        'cookie_httponly' => 1,
-
-        /*
-         * 'cookie_samesite' => 1
-         *
-         * The 'samesite' option support starts
-         * with PHP 7.3
-         */
-
-        /*
-         * 'session.cookie_secure' => 1
-         *
-         * The 'cookie_secure' option can only
-         * be enabled when SSL is configured
-         */
-    );
-}
-
-class SessionStrict extends SessionInit
-{
-    public function __construct()
-    {
-        $this->options['use_strict_mode'] = 1;
-        $this->init();
-    }
-}
-
-class SessionUnsafe extends SessionInit
-{
-    public function __construct()
-    {
-        $this->options['use_strict_mode'] = 0;
-        $this->init();
-    }
-}
 
 /**
  * Session start
@@ -184,68 +130,5 @@ class Session
         }
 
         return true;
-    }
-}
-
-/**
- * Session ID Regeneration
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
- */
-class RegenerateSessionID
-{
-    private $newID;
-
-    public function __construct()
-    {
-        $this->createNewID();
-
-        /*
-         * We mark the current session ID as 'destroyed'
-         * and store the current timestamp in this
-         * session variable, so we can count the time
-         * until this session expires.
-         */
-        SessionTools::set('destroyed', time());
-
-        session_commit();
-
-        /*
-         * Set session ID to the one we generated (uninitialized)
-         */
-        session_id($this->newID);
-        $this->initializeID();
-
-        $this->sessionCleanup();
-    }
-
-    private function createNewID()
-    {
-        $this->newID = session_create_id();
-        SessionTools::set('new_session_id', $this->newID);
-    }
-
-    /**
-     * The session must be started with strict_mode disabled, closed
-     * and then started again with strict_mode enabled.
-     *
-     * This method ensures the new session ID is initialized and accepted.
-     */
-    private function initializeID()
-    {
-        new SessionUnsafe;
-
-        session_commit();
-
-        new SessionStrict;
-    }
-
-    /**
-     * Removes leftover session variables from the ID regeneration process
-     */
-    private function sessionCleanup()
-    {
-        SessionTools::destroy('destroyed');
-        SessionTools::destroy('new_session_id');
     }
 }

@@ -19,29 +19,42 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
+namespace Fragments\Models\Login;
 
-use Fragments\Utility\Server\Request;
+use Fragments\Models\Login\DataMappers\UserMapper;
+use Fragments\Utility\Feedback\WarningFeedback;
 
 /**
- * Request context.
+ * User operations
  *
- * Stores information about the HTTP request.
+ * Any user related task that doesn't fit anywhere else
+ * should be implemented here.
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class RequestContext
+class User
 {
-    public $uri;
+    public $feedbackText = array();
 
-    public $requestMethod;
+    private $username;
 
-    public function __construct()
+    public function __construct($username)
     {
-        $uri = Request::getURI();
-        $uri = trim($uri, '/');
-        $this->uri = $uri;
+        $this->username = $username;
+    }
 
-        $this->requestMethod = Request::requestMethod();
+    public function isRegistered()
+    {
+        $storage = new UserMapper;
+        $matchingRows = $storage->retrieveCount($this->username);
+
+        if ($matchingRows == 0) {
+            $feedback = new WarningFeedback('FEEDBACK_NOT_REGISTERED');
+            $this->feedbackText[] = $feedback->get();
+
+            return false;
+        }
+
+        return true;
     }
 }

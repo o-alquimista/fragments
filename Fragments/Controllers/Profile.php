@@ -19,10 +19,10 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Controllers\Profile;
+namespace Fragments\Controllers;
 
-use Fragments\Views\Profile\Composing\View as ProfileView;
-use Fragments\Utility\Session\Management\Session;
+use Fragments\Views\Profile\View as ProfileView;
+use Fragments\Utility\SessionManagement\Session;
 use Fragments\Models\Profile\ProfileService;
 
 /**

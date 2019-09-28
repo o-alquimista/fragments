@@ -19,21 +19,28 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Views\Errors\Error404\Composing;
+namespace Fragments\Models\Login\DataMappers;
 
-/**
- * Error 404 view
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
- */
-class View
+use Fragments\Models\Login\DataMappers\AbstractDataMapper;
+
+class CredentialHandlerMapper extends AbstractDataMapper
 {
-    public $title = 'Fragments - 404';
-
-    public function composePage()
+    /**
+     * @param string $username
+     * @return string
+     */
+    public function retrieveHash($username)
     {
-        require '../Fragments/Views/_templates/header.php';
-        require '../Fragments/Views/Errors/Error404/templates/error.php';
-        require '../Fragments/Views/_templates/footer.php';
+        $query = "SELECT hash FROM users WHERE username = :username";
+        $stmt = $this->connection->prepare($query);
+
+        $stmt->bindParam(":username", $username);
+
+        $stmt->execute();
+
+        $registry = $stmt->fetchObject();
+        $hash = $registry->hash;
+
+        return $hash;
     }
 }

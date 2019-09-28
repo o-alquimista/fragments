@@ -19,9 +19,9 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing\XMLParser;
+namespace Fragments\Utility\Server\Routing;
 
-use Fragments\Utility\Server\Routing\Route\Route;
+use Fragments\Utility\Server\Routing\Route;
 
 /**
  * XML Loader
@@ -30,7 +30,7 @@ use Fragments\Utility\Server\Routing\Route\Route;
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class Loader
+class XMLParser
 {
     private $routes = [];
 

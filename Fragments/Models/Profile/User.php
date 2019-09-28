@@ -19,50 +19,44 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Controllers;
+namespace Fragments\Models\Profile;
 
-use Fragments\Utility\SessionManagement\Session;
-use Fragments\Views\Register\View as RegisterView;
-use Fragments\Models\Register\RegisterService;
+use Fragments\Models\Profile\DataMappers\UserMapper;
 
 /**
- * Register controller
+ * User operations
+ *
+ * Any user related task that doesn't fit anywhere else
+ * should be implemented here.
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class Register
+class User
 {
-    /**
-     * @var array Holds feedback messages
-     */
-    private $feedbackText = array();
+    public $username;
 
-    public function renderPage()
+    private $storage;
+
+    public function __construct($username)
     {
-        new Session;
-
-        $view = new RegisterView($this->feedbackText);
-        $view->composePage();
+        $this->storage = new UserMapper;
+        $this->username = $username;
     }
 
-    public function startRegister()
+    public function isRegistered()
     {
-        $service = new RegisterService;
-        $service->register();
+        $matchingRows = $this->storage->retrieveCount($this->username);
 
-        $this->getFeedback($service);
+        if ($matchingRows == 0) {
+            return false;
+        }
 
-        $this->renderPage();
+        return true;
     }
 
-    /**
-     * Retrieves feedback messages from the service object.
-     */
-    private function getFeedback($service)
+    public function getData()
     {
-        $this->feedbackText = array_merge(
-            $this->feedbackText,
-            $service->feedbackText
-        );
+        $data = $this->storage->retrieveData($this->username);
+        $this->username = $data->username;
     }
 }

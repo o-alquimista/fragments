@@ -19,12 +19,12 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Controllers\Root;
+namespace Fragments\Controllers;
 
-use Fragments\Views\Root\Composing\View as RootView;
-use Fragments\Utility\Session\Tools\SessionTools;
-use Fragments\Utility\Session\Management\Session;
-use Fragments\Utility\Server\Requests\ServerRequest;
+use Fragments\Views\Root\View as RootView;
+use Fragments\Utility\SessionManagement\SessionTools;
+use Fragments\Utility\SessionManagement\Session;
+use Fragments\Utility\Server\Request;
 
 /**
  * Root controller
@@ -47,6 +47,6 @@ class Root
 
         SessionTools::destroyAll();
 
-        ServerRequest::redirect('/');
+        Request::redirect('/');
     }
 }

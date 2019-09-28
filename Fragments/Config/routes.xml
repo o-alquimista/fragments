@@ -4,7 +4,7 @@
   <route>
     <id>login_get</id>
     <path>login</path>
-    <controller>Fragments\Controllers\Login\Login</controller>
+    <controller>Fragments\Controllers\Login</controller>
     <method>GET</method>
     <action>renderPage</action>
   </route>
@@ -12,7 +12,7 @@
   <route>
     <id>login_post</id>
     <path>login</path>
-    <controller>Fragments\Controllers\Login\Login</controller>
+    <controller>Fragments\Controllers\Login</controller>
     <method>POST</method>
     <action>startLogin</action>
   </route>
@@ -20,7 +20,7 @@
   <route>
     <id>register_get</id>
     <path>register</path>
-    <controller>Fragments\Controllers\Register\Register</controller>
+    <controller>Fragments\Controllers\Register</controller>
     <method>GET</method>
     <action>renderPage</action>
   </route>
@@ -28,7 +28,7 @@
   <route>
     <id>register_post</id>
     <path>register</path>
-    <controller>Fragments\Controllers\Register\Register</controller>
+    <controller>Fragments\Controllers\Register</controller>
     <method>POST</method>
     <action>startRegister</action>
   </route>
@@ -36,7 +36,7 @@
   <route>
     <id>index</id>
     <path></path>
-    <controller>Fragments\Controllers\Root\Root</controller>
+    <controller>Fragments\Controllers\Root</controller>
     <method>GET</method>
     <action>renderPage</action>
   </route>
@@ -44,7 +44,7 @@
   <route>
     <id>logout</id>
     <path>logout</path>
-    <controller>Fragments\Controllers\Root\Root</controller>
+    <controller>Fragments\Controllers\Root</controller>
     <method>GET</method>
     <action>logout</action>
   </route>
@@ -52,7 +52,7 @@
   <route>
     <id>profile</id>
     <path>profile</path>
-    <controller>Fragments\Controllers\Profile\Profile</controller>
+    <controller>Fragments\Controllers\Profile</controller>
     <method>GET</method>
     <action>renderList</action>
   </route>
@@ -60,7 +60,7 @@
   <route>
     <id>public_profile</id>
     <path>profile/{alpha}</path>
-    <controller>Fragments\Controllers\Profile\Profile</controller>
+    <controller>Fragments\Controllers\Profile</controller>
     <method>GET</method>
     <action>renderPage</action>
   </route>

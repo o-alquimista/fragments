@@ -19,7 +19,7 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing\Route;
+namespace Fragments\Utility\Server\Routing;
 
 /**
  * A route description

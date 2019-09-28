@@ -19,29 +19,21 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
-
-use Fragments\Utility\Server\Request;
+namespace Fragments\Views\Root;
 
 /**
- * Request context.
- *
- * Stores information about the HTTP request.
+ * Root view
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class RequestContext
+class View
 {
-    public $uri;
+    public $title = 'Fragments';
 
-    public $requestMethod;
-
-    public function __construct()
+    public function composePage()
     {
-        $uri = Request::getURI();
-        $uri = trim($uri, '/');
-        $this->uri = $uri;
-
-        $this->requestMethod = Request::requestMethod();
+        require '../Fragments/Views/_templates/header.php';
+        require '../Fragments/Views/Root/templates/introduction.php';
+        require '../Fragments/Views/_templates/footer.php';
     }
 }

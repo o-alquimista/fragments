@@ -19,29 +19,25 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
+namespace Fragments\Models\Login\DataMappers;
 
-use Fragments\Utility\Server\Request;
+use Fragments\Models\Login\DataMappers\AbstractDataMapper;
 
-/**
- * Request context.
- *
- * Stores information about the HTTP request.
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
- */
-class RequestContext
+class UserMapper extends AbstractDataMapper
 {
-    public $uri;
-
-    public $requestMethod;
-
-    public function __construct()
+    /**
+     * @param string $username
+     * @return string
+     */
+    public function retrieveCount($username)
     {
-        $uri = Request::getURI();
-        $uri = trim($uri, '/');
-        $this->uri = $uri;
+        $query = "SELECT COUNT(id) FROM users WHERE username = :username";
+        $stmt = $this->connection->prepare($query);
 
-        $this->requestMethod = Request::requestMethod();
+        $stmt->bindParam(":username", $username);
+
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
     }
 }

@@ -19,29 +19,44 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
+namespace Fragments\Models\Login;
 
-use Fragments\Utility\Server\Request;
+use Fragments\Utility\Feedback\WarningFeedback;
+use Fragments\Models\Login\DataMappers\CredentialHandlerMapper;
 
 /**
- * Request context.
+ * Credential handler
  *
- * Stores information about the HTTP request.
+ * Tasks that concern the treatment of login credentials
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class RequestContext
+class CredentialHandler
 {
-    public $uri;
+    public $feedbackText = array();
 
-    public $requestMethod;
+    private $username;
 
-    public function __construct()
+    private $passwd;
+
+    public function __construct($username, $passwd)
     {
-        $uri = Request::getURI();
-        $uri = trim($uri, '/');
-        $this->uri = $uri;
+        $this->username = $username;
+        $this->passwd = $passwd;
+    }
 
-        $this->requestMethod = Request::requestMethod();
+    public function verifyPassword()
+    {
+        $storage = new CredentialHandlerMapper;
+        $hash = $storage->retrieveHash($this->username);
+
+        if (!password_verify($this->passwd, $hash)) {
+            $feedback = new WarningFeedback('FEEDBACK_INCORRECT_PASSWD');
+            $this->feedbackText[] = $feedback->get();
+
+            return false;
+        }
+
+        return true;
     }
 }

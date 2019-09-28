@@ -19,50 +19,48 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Controllers;
-
-use Fragments\Utility\SessionManagement\Session;
-use Fragments\Views\Register\View as RegisterView;
-use Fragments\Models\Register\RegisterService;
+namespace Fragments\Utility\Server;
 
 /**
- * Register controller
+ * Server Request Utility
+ *
+ * Manipulation or retrieval of information regarding HTTP requests.
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class Register
+class Request
 {
-    /**
-     * @var array Holds feedback messages
-     */
-    private $feedbackText = array();
-
-    public function renderPage()
+    public static function getURI()
     {
-        new Session;
-
-        $view = new RegisterView($this->feedbackText);
-        $view->composePage();
+        return $_SERVER['REQUEST_URI'];
     }
 
-    public function startRegister()
+    public static function requestMethod()
     {
-        $service = new RegisterService;
-        $service->register();
+        return $_SERVER['REQUEST_METHOD'];
+    }
 
-        $this->getFeedback($service);
+    public static function post($value)
+    {
+        if (isset($_POST[$value])) {
+            return $_POST[$value];
+        }
+    }
 
-        $this->renderPage();
+    public static function get($value)
+    {
+        if (isset($_GET[$value])) {
+            return $_GET[$value];
+        }
     }
 
     /**
-     * Retrieves feedback messages from the service object.
+     * Redirects the web browser to the specified URI.
+     *
+     * @param string $where
      */
-    private function getFeedback($service)
+    public static function redirect($where)
     {
-        $this->feedbackText = array_merge(
-            $this->feedbackText,
-            $service->feedbackText
-        );
+        header('Location: ' . $where);
     }
 }

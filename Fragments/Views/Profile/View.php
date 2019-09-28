@@ -19,9 +19,9 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Views\Profile\Composing;
+namespace Fragments\Views\Profile;
 
-use Fragments\Utility\Session\Tools\SessionTools;
+use Fragments\Utility\SessionManagement\SessionTools;
 
 /**
  * Profile view.
@@ -30,7 +30,7 @@ use Fragments\Utility\Session\Tools\SessionTools;
  */
 class View
 {
-    public $title = 'Fragments - Profile';
+    public $title = 'Profile - Fragments';
 
     public $username;
 
