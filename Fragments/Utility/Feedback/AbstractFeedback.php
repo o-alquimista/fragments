@@ -91,7 +91,7 @@ abstract class AbstractFeedback
     {
         ob_start();
 
-        echo "<div class='alert alert-" . $this->type . "'>
+        echo "<div class='alert alert-" . $this->type . "' role='alert'>
             " . $message . "
             </div>";
 
