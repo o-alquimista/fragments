@@ -21,7 +21,7 @@ h4 {
  * Lists
  */
 
-#listItem {
+.listItem {
   list-style-type: circle;
   padding: 10px;
 }
