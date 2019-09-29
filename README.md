@@ -1,6 +1,11 @@
 # Fragments
 Fragments aims to be a small framework for web applications. Third-party dependencies will always be avoided if possible, relying solely on what PHP provides. Routing and autoloading are also developed in-house.
 
+Keep in mind that this project is merely an experiment, and is not recommended for use in production.
+
+## Requirements
+- PHP XML extension. This package is called `php-xml` on Ubuntu.
+
 ## Instructions
 - The default database name is `fragments`. Change it at `Fragments/Utility/Connection.php`. The username, password and PDO driver for the database connection can be set there as well.
 
@@ -15,8 +20,7 @@ Require all granted
 FallbackResource /index.php
 ```
 
-## Requirements
-- PHP XML Extension. This package is called `php-xml` on Ubuntu.
+Since Fragments is not meant for use in production, we already include an application in `/App`, plus some routes in `/config/routes.xml` and assets in `/public_html`.
 
 ## License
 Copyright 2019 Douglas Silva (0x9fd287d56ec107ac)
