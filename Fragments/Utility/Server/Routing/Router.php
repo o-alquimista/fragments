@@ -21,11 +21,7 @@
 
 namespace Fragments\Utility\Server\Routing;
 
-use Fragments\Utility\Server\Routing\XMLParser;
-use Fragments\Utility\Server\Routing\RequestContext;
-use Fragments\Utility\Server\Routing\RequestMatcher;
 use Fragments\Controllers\Errors\Error404;
-use Fragments\Utility\Server\Routing\Route;
 
 /**
  * The router controller.

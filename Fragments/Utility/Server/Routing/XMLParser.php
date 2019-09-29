@@ -21,8 +21,6 @@
 
 namespace Fragments\Utility\Server\Routing;
 
-use Fragments\Utility\Server\Routing\Route;
-
 /**
  * XML Loader
  *

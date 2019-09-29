@@ -21,7 +21,6 @@
 
 namespace Fragments\Utility\SessionManagement;
 
-use Fragments\Utility\SessionManagement\SessionTools;
 use Fragments\Utility\SessionManagement\Init\SessionStrict;
 use Fragments\Utility\SessionManagement\Init\SessionUnsafe;
 

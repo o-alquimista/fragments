@@ -21,8 +21,6 @@
 
 namespace Fragments\Utility\SessionManagement\Init;
 
-use Fragments\Utility\SessionManagement\Init\AbstractSessionInit;
-
 class SessionUnsafe extends AbstractSessionInit
 {
     public function __construct()

@@ -21,9 +21,6 @@
 
 namespace Fragments\Utility\Server\Routing;
 
-use Fragments\Utility\Server\Routing\RequestContext;
-use Fragments\Utility\Server\Routing\Route;
-
 /**
  * Request matcher
  *

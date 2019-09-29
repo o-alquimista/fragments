@@ -22,9 +22,6 @@
 namespace App\Models\Register;
 
 use Fragments\Utility\Server\Request;
-use App\Models\Register\FormValidation;
-use App\Models\Register\CredentialHandler;
-use App\Models\Register\User;
 
 /**
  * Register service

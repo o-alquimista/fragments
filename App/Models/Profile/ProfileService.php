@@ -21,9 +21,6 @@
 
 namespace App\Models\Profile;
 
-use App\Models\Profile\Registry;
-use App\Models\Profile\User;
-
 /**
  * Profile service.
  *
