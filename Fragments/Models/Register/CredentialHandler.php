@@ -23,6 +23,7 @@ namespace Fragments\Models\Register;
 
 use Fragments\Utility\Feedback\WarningFeedback;
 use Fragments\Models\Register\DataMappers\CredentialHandlerMapper;
+use Fragments\Utility\SessionManagement\SessionTools;
 
 /**
  * Credential handler
@@ -33,8 +34,6 @@ use Fragments\Models\Register\DataMappers\CredentialHandlerMapper;
  */
 class CredentialHandler
 {
-    public $feedbackText = array();
-
     private $username;
 
     private $passwd;
@@ -52,7 +51,7 @@ class CredentialHandler
 
         if ($matchingRows >= 1) {
             $feedback = new WarningFeedback('FEEDBACK_USERNAME_TAKEN');
-            $this->feedbackText[] = $feedback->get();
+            SessionTools::setFeedback($feedback->get());
 
             return false;
         }

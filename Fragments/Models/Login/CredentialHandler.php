@@ -23,6 +23,7 @@ namespace Fragments\Models\Login;
 
 use Fragments\Utility\Feedback\WarningFeedback;
 use Fragments\Models\Login\DataMappers\CredentialHandlerMapper;
+use Fragments\Utility\SessionManagement\SessionTools;
 
 /**
  * Credential handler
@@ -33,8 +34,6 @@ use Fragments\Models\Login\DataMappers\CredentialHandlerMapper;
  */
 class CredentialHandler
 {
-    public $feedbackText = array();
-
     private $username;
 
     private $passwd;
@@ -52,7 +51,7 @@ class CredentialHandler
 
         if (!password_verify($this->passwd, $hash)) {
             $feedback = new WarningFeedback('FEEDBACK_INCORRECT_PASSWD');
-            $this->feedbackText[] = $feedback->get();
+            SessionTools::setFeedback($feedback->get());
 
             return false;
         }

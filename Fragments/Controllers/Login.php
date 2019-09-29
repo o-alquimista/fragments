@@ -33,21 +33,18 @@ use Fragments\Models\Login\LoginService;
  */
 class Login
 {
-    /**
-     * @var array Holds feedback messages
-     */
-    private $feedbackText = array();
-
     public function renderPage()
     {
         new Session;
 
-        $view = new LoginView($this->feedbackText);
+        $view = new LoginView;
         $view->composePage();
     }
 
     public function startLogin()
     {
+        new Session;
+
         $service = new LoginService;
         $login = $service->login();
 
@@ -56,19 +53,6 @@ class Login
             Request::redirect('/profile/' . $username);
         }
 
-        $this->getFeedback($service);
-
         $this->renderPage();
-    }
-
-    /**
-     * Retrieves feedback messages from the service object.
-     */
-    private function getFeedback($service)
-    {
-        $this->feedbackText = array_merge(
-            $this->feedbackText,
-            $service->feedbackText
-        );
     }
 }

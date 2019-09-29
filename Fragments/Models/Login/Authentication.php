@@ -36,8 +36,6 @@ use Fragments\Models\Login\DataMappers\AuthenticationMapper;
  */
 class Authentication
 {
-    public $feedbackText = array();
-
     private $username;
 
     public function __construct($username)

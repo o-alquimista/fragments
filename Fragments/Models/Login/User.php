@@ -23,6 +23,7 @@ namespace Fragments\Models\Login;
 
 use Fragments\Models\Login\DataMappers\UserMapper;
 use Fragments\Utility\Feedback\WarningFeedback;
+use Fragments\Utility\SessionManagement\SessionTools;
 
 /**
  * User operations
@@ -34,8 +35,6 @@ use Fragments\Utility\Feedback\WarningFeedback;
  */
 class User
 {
-    public $feedbackText = array();
-
     private $username;
 
     public function __construct($username)
@@ -50,7 +49,7 @@ class User
 
         if ($matchingRows == 0) {
             $feedback = new WarningFeedback('FEEDBACK_NOT_REGISTERED');
-            $this->feedbackText[] = $feedback->get();
+            SessionTools::setFeedback($feedback->get());
 
             return false;
         }

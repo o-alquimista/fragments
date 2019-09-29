@@ -23,6 +23,7 @@ namespace Fragments\Models\Register;
 
 use Fragments\Utility\Feedback\SuccessFeedback;
 use Fragments\Models\Register\DataMappers\UserMapper;
+use Fragments\Utility\SessionManagement\SessionTools;
 
 /**
  * User operations
@@ -34,8 +35,6 @@ use Fragments\Models\Register\DataMappers\UserMapper;
  */
 class User
 {
-    public $feedbackText = array();
-
     private $username;
 
     private $passwd;
@@ -52,6 +51,6 @@ class User
         $storage->saveData($this->username, $this->passwd);
 
         $feedback = new SuccessFeedback('FEEDBACK_REGISTRATION_COMPLETE');
-        $this->feedbackText[] = $feedback->get();
+        SessionTools::setFeedback($feedback->get());
     }
 }

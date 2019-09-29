@@ -34,11 +34,6 @@ use Fragments\Models\Login\User;
  */
 class LoginService
 {
-    /**
-     * @var array Holds feedback messages
-     */
-    public $feedbackText = array();
-
     public $username;
 
     private $passwd;
@@ -54,24 +49,18 @@ class LoginService
         $input = new FormValidation($this->username, $this->passwd);
 
         if ($input->validate() === false) {
-            $this->getFeedback($input);
-
             return false;
         }
 
         $user = new User($this->username);
 
         if ($user->isRegistered() === false) {
-            $this->getFeedback($user);
-
             return false;
         }
 
         $credentials = new CredentialHandler($this->username, $this->passwd);
 
         if ($credentials->verifyPassword() === false) {
-            $this->getFeedback($credentials);
-
             return false;
         }
 
@@ -79,14 +68,6 @@ class LoginService
         $authentication->login();
 
         return true;
-    }
-
-    private function getFeedback($object)
-    {
-        $this->feedbackText = array_merge(
-            $this->feedbackText,
-            $object->feedbackText
-        );
     }
 
     private function clean($input)

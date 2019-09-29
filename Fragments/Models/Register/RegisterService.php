@@ -33,11 +33,6 @@ use Fragments\Models\Register\User;
  */
 class RegisterService
 {
-    /**
-     * @var array Holds feedback messages
-     */
-    public $feedbackText = array();
-
     private $username;
 
     private $passwd;
@@ -53,16 +48,12 @@ class RegisterService
         $formInput = new FormValidation($this->username, $this->passwd);
 
         if ($formInput->validate() === false) {
-            $this->getFeedback($formInput);
-
             return false;
         }
 
         $credential = new CredentialHandler($this->username, $this->passwd);
 
         if ($credential->usernameAvailable() === false) {
-            $this->getFeedback($credential);
-
             return false;
         }
 
@@ -70,8 +61,6 @@ class RegisterService
 
         $user = new User($this->username, $hashedPassword);
         $user->createUser();
-
-        $this->getFeedback($user);
 
         return true;
     }
@@ -83,13 +72,5 @@ class RegisterService
         $input = htmlspecialchars($input);
 
         return $input;
-    }
-
-    private function getFeedback($object)
-    {
-        $this->feedbackText = array_merge(
-            $this->feedbackText,
-            $object->feedbackText
-        );
     }
 }

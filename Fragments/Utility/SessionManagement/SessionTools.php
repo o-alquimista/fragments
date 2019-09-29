@@ -57,4 +57,25 @@ class SessionTools
     {
         $_SESSION = array();
     }
+
+    public static function setFeedback($feedback)
+    {
+        if (!isset($_SESSION['feedbackBag'])) {
+            $_SESSION['feedbackBag'] = array();
+        }
+
+        $_SESSION['feedbackBag'][] = $feedback;
+    }
+
+    public static function getFeedback()
+    {
+        if (isset($_SESSION['feedbackBag'])) {
+            $feedbackBag = $_SESSION['feedbackBag'];
+            unset($_SESSION['feedbackBag']);
+
+            return $feedbackBag;
+        }
+
+        return array();
+    }
 }

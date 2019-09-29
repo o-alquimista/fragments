@@ -22,6 +22,7 @@
 namespace Fragments\Models\Register;
 
 use Fragments\Utility\Feedback\WarningFeedback;
+use Fragments\Utility\SessionManagement\SessionTools;
 
 /**
  * Input validation
@@ -33,8 +34,6 @@ use Fragments\Utility\Feedback\WarningFeedback;
  */
 class FormValidation
 {
-    public $feedbackText = array();
-
     private $username;
 
     private $passwd;
@@ -61,21 +60,21 @@ class FormValidation
     {
         if (empty($this->username)) {
             $feedback = new WarningFeedback('FEEDBACK_USERNAME_EMPTY');
-            $this->feedbackText[] = $feedback->get();
+            SessionTools::setFeedback($feedback->get());
 
             return false;
         }
 
         if (strlen($this->username) < 4 or strlen($this->username) > 15) {
             $feedback = new WarningFeedback('FEEDBACK_USERNAME_LENGTH');
-            $this->feedbackText[] = $feedback->get();
+            SessionTools::setFeedback($feedback->get());
 
             return false;
         }
 
         if (!preg_match('/^(?!.*__.*)[a-zA-Z0-9_]+$/', $this->username)) {
             $feedback = new WarningFeedback('FEEDBACK_USERNAME_INVALID');
-            $this->feedbackText[] = $feedback->get();
+            SessionTools::setFeedback($feedback->get());
 
             return false;
         }
@@ -87,14 +86,14 @@ class FormValidation
     {
         if (empty($this->passwd)) {
             $feedback = new WarningFeedback('FEEDBACK_PASSWORD_EMPTY');
-            $this->feedbackText[] = $feedback->get();
+            SessionTools::setFeedback($feedback->get());
 
             return false;
         }
 
         if (strlen($this->passwd) <= 7) {
             $feedback = new WarningFeedback('FEEDBACK_PASSWORD_LENGTH');
-            $this->feedbackText[] = $feedback->get();
+            SessionTools::setFeedback($feedback->get());
 
             return false;
         }

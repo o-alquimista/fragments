@@ -21,6 +21,8 @@
 
 namespace Fragments\Views\Register;
 
+use Fragments\Utility\SessionManagement\SessionTools;
+
 /**
  * Register view
  *
@@ -28,27 +30,22 @@ namespace Fragments\Views\Register;
  */
 class View
 {
-    private $feedbackText = array();
+    private $feedback;
 
     public $title = 'Register - Fragments';
 
-    public function __construct($feedback)
+    public function __construct()
     {
-        $this->feedbackText = $feedback;
-    }
-
-    private function renderFeedback()
-    {
-        foreach ($this->feedbackText as $text) {
-            echo $text;
-        }
+        $this->feedback = SessionTools::getFeedback();
     }
 
     public function composePage()
     {
         require '../Fragments/Views/_templates/header.php';
 
-        $this->renderFeedback();
+        foreach ($this->feedback as $feedback) {
+            echo $feedback;
+        }
 
         require '../Fragments/Views/Register/templates/registerForm.php';
         require '../Fragments/Views/_templates/footer.php';

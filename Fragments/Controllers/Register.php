@@ -32,37 +32,21 @@ use Fragments\Models\Register\RegisterService;
  */
 class Register
 {
-    /**
-     * @var array Holds feedback messages
-     */
-    private $feedbackText = array();
-
     public function renderPage()
     {
         new Session;
 
-        $view = new RegisterView($this->feedbackText);
+        $view = new RegisterView;
         $view->composePage();
     }
 
     public function startRegister()
     {
+        new Session;
+
         $service = new RegisterService;
         $service->register();
 
-        $this->getFeedback($service);
-
         $this->renderPage();
-    }
-
-    /**
-     * Retrieves feedback messages from the service object.
-     */
-    private function getFeedback($service)
-    {
-        $this->feedbackText = array_merge(
-            $this->feedbackText,
-            $service->feedbackText
-        );
     }
 }
