@@ -46,14 +46,7 @@ class FormValidation
 
     public function validate()
     {
-        $validationUsername = $this->validateUsername();
-        $validationPassword = $this->validatePassword();
-
-        if ($validationUsername && $validationPassword === true) {
-            return true;
-        }
-
-        return false;
+        return $this->validateUsername() && $this->validatePassword();
     }
 
     private function validateUsername()
@@ -65,15 +58,15 @@ class FormValidation
             return false;
         }
 
-        if (strlen($this->username) < 4 or strlen($this->username) > 15) {
-            $feedback = new WarningFeedback('FEEDBACK_USERNAME_LENGTH');
+        if (!preg_match('/^[a-zA-Z0-9_]+$/', $this->username)) {
+            $feedback = new WarningFeedback('FEEDBACK_USERNAME_INVALID');
             SessionTools::setFeedback($feedback->get());
 
             return false;
         }
 
-        if (!preg_match('/^(?!.*__.*)[a-zA-Z0-9_]+$/', $this->username)) {
-            $feedback = new WarningFeedback('FEEDBACK_USERNAME_INVALID');
+        if (strlen($this->username) < 4 or strlen($this->username) > 25) {
+            $feedback = new WarningFeedback('FEEDBACK_USERNAME_LENGTH');
             SessionTools::setFeedback($feedback->get());
 
             return false;
@@ -91,7 +84,7 @@ class FormValidation
             return false;
         }
 
-        if (strlen($this->passwd) <= 7) {
+        if (strlen($this->passwd) < 8) {
             $feedback = new WarningFeedback('FEEDBACK_PASSWORD_LENGTH');
             SessionTools::setFeedback($feedback->get());
 

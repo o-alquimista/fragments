@@ -45,14 +45,7 @@ class FormValidation
 
     public function validate()
     {
-        $validationUsername = $this->validateUsername();
-        $validationPassword = $this->validatePassword();
-
-        if ($validationUsername && $validationPassword === true) {
-            return true;
-        }
-
-        return false;
+        return $this->validateUsername() && $this->validatePassword();
     }
 
     private function validateUsername()

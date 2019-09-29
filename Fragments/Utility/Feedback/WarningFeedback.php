@@ -30,10 +30,9 @@ class WarningFeedback extends AbstractFeedback
     protected $feedbackText = array(
         'FEEDBACK_USERNAME_EMPTY' => 'Username was left empty',
         'FEEDBACK_USERNAME_LENGTH' => 'Username must be longer than 3 and '.
-            'shorter than 16 characters',
+            'shorter than 26 characters',
         'FEEDBACK_USERNAME_INVALID' => 'Username can only contain '.
-            'alphanumerical characters(a-z, A-Z, 0-9) and underscore(_). '.
-            'Two or more consecutive underscores(__) will be rejected.',
+            'alphanumerical characters(a-z, A-Z, 0-9) and underscore(_).',
         'FEEDBACK_PASSWORD_EMPTY' => 'Password was left empty',
         'FEEDBACK_PASSWORD_LENGTH' => 'Minimum password length is 8 characters',
         'FEEDBACK_NOT_REGISTERED' => 'Invalid credentials',
