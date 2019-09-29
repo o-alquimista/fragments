@@ -19,38 +19,26 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
+namespace App\Views\Register;
 
-use Fragments\Utility\Server\Routing\Route;
+use Fragments\Views\AbstractView;
 
 /**
- * XML Loader
- *
- * Populates route objects using data from an XML file
+ * Register view
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class XMLParser
+class View extends AbstractView
 {
-    private $routes = [];
+    public $title = 'Register - Fragments';
 
-    public function __construct()
+    public function composePage()
     {
-        $routing = simplexml_load_file('../config/routes.xml');
+        require '../App/Views/_templates/header.php';
 
-        foreach ($routing->route as $route) {
-            $id = (string)$route->id;
-            $path = (string)$route->path;
-            $methods = (string)$route->methods;
-            $controller = (string)$route->controller;
-            $action = (string)$route->action;
+        $this->renderFeedback();
 
-            $this->routes[$id] = new Route($path, $controller, $action, $methods);
-        }
-    }
-
-    public function getRouteCollection()
-    {
-        return $this->routes;
+        require '../App/Views/Register/templates/registerForm.php';
+        require '../App/Views/_templates/footer.php';
     }
 }

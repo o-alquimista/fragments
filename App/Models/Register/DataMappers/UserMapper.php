@@ -19,23 +19,25 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Views\Errors\Error404;
+namespace App\Models\Register\DataMappers;
 
-use Fragments\Views\AbstractView;
+use Fragments\Models\DataMappers\AbstractDataMapper;
 
-/**
- * Error 404 view
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
- */
-class View extends AbstractView
+class UserMapper extends AbstractDataMapper
 {
-    public $title = 'Page not found';
-
-    public function composePage()
+    /**
+     * @param string $username
+     * @param string $passwd
+     */
+    public function saveData($username, $passwd)
     {
-        require '../Fragments/Views/_templates/header.php';
-        require '../Fragments/Views/Errors/Error404/templates/error.php';
-        require '../Fragments/Views/_templates/footer.php';
+        $query = "INSERT INTO users (username, hash) VALUES (:username, :hash)";
+
+        $stmt = $this->connection->prepare($query);
+
+        $stmt->bindParam(":username", $username);
+        $stmt->bindParam(":hash", $passwd);
+
+        $stmt->execute();
     }
 }

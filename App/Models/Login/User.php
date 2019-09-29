@@ -19,38 +19,41 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
+namespace App\Models\Login;
 
-use Fragments\Utility\Server\Routing\Route;
+use Fragments\Utility\SessionManagement\SessionTools;
+use App\Models\Login\DataMappers\UserMapper;
+use App\Utility\Feedback\WarningFeedback;
 
 /**
- * XML Loader
+ * User operations
  *
- * Populates route objects using data from an XML file
+ * Any user related task that doesn't fit anywhere else
+ * should be implemented here.
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class XMLParser
+class User
 {
-    private $routes = [];
+    private $username;
 
-    public function __construct()
+    public function __construct($username)
     {
-        $routing = simplexml_load_file('../config/routes.xml');
-
-        foreach ($routing->route as $route) {
-            $id = (string)$route->id;
-            $path = (string)$route->path;
-            $methods = (string)$route->methods;
-            $controller = (string)$route->controller;
-            $action = (string)$route->action;
-
-            $this->routes[$id] = new Route($path, $controller, $action, $methods);
-        }
+        $this->username = $username;
     }
 
-    public function getRouteCollection()
+    public function isRegistered()
     {
-        return $this->routes;
+        $storage = new UserMapper;
+        $matchingRows = $storage->retrieveCount($this->username);
+
+        if ($matchingRows == 0) {
+            $feedback = new WarningFeedback('FEEDBACK_NOT_REGISTERED');
+            SessionTools::setFeedback($feedback->get());
+
+            return false;
+        }
+
+        return true;
     }
 }

@@ -19,38 +19,38 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
+namespace App\Models\Login;
 
-use Fragments\Utility\Server\Routing\Route;
+use Fragments\Utility\SessionManagement\RegenerateSessionID;
+use Fragments\Utility\SessionManagement\SessionTools;
+use App\Models\Login\DataMappers\AuthenticationMapper;
 
 /**
- * XML Loader
+ * Authentication
  *
- * Populates route objects using data from an XML file
+ * Tasks that grant some form of authentication. Remember to
+ * regenerate the session ID before creating/modifying session
+ * variables.
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class XMLParser
+class Authentication
 {
-    private $routes = [];
+    private $username;
 
-    public function __construct()
+    public function __construct($username)
     {
-        $routing = simplexml_load_file('../config/routes.xml');
-
-        foreach ($routing->route as $route) {
-            $id = (string)$route->id;
-            $path = (string)$route->path;
-            $methods = (string)$route->methods;
-            $controller = (string)$route->controller;
-            $action = (string)$route->action;
-
-            $this->routes[$id] = new Route($path, $controller, $action, $methods);
-        }
+        $this->username = $username;
     }
 
-    public function getRouteCollection()
+    public function login()
     {
-        return $this->routes;
+        new RegenerateSessionID;
+
+        $storage = new AuthenticationMapper;
+        $data = $storage->retrieveData($this->username);
+
+        SessionTools::set('login', true);
+        SessionTools::set('username', $data->username);
     }
 }

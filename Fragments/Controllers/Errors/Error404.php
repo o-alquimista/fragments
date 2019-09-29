@@ -22,8 +22,8 @@
 namespace Fragments\Controllers\Errors;
 
 use Fragments\Controllers\AbstractController;
-use Fragments\Views\Errors\Error404\View as Error404View;
 use Fragments\Utility\SessionManagement\Session;
+use Fragments\Views\Errors\Error404\View as Error404View;
 
 /**
  * Error 404 controller

@@ -19,38 +19,46 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
+namespace App\Models\Profile;
 
-use Fragments\Utility\Server\Routing\Route;
+use App\Models\Profile\Registry;
+use App\Models\Profile\User;
 
 /**
- * XML Loader
+ * Profile service.
  *
- * Populates route objects using data from an XML file
+ * Retrieves resources to populate the profile page.
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class XMLParser
+class ProfileService
 {
-    private $routes = [];
+    public $username;
 
-    public function __construct()
+    public function getUserData($username)
     {
-        $routing = simplexml_load_file('../config/routes.xml');
+        $user = new User($username);
 
-        foreach ($routing->route as $route) {
-            $id = (string)$route->id;
-            $path = (string)$route->path;
-            $methods = (string)$route->methods;
-            $controller = (string)$route->controller;
-            $action = (string)$route->action;
-
-            $this->routes[$id] = new Route($path, $controller, $action, $methods);
+        if ($user->isRegistered() === false) {
+            return false;
         }
+
+        $user->getData($username);
+        $this->username = $user->username;
+
+        return true;
     }
 
-    public function getRouteCollection()
+    /**
+     * Returns an array containing all registered usernames.
+     *
+     * @return array
+     */
+    public function getUserList()
     {
-        return $this->routes;
+        $registry = new Registry;
+        $list = $registry->retrieveUserList();
+
+        return $list;
     }
 }

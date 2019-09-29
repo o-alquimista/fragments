@@ -19,38 +19,26 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
+namespace Fragments\Models\DataMappers;
 
-use Fragments\Utility\Server\Routing\Route;
+use Fragments\Utility\DatabaseConnection;
 
 /**
- * XML Loader
+ * Data mapper
  *
- * Populates route objects using data from an XML file
+ * Creates resources used by mappers
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class XMLParser
+abstract class AbstractDataMapper
 {
-    private $routes = [];
+    /**
+     * @var object database connection object (PDO)
+     */
+    protected $connection;
 
-    public function __construct()
-    {
-        $routing = simplexml_load_file('../config/routes.xml');
-
-        foreach ($routing->route as $route) {
-            $id = (string)$route->id;
-            $path = (string)$route->path;
-            $methods = (string)$route->methods;
-            $controller = (string)$route->controller;
-            $action = (string)$route->action;
-
-            $this->routes[$id] = new Route($path, $controller, $action, $methods);
-        }
-    }
-
-    public function getRouteCollection()
-    {
-        return $this->routes;
+    public function __construct() {
+        $connection = new DatabaseConnection;
+        $this->connection = $connection->getConnection();
     }
 }

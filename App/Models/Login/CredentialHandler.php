@@ -19,38 +19,43 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
+namespace App\Models\Login;
 
-use Fragments\Utility\Server\Routing\Route;
+use Fragments\Utility\SessionManagement\SessionTools;
+use App\Models\Login\DataMappers\CredentialHandlerMapper;
+use App\Utility\Feedback\WarningFeedback;
 
 /**
- * XML Loader
+ * Credential handler
  *
- * Populates route objects using data from an XML file
+ * Tasks that concern the treatment of login credentials
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class XMLParser
+class CredentialHandler
 {
-    private $routes = [];
+    private $username;
 
-    public function __construct()
+    private $passwd;
+
+    public function __construct($username, $passwd)
     {
-        $routing = simplexml_load_file('../config/routes.xml');
-
-        foreach ($routing->route as $route) {
-            $id = (string)$route->id;
-            $path = (string)$route->path;
-            $methods = (string)$route->methods;
-            $controller = (string)$route->controller;
-            $action = (string)$route->action;
-
-            $this->routes[$id] = new Route($path, $controller, $action, $methods);
-        }
+        $this->username = $username;
+        $this->passwd = $passwd;
     }
 
-    public function getRouteCollection()
+    public function verifyPassword()
     {
-        return $this->routes;
+        $storage = new CredentialHandlerMapper;
+        $hash = $storage->retrieveHash($this->username);
+
+        if (!password_verify($this->passwd, $hash)) {
+            $feedback = new WarningFeedback('FEEDBACK_INCORRECT_PASSWD');
+            SessionTools::setFeedback($feedback->get());
+
+            return false;
+        }
+
+        return true;
     }
 }

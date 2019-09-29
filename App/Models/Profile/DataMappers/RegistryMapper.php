@@ -19,23 +19,23 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Views\Errors\Error404;
+namespace App\Models\Profile\DataMappers;
 
-use Fragments\Views\AbstractView;
+use Fragments\Models\DataMappers\AbstractDataMapper;
+use PDO;
 
-/**
- * Error 404 view
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
- */
-class View extends AbstractView
+class RegistryMapper extends AbstractDataMapper
 {
-    public $title = 'Page not found';
-
-    public function composePage()
+    /**
+     * @return array
+     */
+    public function getAllUsernames()
     {
-        require '../Fragments/Views/_templates/header.php';
-        require '../Fragments/Views/Errors/Error404/templates/error.php';
-        require '../Fragments/Views/_templates/footer.php';
+        $query = "SELECT username FROM users";
+
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 }

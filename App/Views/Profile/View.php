@@ -1,0 +1,75 @@
+<?php
+
+/**
+ * Copyright 2019 Douglas Silva (0x9fd287d56ec107ac)
+ *
+ * This file is part of Fragments.
+ *
+ * Fragments is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+namespace App\Views\Profile;
+
+use Fragments\Views\AbstractView;
+use Fragments\Utility\SessionManagement\SessionTools;
+
+/**
+ * Profile view.
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
+ */
+class View extends AbstractView
+{
+    public $title = 'Profile - Fragments';
+
+    public $username;
+
+    public $sessionStatus;
+
+    public function __construct($username) {
+        $this->username = $username;
+
+        if (SessionTools::get('login') == true) {
+            $name = SessionTools::get('username');
+            $this->sessionStatus = "You are logged in, " . $name;
+        }
+    }
+
+    public function composePage()
+    {
+        require '../App/Views/_templates/header.php';
+        require '../App/Views/Profile/templates/profile.php';
+        require '../App/Views/_templates/footer.php';
+    }
+
+    public function composeError()
+    {
+        require '../App/Views/_templates/header.php';
+        require '../App/Views/Profile/templates/notFound.php';
+        require '../App/Views/_templates/footer.php';
+    }
+
+    public function composeList($list)
+    {
+        require '../App/Views/_templates/header.php';
+        require '../App/Views/Profile/templates/listTemplates/openContainer.php';
+
+        foreach ($list as $username) {
+            require '../App/Views/Profile/templates/listTemplates/listItem.php';
+        }
+
+        require '../App/Views/Profile/templates/listTemplates/closeContainer.php';
+        require '../App/Views/_templates/footer.php';
+    }
+}

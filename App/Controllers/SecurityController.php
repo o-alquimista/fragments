@@ -19,38 +19,46 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
+namespace App\Controllers;
 
-use Fragments\Utility\Server\Routing\Route;
+use Fragments\Controllers\AbstractController;
+use Fragments\Utility\SessionManagement\Session;
+use Fragments\Utility\SessionManagement\SessionTools;
+use Fragments\Utility\Server\Request;
+use App\Views\Login\View as LoginView;
+use App\Models\Login\LoginService;
 
 /**
- * XML Loader
- *
- * Populates route objects using data from an XML file
+ * Security controller
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class XMLParser
+class SecurityController extends AbstractController
 {
-    private $routes = [];
-
-    public function __construct()
+    public function login()
     {
-        $routing = simplexml_load_file('../config/routes.xml');
+        new Session;
 
-        foreach ($routing->route as $route) {
-            $id = (string)$route->id;
-            $path = (string)$route->path;
-            $methods = (string)$route->methods;
-            $controller = (string)$route->controller;
-            $action = (string)$route->action;
+        if ($this->isFormSubmitted()) {
+            $service = new LoginService;
+            $login = $service->login();
 
-            $this->routes[$id] = new Route($path, $controller, $action, $methods);
+            if ($login === true) {
+                $username = $service->username;
+                Request::redirect('/profile/' . $username);
+            }
         }
+
+        $view = new LoginView;
+        $view->composePage();
     }
 
-    public function getRouteCollection()
+    public function logout()
     {
-        return $this->routes;
+        new Session;
+
+        SessionTools::destroyAll();
+
+        Request::redirect('/');
     }
 }

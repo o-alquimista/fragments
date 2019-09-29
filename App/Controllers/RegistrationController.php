@@ -19,38 +19,30 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
+namespace App\Controllers;
 
-use Fragments\Utility\Server\Routing\Route;
+use Fragments\Controllers\AbstractController;
+use Fragments\Utility\SessionManagement\Session;
+use App\Views\Register\View as RegisterView;
+use App\Models\Register\RegisterService;
 
 /**
- * XML Loader
- *
- * Populates route objects using data from an XML file
+ * Register controller
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class XMLParser
+class RegistrationController extends AbstractController
 {
-    private $routes = [];
-
-    public function __construct()
+    public function register()
     {
-        $routing = simplexml_load_file('../config/routes.xml');
+        new Session;
 
-        foreach ($routing->route as $route) {
-            $id = (string)$route->id;
-            $path = (string)$route->path;
-            $methods = (string)$route->methods;
-            $controller = (string)$route->controller;
-            $action = (string)$route->action;
-
-            $this->routes[$id] = new Route($path, $controller, $action, $methods);
+        if ($this->isFormSubmitted()) {
+            $service = new RegisterService;
+            $service->register();
         }
-    }
 
-    public function getRouteCollection()
-    {
-        return $this->routes;
+        $view = new RegisterView;
+        $view->composePage();
     }
 }

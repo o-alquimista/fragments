@@ -19,23 +19,15 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Views\Errors\Error404;
+namespace App\Utility\Feedback;
 
-use Fragments\Views\AbstractView;
+use Fragments\Utility\Feedback\AbstractFeedback;
 
-/**
- * Error 404 view
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
- */
-class View extends AbstractView
+class SuccessFeedback extends AbstractFeedback
 {
-    public $title = 'Page not found';
+    protected $feedbackType = 'success';
 
-    public function composePage()
-    {
-        require '../Fragments/Views/_templates/header.php';
-        require '../Fragments/Views/Errors/Error404/templates/error.php';
-        require '../Fragments/Views/_templates/footer.php';
-    }
+    protected $feedbackText = array(
+        'FEEDBACK_REGISTRATION_COMPLETE' => 'Registration complete',
+    );
 }

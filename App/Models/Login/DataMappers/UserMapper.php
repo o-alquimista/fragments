@@ -19,23 +19,25 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Views\Errors\Error404;
+namespace App\Models\Login\DataMappers;
 
-use Fragments\Views\AbstractView;
+use Fragments\Models\DataMappers\AbstractDataMapper;
 
-/**
- * Error 404 view
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
- */
-class View extends AbstractView
+class UserMapper extends AbstractDataMapper
 {
-    public $title = 'Page not found';
-
-    public function composePage()
+    /**
+     * @param string $username
+     * @return string
+     */
+    public function retrieveCount($username)
     {
-        require '../Fragments/Views/_templates/header.php';
-        require '../Fragments/Views/Errors/Error404/templates/error.php';
-        require '../Fragments/Views/_templates/footer.php';
+        $query = "SELECT COUNT(id) FROM users WHERE username = :username";
+        $stmt = $this->connection->prepare($query);
+
+        $stmt->bindParam(":username", $username);
+
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
     }
 }

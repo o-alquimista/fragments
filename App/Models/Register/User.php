@@ -19,38 +19,38 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
+namespace App\Models\Register;
 
-use Fragments\Utility\Server\Routing\Route;
+use Fragments\Utility\SessionManagement\SessionTools;
+use App\Models\Register\DataMappers\UserMapper;
+use App\Utility\Feedback\SuccessFeedback;
 
 /**
- * XML Loader
+ * User operations
  *
- * Populates route objects using data from an XML file
+ * Any user related task that doesn't fit anywhere else
+ * should be implemented here.
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class XMLParser
+class User
 {
-    private $routes = [];
+    private $username;
 
-    public function __construct()
+    private $passwd;
+
+    public function __construct($username, $passwd)
     {
-        $routing = simplexml_load_file('../config/routes.xml');
-
-        foreach ($routing->route as $route) {
-            $id = (string)$route->id;
-            $path = (string)$route->path;
-            $methods = (string)$route->methods;
-            $controller = (string)$route->controller;
-            $action = (string)$route->action;
-
-            $this->routes[$id] = new Route($path, $controller, $action, $methods);
-        }
+        $this->username = $username;
+        $this->passwd = $passwd;
     }
 
-    public function getRouteCollection()
+    public function createUser()
     {
-        return $this->routes;
+        $storage = new UserMapper;
+        $storage->saveData($this->username, $this->passwd);
+
+        $feedback = new SuccessFeedback('FEEDBACK_REGISTRATION_COMPLETE');
+        SessionTools::setFeedback($feedback->get());
     }
 }

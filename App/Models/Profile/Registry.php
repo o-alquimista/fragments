@@ -19,38 +19,33 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Server\Routing;
+namespace App\Models\Profile;
 
-use Fragments\Utility\Server\Routing\Route;
+use App\Models\Profile\DataMappers\RegistryMapper;
 
 /**
- * XML Loader
+ * Registry operations.
  *
- * Populates route objects using data from an XML file
+ * Operations which do not concern a specific user.
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class XMLParser
+class Registry
 {
-    private $routes = [];
+    private $storage;
 
     public function __construct()
     {
-        $routing = simplexml_load_file('../config/routes.xml');
-
-        foreach ($routing->route as $route) {
-            $id = (string)$route->id;
-            $path = (string)$route->path;
-            $methods = (string)$route->methods;
-            $controller = (string)$route->controller;
-            $action = (string)$route->action;
-
-            $this->routes[$id] = new Route($path, $controller, $action, $methods);
-        }
+        $this->storage = new RegistryMapper;
     }
 
-    public function getRouteCollection()
+    /**
+     * Retrieve all registered usernames.
+     */
+    public function retrieveUserList()
     {
-        return $this->routes;
+        $list = $this->storage->getAllUsernames();
+
+        return $list;
     }
 }
