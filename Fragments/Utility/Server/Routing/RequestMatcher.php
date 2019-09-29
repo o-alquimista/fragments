@@ -104,14 +104,18 @@ class RequestMatcher
      * @return boolean
      */
     private function matchPathWithWildcard(Route $route) {
+        if (!in_array($this->context->requestMethod, $route->methods)) {
+            return false;
+        }
+
         $path = $route->path;
         $pattern = '/\/{alpha}/';
         $replacement = '';
 
         $prefix = preg_replace($pattern, $replacement, $path);
-        $prefix = '/^' . $prefix . '\/' . '(?<username>[a-zA-Z0-9_]+)$/';
 
-        $match = [];
+        // Using ~ as the regex delimiter to prevent conflict
+        $prefix = '~^' . $prefix . '\/' . '(?<username>[a-zA-Z0-9_]+)$~';
 
         if (preg_match($prefix, $this->context->uri, $match) == true) {
             $this->parameter = $match['username'];
@@ -134,7 +138,7 @@ class RequestMatcher
             return false;
         }
 
-        if ($route->method !== $this->context->requestMethod) {
+        if (!in_array($this->context->requestMethod, $route->methods)) {
             return false;
         }
 

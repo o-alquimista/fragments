@@ -21,38 +21,28 @@
 
 namespace Fragments\Controllers;
 
+use Fragments\Controllers\AbstractController;
 use Fragments\Utility\SessionManagement\Session;
-use Fragments\Utility\Server\Request;
-use Fragments\Views\Login\View as LoginView;
-use Fragments\Models\Login\LoginService;
+use Fragments\Views\Register\View as RegisterView;
+use Fragments\Models\Register\RegisterService;
 
 /**
- * Login controller
+ * Register controller
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class Login
+class RegistrationController extends AbstractController
 {
-    public function renderPage()
+    public function register()
     {
         new Session;
 
-        $view = new LoginView;
-        $view->composePage();
-    }
-
-    public function startLogin()
-    {
-        new Session;
-
-        $service = new LoginService;
-        $login = $service->login();
-
-        if ($login === TRUE) {
-            $username = $service->username;
-            Request::redirect('/profile/' . $username);
+        if ($this->isFormSubmitted()) {
+            $service = new RegisterService;
+            $service->register();
         }
 
-        $this->renderPage();
+        $view = new RegisterView;
+        $view->composePage();
     }
 }

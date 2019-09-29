@@ -52,19 +52,19 @@ class Route
     public $action;
 
     /**
-     * The request method.
+     * The request methods supported.
      *
      * Example: POST, GET.
      *
-     * @var string
+     * @var array
      */
-    public $method;
+    public $methods;
 
-    public function __construct($path, $controller, $action, $method)
+    public function __construct($path, $controller, $action, $methods)
     {
         $this->path = $path;
         $this->controller = $controller;
         $this->action = $action;
-        $this->method = $method;
+        $this->methods = explode('|', $methods);
     }
 }

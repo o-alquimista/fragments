@@ -41,11 +41,11 @@ class XMLParser
         foreach ($routing->route as $route) {
             $id = (string)$route->id;
             $path = (string)$route->path;
-            $method = (string)$route->method;
+            $methods = (string)$route->methods;
             $controller = (string)$route->controller;
             $action = (string)$route->action;
 
-            $this->routes[$id] = new Route($path, $controller, $action, $method);
+            $this->routes[$id] = new Route($path, $controller, $action, $methods);
         }
     }
 

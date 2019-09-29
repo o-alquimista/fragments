@@ -21,6 +21,7 @@
 
 namespace Fragments\Controllers;
 
+use Fragments\Controllers\AbstractController;
 use Fragments\Views\Profile\View as ProfileView;
 use Fragments\Utility\SessionManagement\Session;
 use Fragments\Models\Profile\ProfileService;
@@ -30,11 +31,11 @@ use Fragments\Models\Profile\ProfileService;
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class Profile
+class ProfileController extends AbstractController
 {
     private $username;
 
-    public function renderPage($username)
+    public function renderUserProfile($username)
     {
         $result = $this->populate($username);
 
@@ -51,7 +52,7 @@ class Profile
     /**
      * Fetches a list of all registered users.
      */
-    public function renderList()
+    public function renderUserList()
     {
         $service = new ProfileService;
         $list = $service->getUserList();

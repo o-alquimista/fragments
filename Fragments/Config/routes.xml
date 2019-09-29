@@ -2,66 +2,50 @@
 <!DOCTYPE xml>
 <routing>
   <route>
-    <id>login_get</id>
-    <path>login</path>
-    <controller>Fragments\Controllers\Login</controller>
-    <method>GET</method>
-    <action>renderPage</action>
+    <id>login</id>
+    <path>/login</path>
+    <controller>Fragments\Controllers\SecurityController</controller>
+    <methods>GET|POST</methods>
+    <action>login</action>
   </route>
 
   <route>
-    <id>login_post</id>
-    <path>login</path>
-    <controller>Fragments\Controllers\Login</controller>
-    <method>POST</method>
-    <action>startLogin</action>
-  </route>
-
-  <route>
-    <id>register_get</id>
-    <path>register</path>
-    <controller>Fragments\Controllers\Register</controller>
-    <method>GET</method>
-    <action>renderPage</action>
-  </route>
-
-  <route>
-    <id>register_post</id>
-    <path>register</path>
-    <controller>Fragments\Controllers\Register</controller>
-    <method>POST</method>
-    <action>startRegister</action>
+    <id>register</id>
+    <path>/register</path>
+    <controller>Fragments\Controllers\RegistrationController</controller>
+    <methods>GET|POST</methods>
+    <action>register</action>
   </route>
 
   <route>
     <id>index</id>
-    <path></path>
-    <controller>Fragments\Controllers\Root</controller>
-    <method>GET</method>
+    <path>/</path>
+    <controller>Fragments\Controllers\RootController</controller>
+    <methods>GET</methods>
     <action>renderPage</action>
   </route>
 
   <route>
     <id>logout</id>
-    <path>logout</path>
-    <controller>Fragments\Controllers\Root</controller>
-    <method>GET</method>
+    <path>/logout</path>
+    <controller>Fragments\Controllers\SecurityController</controller>
+    <methods>GET</methods>
     <action>logout</action>
   </route>
 
   <route>
     <id>profile</id>
-    <path>profile</path>
-    <controller>Fragments\Controllers\Profile</controller>
-    <method>GET</method>
-    <action>renderList</action>
+    <path>/profile</path>
+    <controller>Fragments\Controllers\ProfileController</controller>
+    <methods>GET</methods>
+    <action>renderUserList</action>
   </route>
 
   <route>
-    <id>public_profile</id>
-    <path>profile/{alpha}</path>
-    <controller>Fragments\Controllers\Profile</controller>
-    <method>GET</method>
-    <action>renderPage</action>
+    <id>user_profile</id>
+    <path>/profile/{alpha}</path>
+    <controller>Fragments\Controllers\ProfileController</controller>
+    <methods>GET</methods>
+    <action>renderUserProfile</action>
   </route>
 </routing>

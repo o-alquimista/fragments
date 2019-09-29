@@ -21,23 +21,35 @@
 
 namespace Fragments\Controllers;
 
-use Fragments\Views\Root\View as RootView;
-use Fragments\Utility\SessionManagement\SessionTools;
+use Fragments\Controllers\AbstractController;
 use Fragments\Utility\SessionManagement\Session;
+use Fragments\Utility\SessionManagement\SessionTools;
 use Fragments\Utility\Server\Request;
+use Fragments\Views\Login\View as LoginView;
+use Fragments\Models\Login\LoginService;
 
 /**
- * Root controller
+ * Security controller
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class Root
+class SecurityController extends AbstractController
 {
-    public function renderPage()
+    public function login()
     {
         new Session;
 
-        $view = new RootView;
+        if ($this->isFormSubmitted()) {
+            $service = new LoginService;
+            $login = $service->login();
+
+            if ($login === true) {
+                $username = $service->username;
+                Request::redirect('/profile/' . $username);
+            }
+        }
+
+        $view = new LoginView;
         $view->composePage();
     }
 

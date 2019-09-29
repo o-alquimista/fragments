@@ -21,32 +21,22 @@
 
 namespace Fragments\Controllers;
 
+use Fragments\Controllers\AbstractController;
+use Fragments\Views\Root\View as RootView;
 use Fragments\Utility\SessionManagement\Session;
-use Fragments\Views\Register\View as RegisterView;
-use Fragments\Models\Register\RegisterService;
 
 /**
- * Register controller
+ * Root controller
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class Register
+class RootController extends AbstractController
 {
     public function renderPage()
     {
         new Session;
 
-        $view = new RegisterView;
+        $view = new RootView;
         $view->composePage();
-    }
-
-    public function startRegister()
-    {
-        new Session;
-
-        $service = new RegisterService;
-        $service->register();
-
-        $this->renderPage();
     }
 }

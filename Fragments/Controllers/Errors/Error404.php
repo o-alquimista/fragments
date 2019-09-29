@@ -21,6 +21,7 @@
 
 namespace Fragments\Controllers\Errors;
 
+use Fragments\Controllers\AbstractController;
 use Fragments\Views\Errors\Error404\View as Error404View;
 use Fragments\Utility\SessionManagement\Session;
 
@@ -29,7 +30,7 @@ use Fragments\Utility\SessionManagement\Session;
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class Error404
+class Error404 extends AbstractController
 {
     public function renderPage()
     {
