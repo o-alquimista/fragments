@@ -21,6 +21,7 @@
 
 namespace Fragments\Views\Profile;
 
+use Fragments\Views\AbstractView;
 use Fragments\Utility\SessionManagement\SessionTools;
 
 /**
@@ -28,7 +29,7 @@ use Fragments\Utility\SessionManagement\SessionTools;
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class View
+class View extends AbstractView
 {
     public $title = 'Profile - Fragments';
 

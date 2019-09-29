@@ -21,12 +21,14 @@
 
 namespace Fragments\Views\Errors\Error404;
 
+use Fragments\Views\AbstractView;
+
 /**
  * Error 404 view
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class View
+class View extends AbstractView
 {
     public $title = 'Page not found - Fragments';
 

@@ -21,12 +21,14 @@
 
 namespace Fragments\Views\Root;
 
+use Fragments\Views\AbstractView;
+
 /**
  * Root view
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class View
+class View extends AbstractView
 {
     public $title = 'Fragments';
 

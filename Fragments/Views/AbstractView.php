@@ -19,26 +19,18 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Views\Login;
+namespace Fragments\Views;
 
-use Fragments\Views\AbstractView;
+use Fragments\Utility\SessionManagement\SessionTools;
 
-/**
- * Login view
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
- */
-class View extends AbstractView
+abstract class AbstractView
 {
-    public $title = 'Login - Fragments';
-
-    public function composePage()
+    public function renderFeedback()
     {
-        require '../Fragments/Views/_templates/header.php';
+        $feedbackBag = SessionTools::getFeedback();
 
-        $this->renderFeedback();
-
-        require '../Fragments/Views/Login/templates/loginForm.php';
-        require '../Fragments/Views/_templates/footer.php';
+        foreach ($feedbackBag as $feedback) {
+            echo $feedback;
+        }
     }
 }

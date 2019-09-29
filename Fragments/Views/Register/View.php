@@ -21,31 +21,22 @@
 
 namespace Fragments\Views\Register;
 
-use Fragments\Utility\SessionManagement\SessionTools;
+use Fragments\Views\AbstractView;
 
 /**
  * Register view
  *
  * @author Douglas Silva <0x9fd287d56ec107ac>
  */
-class View
+class View extends AbstractView
 {
-    private $feedback;
-
     public $title = 'Register - Fragments';
-
-    public function __construct()
-    {
-        $this->feedback = SessionTools::getFeedback();
-    }
 
     public function composePage()
     {
         require '../Fragments/Views/_templates/header.php';
 
-        foreach ($this->feedback as $feedback) {
-            echo $feedback;
-        }
+        $this->renderFeedback();
 
         require '../Fragments/Views/Register/templates/registerForm.php';
         require '../Fragments/Views/_templates/footer.php';
