@@ -36,19 +36,16 @@ abstract class AbstractSessionInit
         'use_only_cookies' => 1,
         'use_trans_sid' => 0,
         'cookie_httponly' => 1,
-
-        /*
-         * 'cookie_samesite' => 1
-         *
-         * The 'samesite' option support starts
-         * with PHP 7.3
-         */
-
-        /*
-         * 'session.cookie_secure' => 1
-         *
-         * The 'cookie_secure' option can only
-         * be enabled when SSL is configured
-         */
     );
+
+    public function __construct()
+    {
+        if (version_compare(phpversion(), '7.3.0', '>')) {
+            // Helps prevent CSRF attacks
+            $this->options['cookie_samesite'] = 'Lax';
+        }
+
+        // 'cookie_secure' requires SSL to be configured
+        // $this->options['cookie_secure'] = 1;
+    }
 }
