@@ -19,19 +19,23 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require '../Fragments/Component/Autoloader.php';
+namespace App\Model\Profile\DataMapper;
 
-use Fragments\Component\Autoloader;
-use Fragments\Component\Routing\Router;
+use Fragments\Bundle\Model\DataMapper\AbstractDataMapper;
+use PDO;
 
-/**
- * The entry point of the application.
- *
- * This file initializes the router and the autoloader.
- */
+class RegistryMapper extends AbstractDataMapper
+{
+    /**
+     * @return array
+     */
+    public function getAllUsernames()
+    {
+        $query = "SELECT username FROM users";
 
-$autoloader = new Autoloader;
-$autoloader->register();
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute();
 
-$router = new Router;
-$router->start();
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+}

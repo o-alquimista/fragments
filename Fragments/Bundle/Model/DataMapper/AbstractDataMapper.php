@@ -19,19 +19,26 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require '../Fragments/Component/Autoloader.php';
+namespace Fragments\Bundle\Model\DataMapper;
 
-use Fragments\Component\Autoloader;
-use Fragments\Component\Routing\Router;
+use Fragments\Component\Database\PDOConnection;
 
 /**
- * The entry point of the application.
+ * Data mapper
  *
- * This file initializes the router and the autoloader.
+ * Creates resources used by mappers
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
  */
+abstract class AbstractDataMapper
+{
+    /**
+     * @var object database connection object (PDO)
+     */
+    protected $connection;
 
-$autoloader = new Autoloader;
-$autoloader->register();
-
-$router = new Router;
-$router->start();
+    public function __construct() {
+        $connection = new PDOConnection;
+        $this->connection = $connection->getConnection();
+    }
+}

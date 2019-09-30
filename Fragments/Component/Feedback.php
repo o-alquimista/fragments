@@ -19,19 +19,33 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require '../Fragments/Component/Autoloader.php';
+namespace Fragments\Component;
 
-use Fragments\Component\Autoloader;
-use Fragments\Component\Routing\Router;
+use Fragments\Component\SessionManagement\SessionTools;
 
-/**
- * The entry point of the application.
- *
- * This file initializes the router and the autoloader.
- */
+class Feedback
+{
+    private const BAG_NAME = 'feedbackBag';
 
-$autoloader = new Autoloader;
-$autoloader->register();
+    public static function add($id, $message)
+    {
+        if (false === SessionTools::isSet(self::BAG_NAME)) {
+            SessionTools::set(self::BAG_NAME, array());
+        }
 
-$router = new Router;
-$router->start();
+        $feedback = array($id => $message);
+        SessionTools::append(self::BAG_NAME, $feedback);
+    }
+
+    public static function get()
+    {
+        if (SessionTools::isSet(self::BAG_NAME)) {
+            $bag = SessionTools::get(self::BAG_NAME);
+            SessionTools::destroy(self::BAG_NAME);
+
+            return $bag;
+        }
+
+        return array();
+    }
+}

@@ -19,19 +19,28 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require '../Fragments/Component/Autoloader.php';
+namespace App\Model\Login\DataMapper;
 
-use Fragments\Component\Autoloader;
-use Fragments\Component\Routing\Router;
+use Fragments\Bundle\Model\DataMapper\AbstractDataMapper;
 
-/**
- * The entry point of the application.
- *
- * This file initializes the router and the autoloader.
- */
+class CredentialHandlerMapper extends AbstractDataMapper
+{
+    /**
+     * @param string $username
+     * @return string
+     */
+    public function retrieveHash($username)
+    {
+        $query = "SELECT hash FROM users WHERE username = :username";
+        $stmt = $this->connection->prepare($query);
 
-$autoloader = new Autoloader;
-$autoloader->register();
+        $stmt->bindParam(":username", $username);
 
-$router = new Router;
-$router->start();
+        $stmt->execute();
+
+        $registry = $stmt->fetchObject();
+        $hash = $registry->hash;
+
+        return $hash;
+    }
+}

@@ -19,19 +19,33 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require '../Fragments/Component/Autoloader.php';
+namespace Fragments\Component\Routing;
 
-use Fragments\Component\Autoloader;
-use Fragments\Component\Routing\Router;
+use Fragments\Component\Server\Request;
 
 /**
- * The entry point of the application.
+ * Request context.
  *
- * This file initializes the router and the autoloader.
+ * Stores information about the HTTP request.
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
  */
+class RequestContext
+{
+    public $uri;
 
-$autoloader = new Autoloader;
-$autoloader->register();
+    public $requestMethod;
 
-$router = new Router;
-$router->start();
+    public function __construct()
+    {
+        $uri = Request::getURI();
+
+        // Remove trailing slash from path, except for the root
+        if ($uri !== '/') {
+            $uri = rtrim($uri, '/');
+        }
+
+        $this->uri = $uri;
+        $this->requestMethod = Request::requestMethod();
+    }
+}

@@ -19,19 +19,39 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require '../Fragments/Component/Autoloader.php';
+namespace App\Model\Register;
 
-use Fragments\Component\Autoloader;
-use Fragments\Component\Routing\Router;
+use App\Model\Register\DataMapper\UserMapper;
+use Fragments\Component\Feedback;
 
 /**
- * The entry point of the application.
+ * User operations
  *
- * This file initializes the router and the autoloader.
+ * Any user related task that doesn't fit anywhere else
+ * should be implemented here.
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
  */
+class User
+{
+    private $username;
 
-$autoloader = new Autoloader;
-$autoloader->register();
+    private $passwd;
 
-$router = new Router;
-$router->start();
+    public function __construct($username, $passwd)
+    {
+        $this->username = $username;
+        $this->passwd = $passwd;
+    }
+
+    public function createUser()
+    {
+        $storage = new UserMapper;
+        $storage->saveData($this->username, $this->passwd);
+
+        Feedback::add(
+            'success',
+            'Registration complete'
+        );
+    }
+}

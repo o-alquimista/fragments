@@ -19,19 +19,29 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require '../Fragments/Component/Autoloader.php';
+namespace App\Controller;
 
-use Fragments\Component\Autoloader;
-use Fragments\Component\Routing\Router;
+use Fragments\Bundle\Controller\AbstractController;
+use App\View\Register\View as RegisterView;
+use App\Model\Register\RegisterService;
 
 /**
- * The entry point of the application.
+ * Register controller
  *
- * This file initializes the router and the autoloader.
+ * @author Douglas Silva <0x9fd287d56ec107ac>
  */
+class RegistrationController extends AbstractController
+{
+    public function register()
+    {
+        $this->startSession();
 
-$autoloader = new Autoloader;
-$autoloader->register();
+        if ($this->isFormSubmitted()) {
+            $service = new RegisterService;
+            $service->register();
+        }
 
-$router = new Router;
-$router->start();
+        $view = new RegisterView;
+        $view->composePage();
+    }
+}

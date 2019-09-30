@@ -19,19 +19,15 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require '../Fragments/Component/Autoloader.php';
+namespace Fragments\Component\Server\Response;
 
-use Fragments\Component\Autoloader;
-use Fragments\Component\Routing\Router;
+use Fragments\Bundle\View\Error404\View as Error404View;
 
-/**
- * The entry point of the application.
- *
- * This file initializes the router and the autoloader.
- */
-
-$autoloader = new Autoloader;
-$autoloader->register();
-
-$router = new Router;
-$router->start();
+class Error404
+{
+    public function renderPage()
+    {
+        $view = new Error404View;
+        $view->composePage();
+    }
+}

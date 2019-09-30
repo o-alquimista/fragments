@@ -19,19 +19,24 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require '../Fragments/Component/Autoloader.php';
+namespace App\View\Root;
 
-use Fragments\Component\Autoloader;
-use Fragments\Component\Routing\Router;
+use Fragments\Bundle\View\AbstractView;
 
 /**
- * The entry point of the application.
+ * Root view
  *
- * This file initializes the router and the autoloader.
+ * @author Douglas Silva <0x9fd287d56ec107ac>
  */
+class View extends AbstractView
+{
+    public $title = 'Fragments';
 
-$autoloader = new Autoloader;
-$autoloader->register();
-
-$router = new Router;
-$router->start();
+    public function composePage()
+    {
+        $this->renderTemplate('_templates/header.php');
+        $this->renderFeedback();
+        $this->renderTemplate('Root/templates/introduction.php');
+        $this->renderTemplate('_templates/footer.php');
+    }
+}

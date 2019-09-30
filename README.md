@@ -7,7 +7,7 @@ Keep in mind that this project is merely an experiment, and is not recommended f
 - PHP XML extension. This package is called `php-xml` on Ubuntu.
 
 ## Instructions
-- The default database name is `fragments`. Change it at `Fragments/Utility/Connection.php`. The username, password and PDO driver for the database connection can be set there as well.
+- The default database name is `fragments`. Change it at `Fragments/Component/Database/PDOConnection.php`. The username, password and PDO driver for the connection can be set there as well.
 
 - Create the table: `CREATE TABLE users (id INT NOT NULL AUTO_INCREMENT, username VARCHAR(255) NOT NULL, hash VARCHAR(255) NOT NULL, PRIMARY KEY(id));`
 

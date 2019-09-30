@@ -19,19 +19,33 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require '../Fragments/Component/Autoloader.php';
+namespace App\Model\Profile;
 
-use Fragments\Component\Autoloader;
-use Fragments\Component\Routing\Router;
+use App\Model\Profile\DataMapper\RegistryMapper;
 
 /**
- * The entry point of the application.
+ * Registry operations.
  *
- * This file initializes the router and the autoloader.
+ * Operations which do not concern a specific user.
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
  */
+class Registry
+{
+    private $storage;
 
-$autoloader = new Autoloader;
-$autoloader->register();
+    public function __construct()
+    {
+        $this->storage = new RegistryMapper;
+    }
 
-$router = new Router;
-$router->start();
+    /**
+     * Retrieve all registered usernames.
+     */
+    public function retrieveUserList()
+    {
+        $list = $this->storage->getAllUsernames();
+
+        return $list;
+    }
+}

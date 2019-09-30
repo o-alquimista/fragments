@@ -19,19 +19,25 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require '../Fragments/Component/Autoloader.php';
+namespace App\Model\Register\DataMapper;
 
-use Fragments\Component\Autoloader;
-use Fragments\Component\Routing\Router;
+use Fragments\Bundle\Model\DataMapper\AbstractDataMapper;
 
-/**
- * The entry point of the application.
- *
- * This file initializes the router and the autoloader.
- */
+class UserMapper extends AbstractDataMapper
+{
+    /**
+     * @param string $username
+     * @param string $passwd
+     */
+    public function saveData($username, $passwd)
+    {
+        $query = "INSERT INTO users (username, hash) VALUES (:username, :hash)";
 
-$autoloader = new Autoloader;
-$autoloader->register();
+        $stmt = $this->connection->prepare($query);
 
-$router = new Router;
-$router->start();
+        $stmt->bindParam(":username", $username);
+        $stmt->bindParam(":hash", $passwd);
+
+        $stmt->execute();
+    }
+}

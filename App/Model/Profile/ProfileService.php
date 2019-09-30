@@ -19,19 +19,43 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require '../Fragments/Component/Autoloader.php';
-
-use Fragments\Component\Autoloader;
-use Fragments\Component\Routing\Router;
+namespace App\Model\Profile;
 
 /**
- * The entry point of the application.
+ * Profile service.
  *
- * This file initializes the router and the autoloader.
+ * Retrieves resources to populate the profile page.
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
  */
+class ProfileService
+{
+    public $username;
 
-$autoloader = new Autoloader;
-$autoloader->register();
+    public function getUserData($username)
+    {
+        $user = new User($username);
 
-$router = new Router;
-$router->start();
+        if ($user->isRegistered() === false) {
+            return false;
+        }
+
+        $user->getData($username);
+        $this->username = $user->username;
+
+        return true;
+    }
+
+    /**
+     * Returns an array containing all registered usernames.
+     *
+     * @return array
+     */
+    public function getUserList()
+    {
+        $registry = new Registry;
+        $list = $registry->retrieveUserList();
+
+        return $list;
+    }
+}

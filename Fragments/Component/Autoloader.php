@@ -19,19 +19,33 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require '../Fragments/Component/Autoloader.php';
-
-use Fragments\Component\Autoloader;
-use Fragments\Component\Routing\Router;
+namespace Fragments\Component;
 
 /**
- * The entry point of the application.
+ * Autoloader Utility
  *
- * This file initializes the router and the autoloader.
+ * A PSR-4 compliant autoloader
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
  */
+class Autoloader
+{
+    public function register()
+    {
+        spl_autoload_register(array($this, 'load'));
+    }
 
-$autoloader = new Autoloader;
-$autoloader->register();
+    public function load($class)
+    {
+        // Replace namespace separators with directory separators
+        $namespace = str_replace('\\', '/', $class);
 
-$router = new Router;
-$router->start();
+        /*
+         * Go back one directory to leave public_html, and append
+         * the file extension.
+         */
+        $path = '../' . $namespace . '.php';
+
+        require $path;
+    }
+}

@@ -19,19 +19,23 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require '../Fragments/Component/Autoloader.php';
+namespace App\Controller;
 
-use Fragments\Component\Autoloader;
-use Fragments\Component\Routing\Router;
+use Fragments\Bundle\Controller\AbstractController;
+use App\View\Root\View as RootView;
 
 /**
- * The entry point of the application.
+ * Root controller
  *
- * This file initializes the router and the autoloader.
+ * @author Douglas Silva <0x9fd287d56ec107ac>
  */
+class RootController extends AbstractController
+{
+    public function renderPage()
+    {
+        $this->startSession();
 
-$autoloader = new Autoloader;
-$autoloader->register();
-
-$router = new Router;
-$router->start();
+        $view = new RootView;
+        $view->composePage();
+    }
+}

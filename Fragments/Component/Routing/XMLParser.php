@@ -19,19 +19,36 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require '../Fragments/Component/Autoloader.php';
-
-use Fragments\Component\Autoloader;
-use Fragments\Component\Routing\Router;
+namespace Fragments\Component\Routing;
 
 /**
- * The entry point of the application.
+ * XML Loader
  *
- * This file initializes the router and the autoloader.
+ * Populates route objects using data from an XML file
+ *
+ * @author Douglas Silva <0x9fd287d56ec107ac>
  */
+class XMLParser
+{
+    private $routes = [];
 
-$autoloader = new Autoloader;
-$autoloader->register();
+    public function __construct()
+    {
+        $routing = simplexml_load_file('../config/routes.xml');
 
-$router = new Router;
-$router->start();
+        foreach ($routing->route as $route) {
+            $id = (string)$route->id;
+            $path = (string)$route->path;
+            $methods = (string)$route->methods;
+            $controller = (string)$route->controller;
+            $action = (string)$route->action;
+
+            $this->routes[$id] = new Route($path, $controller, $action, $methods);
+        }
+    }
+
+    public function getRouteCollection()
+    {
+        return $this->routes;
+    }
+}

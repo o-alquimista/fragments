@@ -4,7 +4,7 @@
   <route>
     <id>login</id>
     <path>/login</path>
-    <controller>App\Controllers\SecurityController</controller>
+    <controller>App\Controller\SecurityController</controller>
     <methods>GET|POST</methods>
     <action>login</action>
   </route>
@@ -12,7 +12,7 @@
   <route>
     <id>register</id>
     <path>/register</path>
-    <controller>App\Controllers\RegistrationController</controller>
+    <controller>App\Controller\RegistrationController</controller>
     <methods>GET|POST</methods>
     <action>register</action>
   </route>
@@ -20,7 +20,7 @@
   <route>
     <id>index</id>
     <path>/</path>
-    <controller>App\Controllers\RootController</controller>
+    <controller>App\Controller\RootController</controller>
     <methods>GET</methods>
     <action>renderPage</action>
   </route>
@@ -28,7 +28,7 @@
   <route>
     <id>logout</id>
     <path>/logout</path>
-    <controller>App\Controllers\SecurityController</controller>
+    <controller>App\Controller\SecurityController</controller>
     <methods>GET</methods>
     <action>logout</action>
   </route>
@@ -36,7 +36,7 @@
   <route>
     <id>profile</id>
     <path>/profile</path>
-    <controller>App\Controllers\ProfileController</controller>
+    <controller>App\Controller\ProfileController</controller>
     <methods>GET</methods>
     <action>renderUserList</action>
   </route>
@@ -44,7 +44,7 @@
   <route>
     <id>user_profile</id>
     <path>/profile/{alpha}</path>
-    <controller>App\Controllers\ProfileController</controller>
+    <controller>App\Controller\ProfileController</controller>
     <methods>GET</methods>
     <action>renderUserProfile</action>
   </route>

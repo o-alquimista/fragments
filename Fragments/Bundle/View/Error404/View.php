@@ -19,19 +19,23 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require '../Fragments/Component/Autoloader.php';
+namespace Fragments\Bundle\View\Error404;
 
-use Fragments\Component\Autoloader;
-use Fragments\Component\Routing\Router;
+use Fragments\Views\AbstractView;
 
 /**
- * The entry point of the application.
+ * Error 404 view
  *
- * This file initializes the router and the autoloader.
+ * @author Douglas Silva <0x9fd287d56ec107ac>
  */
+class View extends AbstractView
+{
+    public $title = 'Page not found';
 
-$autoloader = new Autoloader;
-$autoloader->register();
-
-$router = new Router;
-$router->start();
+    public function composePage()
+    {
+        require '../Fragments/Bundle/View/_templates/header.php';
+        require '../Fragments/Bundle/View/Error404/templates/error.php';
+        require '../Fragments/Bundle/View/_templates/footer.php';
+    }
+}
