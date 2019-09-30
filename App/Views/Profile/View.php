@@ -49,6 +49,7 @@ class View extends AbstractView
         }
 
         $this->renderTemplate('_templates/header.php');
+        $this->renderFeedback();
         $this->renderTemplate('Profile/templates/profile.php');
         $this->renderTemplate('_templates/footer.php');
     }
@@ -56,6 +57,7 @@ class View extends AbstractView
     public function composeUserNotFoundError()
     {
         $this->renderTemplate('_templates/header.php');
+        $this->renderFeedback();
         $this->renderTemplate('Profile/templates/notFound.php');
         $this->renderTemplate('_templates/footer.php');
     }
@@ -65,6 +67,7 @@ class View extends AbstractView
         $this->userList = $list;
 
         $this->renderTemplate('_templates/header.php');
+        $this->renderFeedback();
         $this->renderTemplate('Profile/templates/userList.php');
         $this->renderTemplate('_templates/footer.php');
     }
