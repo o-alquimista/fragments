@@ -26,17 +26,11 @@ use Fragments\Utility\SessionManagement\Init\SessionUnsafe;
 use Fragments\Utility\Errors\SoftException;
 
 /**
- * Session Utility
+ * Session Utility.
  *
  * Handles starting a session and regenerating
  * a new session ID while attempting to avoid
  * lost sessions due to unstable connections.
- */
-
-/**
- * Session start
- *
- * Starts a session when this class is instantiated.
  *
  * If the session contains the flag 'destroyed',
  * we will check if it has expired. If it has,
@@ -84,6 +78,10 @@ class Session
 
     public function regenerate()
     {
+        if (session_status() == PHP_SESSION_NONE) {
+            return;
+        }
+
         $this->createNewID();
 
         /*
