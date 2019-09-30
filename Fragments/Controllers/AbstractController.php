@@ -22,9 +22,16 @@
 namespace Fragments\Controllers;
 
 use Fragments\Utility\Server\Request;
+use Fragments\Utility\SessionManagement\Session;
 
 class AbstractController
 {
+    public function startSession()
+    {
+        $session = new Session;
+        $session->start();
+    }
+
     public function isFormSubmitted()
     {
         if (Request::requestMethod() == "POST") {

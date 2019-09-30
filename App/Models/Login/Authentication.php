@@ -21,7 +21,7 @@
 
 namespace App\Models\Login;
 
-use Fragments\Utility\SessionManagement\RegenerateSessionID;
+use Fragments\Utility\SessionManagement\Session;
 use Fragments\Utility\SessionManagement\SessionTools;
 use App\Models\Login\DataMappers\AuthenticationMapper;
 
@@ -45,7 +45,8 @@ class Authentication
 
     public function login()
     {
-        new RegenerateSessionID;
+        $session = new Session;
+        $session->regenerate();
 
         $storage = new AuthenticationMapper;
         $data = $storage->retrieveData($this->username);

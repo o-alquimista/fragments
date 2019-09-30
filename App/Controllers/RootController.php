@@ -22,7 +22,6 @@
 namespace App\Controllers;
 
 use Fragments\Controllers\AbstractController;
-use Fragments\Utility\SessionManagement\Session;
 use App\Views\Root\View as RootView;
 
 /**
@@ -34,7 +33,7 @@ class RootController extends AbstractController
 {
     public function renderPage()
     {
-        new Session;
+        $this->startSession();
 
         $view = new RootView;
         $view->composePage();

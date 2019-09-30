@@ -51,9 +51,4 @@ abstract class AbstractSessionInit
          * be enabled when SSL is configured
          */
     );
-
-    protected function init()
-    {
-        session_start($this->options);
-    }
 }

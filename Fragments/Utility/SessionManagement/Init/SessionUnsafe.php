@@ -23,9 +23,9 @@ namespace Fragments\Utility\SessionManagement\Init;
 
 class SessionUnsafe extends AbstractSessionInit
 {
-    public function __construct()
+    public function init()
     {
         $this->options['use_strict_mode'] = 0;
-        $this->init();
+        session_start($this->options);
     }
 }

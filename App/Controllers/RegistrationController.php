@@ -22,7 +22,6 @@
 namespace App\Controllers;
 
 use Fragments\Controllers\AbstractController;
-use Fragments\Utility\SessionManagement\Session;
 use App\Views\Register\View as RegisterView;
 use App\Models\Register\RegisterService;
 
@@ -35,7 +34,7 @@ class RegistrationController extends AbstractController
 {
     public function register()
     {
-        new Session;
+        $this->startSession();
 
         if ($this->isFormSubmitted()) {
             $service = new RegisterService;

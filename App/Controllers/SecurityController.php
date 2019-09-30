@@ -22,7 +22,6 @@
 namespace App\Controllers;
 
 use Fragments\Controllers\AbstractController;
-use Fragments\Utility\SessionManagement\Session;
 use Fragments\Utility\SessionManagement\SessionTools;
 use Fragments\Utility\Server\Request;
 use App\Views\Login\View as LoginView;
@@ -37,7 +36,7 @@ class SecurityController extends AbstractController
 {
     public function login()
     {
-        new Session;
+        $this->startSession();
 
         if ($this->isFormSubmitted()) {
             $service = new LoginService;
@@ -55,7 +54,7 @@ class SecurityController extends AbstractController
 
     public function logout()
     {
-        new Session;
+        $this->startSession();
 
         SessionTools::destroyAll();
 

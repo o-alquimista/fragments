@@ -22,7 +22,6 @@
 namespace App\Controllers;
 
 use Fragments\Controllers\AbstractController;
-use Fragments\Utility\SessionManagement\Session;
 use App\Views\Profile\View as ProfileView;
 use App\Models\Profile\ProfileService;
 
@@ -38,7 +37,8 @@ class ProfileController extends AbstractController
         $service = new ProfileService;
         $userExists = $service->getUserData($username);
 
-        new Session;
+        $this->startSession();
+
         $view = new ProfileView;
 
         if ($userExists) {
@@ -57,7 +57,7 @@ class ProfileController extends AbstractController
         $service = new ProfileService;
         $list = $service->getUserList();
 
-        new Session;
+        $this->startSession();
 
         $view = new ProfileView;
         $view->composeList($list);

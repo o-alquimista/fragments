@@ -22,6 +22,7 @@
 namespace Fragments\Utility\SessionManagement;
 
 use Fragments\Utility\SessionManagement\Init\SessionStrict;
+use Fragments\Utility\SessionManagement\Init\SessionUnsafe;
 use Fragments\Utility\Errors\SoftException;
 
 /**
@@ -49,13 +50,15 @@ use Fragments\Utility\Errors\SoftException;
  */
 class Session
 {
-    public function __construct()
+    private $newID;
+
+    public function start()
     {
         if (session_status() == PHP_SESSION_ACTIVE) {
             return;
         }
 
-        new SessionStrict;
+        (new SessionStrict)->init();
 
         $isDestroyed = $this->isDestroyed();
         if ($isDestroyed === false) {
@@ -76,7 +79,30 @@ class Session
 
         session_id(SessionTools::get('new_session_id'));
 
-        new SessionStrict;
+        (new SessionStrict)->init();
+    }
+
+    public function regenerate()
+    {
+        $this->createNewID();
+
+        /*
+         * We mark the current session ID as 'destroyed'
+         * and store the current timestamp in this
+         * session variable, so we can count the time
+         * until this session expires.
+         */
+        SessionTools::set('destroyed', time());
+
+        session_commit();
+
+        /*
+         * Set session ID to the one we generated (uninitialized)
+         */
+        session_id($this->newID);
+        $this->initializeID();
+
+        $this->sessionCleanup();
     }
 
     /**
@@ -129,5 +155,35 @@ class Session
         }
 
         return true;
+    }
+
+    private function createNewID()
+    {
+        $this->newID = session_create_id();
+        SessionTools::set('new_session_id', $this->newID);
+    }
+
+    /**
+     * The session must be started with strict_mode disabled, closed
+     * and then started again with strict_mode enabled.
+     *
+     * This method ensures the new session ID is initialized and accepted.
+     */
+    private function initializeID()
+    {
+        (new SessionUnsafe)->init();
+
+        session_commit();
+
+        (new SessionStrict)->init();
+    }
+
+    /**
+     * Removes leftover session variables from the ID regeneration process
+     */
+    private function sessionCleanup()
+    {
+        SessionTools::destroy('destroyed');
+        SessionTools::destroy('new_session_id');
     }
 }
