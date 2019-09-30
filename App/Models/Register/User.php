@@ -21,9 +21,8 @@
 
 namespace App\Models\Register;
 
-use Fragments\Utility\SessionManagement\SessionTools;
 use App\Models\Register\DataMappers\UserMapper;
-use App\Utility\Feedback\SuccessFeedback;
+use Fragments\Utility\Feedback;
 
 /**
  * User operations
@@ -50,7 +49,9 @@ class User
         $storage = new UserMapper;
         $storage->saveData($this->username, $this->passwd);
 
-        $feedback = new SuccessFeedback('FEEDBACK_REGISTRATION_COMPLETE');
-        SessionTools::setFeedback($feedback->get());
+        Feedback::add(
+            'success',
+            'Registration complete'
+        );
     }
 }

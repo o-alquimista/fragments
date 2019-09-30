@@ -36,7 +36,7 @@ class LoginService
 
     public function __construct()
     {
-        $this->username = $this->clean(Request::post('username'));
+        $this->username = Request::post('username');
         $this->passwd = Request::post('passwd');
     }
 
@@ -64,14 +64,5 @@ class LoginService
         $authentication->login();
 
         return true;
-    }
-
-    private function clean($input)
-    {
-        $input = trim($input);
-        $input = stripslashes($input);
-        $input = htmlspecialchars($input);
-
-        return $input;
     }
 }

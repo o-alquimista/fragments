@@ -22,7 +22,7 @@
 namespace Fragments\Utility\Errors;
 
 use Exception;
-use Fragments\Utility\Feedback\DangerFeedback;
+use Fragments\Utility\Feedback;
 
 /**
  * Soft Exceptions
@@ -35,20 +35,11 @@ use Fragments\Utility\Feedback\DangerFeedback;
  */
 class SoftException extends Exception
 {
-    public function invalidFeedbackID()
-    {
-        $userFeedback = "Oops, something isn't right!";
-        $detailedError = $this->getMessage() . ' is an invalid feedback ID.';
-
-        error_log($detailedError);
-
-        return $userFeedback;
-    }
-
     public function sessionExpired()
     {
-        $feedback = new DangerFeedback('EXCEPTION_SESSION_EXPIRED');
-
-        return $feedback->get();
+        Feedback::add(
+            'danger',
+            'This session has expired'
+        );
     }
 }

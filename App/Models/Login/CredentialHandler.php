@@ -21,9 +21,8 @@
 
 namespace App\Models\Login;
 
-use Fragments\Utility\SessionManagement\SessionTools;
 use App\Models\Login\DataMappers\CredentialHandlerMapper;
-use App\Utility\Feedback\WarningFeedback;
+use Fragments\Utility\Feedback;
 
 /**
  * Credential handler
@@ -50,8 +49,10 @@ class CredentialHandler
         $hash = $storage->retrieveHash($this->username);
 
         if (!password_verify($this->passwd, $hash)) {
-            $feedback = new WarningFeedback('FEEDBACK_INCORRECT_PASSWD');
-            SessionTools::setFeedback($feedback->get());
+            Feedback::add(
+                'warning',
+                'Invalid credentials'
+            );
 
             return false;
         }

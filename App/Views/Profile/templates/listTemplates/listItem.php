@@ -1,1 +1,1 @@
-<li class="listItem"><?php echo $username ?></li>
+<li class="listItem"><?php echo $this->escape($username) ?></li>

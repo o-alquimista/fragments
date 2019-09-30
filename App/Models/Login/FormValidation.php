@@ -21,8 +21,7 @@
 
 namespace App\Models\Login;
 
-use Fragments\Utility\SessionManagement\SessionTools;
-use App\Utility\Feedback\WarningFeedback;
+use Fragments\Utility\Feedback;
 
 /**
  * Input validation.
@@ -45,14 +44,23 @@ class FormValidation
 
     public function validate()
     {
-        return $this->validateUsername() && $this->validatePassword();
+        $validUsername = $this->validateUsername();
+        $validPassword = $this->validatePassword();
+
+        if ($validUsername && $validPassword) {
+            return true;
+        }
+
+        return false;
     }
 
     private function validateUsername()
     {
         if (empty($this->username)) {
-            $feedback = new WarningFeedback('FEEDBACK_USERNAME_EMPTY');
-            SessionTools::setFeedback($feedback->get());
+            Feedback::add(
+                'warning',
+                'Username was left empty'
+            );
 
             return false;
         }
@@ -63,8 +71,10 @@ class FormValidation
     private function validatePassword()
     {
         if (empty($this->passwd)) {
-            $feedback = new WarningFeedback('FEEDBACK_PASSWORD_EMPTY');
-            SessionTools::setFeedback($feedback->get());
+            Feedback::add(
+                'warning',
+                'Password was left empty'
+            );
 
             return false;
         }

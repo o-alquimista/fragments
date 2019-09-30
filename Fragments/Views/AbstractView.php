@@ -21,16 +21,23 @@
 
 namespace Fragments\Views;
 
-use Fragments\Utility\SessionManagement\SessionTools;
+use Fragments\Utility\Feedback;
 
 abstract class AbstractView
 {
     public function renderFeedback()
     {
-        $feedbackBag = SessionTools::getFeedback();
+        $bag = Feedback::get();
 
-        foreach ($feedbackBag as $feedback) {
-            echo $feedback;
+        foreach ($bag as $feedback) {
+            foreach ($feedback as $id => $message) {
+                require '../Fragments/Views/_templates/feedback.php';
+            }
         }
+    }
+
+    public function escape($output)
+    {
+        return htmlspecialchars($output);
     }
 }

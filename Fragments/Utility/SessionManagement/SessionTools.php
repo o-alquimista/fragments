@@ -40,6 +40,20 @@ class SessionTools
         $_SESSION[$name] = $value;
     }
 
+    public static function isSet($name)
+    {
+        if (isset($_SESSION[$name])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function append($name, $value)
+    {
+        $_SESSION[$name][] = $value;
+    }
+
     /**
      * Unset the specified session variable.
      *
@@ -56,26 +70,5 @@ class SessionTools
     public static function destroyAll()
     {
         $_SESSION = array();
-    }
-
-    public static function setFeedback($feedback)
-    {
-        if (!isset($_SESSION['feedbackBag'])) {
-            $_SESSION['feedbackBag'] = array();
-        }
-
-        $_SESSION['feedbackBag'][] = $feedback;
-    }
-
-    public static function getFeedback()
-    {
-        if (isset($_SESSION['feedbackBag'])) {
-            $feedbackBag = $_SESSION['feedbackBag'];
-            unset($_SESSION['feedbackBag']);
-
-            return $feedbackBag;
-        }
-
-        return array();
     }
 }

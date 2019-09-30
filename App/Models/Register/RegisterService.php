@@ -36,7 +36,7 @@ class RegisterService
 
     public function __construct()
     {
-        $this->username = $this->clean(Request::post('username'));
+        $this->username = trim(Request::post('username'));
         $this->passwd = Request::post('passwd');
     }
 
@@ -60,14 +60,5 @@ class RegisterService
         $user->createUser();
 
         return true;
-    }
-
-    private function clean($input)
-    {
-        $input = trim($input);
-        $input = stripslashes($input);
-        $input = htmlspecialchars($input);
-
-        return $input;
     }
 }

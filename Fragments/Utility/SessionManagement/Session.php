@@ -111,9 +111,7 @@ class Session
 
             return false;
         } catch(SoftException $err) {
-            echo $err->sessionExpired();
-
-            return true;
+            $err->sessionExpired();
         }
     }
 

@@ -21,9 +21,8 @@
 
 namespace App\Models\Login;
 
-use Fragments\Utility\SessionManagement\SessionTools;
 use App\Models\Login\DataMappers\UserMapper;
-use App\Utility\Feedback\WarningFeedback;
+use Fragments\Utility\Feedback;
 
 /**
  * User operations
@@ -48,8 +47,10 @@ class User
         $matchingRows = $storage->retrieveCount($this->username);
 
         if ($matchingRows == 0) {
-            $feedback = new WarningFeedback('FEEDBACK_NOT_REGISTERED');
-            SessionTools::setFeedback($feedback->get());
+            Feedback::add(
+                'warning',
+                'Invalid credentials'
+            );
 
             return false;
         }

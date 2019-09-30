@@ -19,13 +19,33 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Utility\Feedback;
+namespace Fragments\Utility;
 
-class DangerFeedback extends AbstractFeedback
+use Fragments\Utility\SessionManagement\SessionTools;
+
+class Feedback
 {
-    protected $feedbackType = 'danger';
+    private const BAG_NAME = 'feedbackBag';
 
-    protected $feedbackText = array(
-        'EXCEPTION_SESSION_EXPIRED' => 'This session has expired',
-    );
+    public static function add($id, $message)
+    {
+        if (false === SessionTools::isSet(self::BAG_NAME)) {
+            SessionTools::set(self::BAG_NAME, array());
+        }
+
+        $feedback = array($id => $message);
+        SessionTools::append(self::BAG_NAME, $feedback);
+    }
+
+    public static function get()
+    {
+        if (SessionTools::isSet(self::BAG_NAME)) {
+            $bag = SessionTools::get(self::BAG_NAME);
+            SessionTools::destroy(self::BAG_NAME);
+
+            return $bag;
+        }
+
+        return array();
+    }
 }

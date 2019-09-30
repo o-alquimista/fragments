@@ -21,9 +21,8 @@
 
 namespace App\Models\Register;
 
-use Fragments\Utility\SessionManagement\SessionTools;
 use App\Models\Register\DataMappers\CredentialHandlerMapper;
-use App\Utility\Feedback\WarningFeedback;
+use Fragments\Utility\Feedback;
 
 /**
  * Credential handler
@@ -50,8 +49,10 @@ class CredentialHandler
         $matchingRows = $storage->retrieveCount($this->username);
 
         if ($matchingRows >= 1) {
-            $feedback = new WarningFeedback('FEEDBACK_USERNAME_TAKEN');
-            SessionTools::setFeedback($feedback->get());
+            Feedback::add(
+                'warning',
+                'Username already taken'
+            );
 
             return false;
         }

@@ -21,8 +21,7 @@
 
 namespace App\Models\Register;
 
-use Fragments\Utility\SessionManagement\SessionTools;
-use App\Utility\Feedback\WarningFeedback;
+use Fragments\Utility\Feedback;
 
 /**
  * Input validation
@@ -46,28 +45,41 @@ class FormValidation
 
     public function validate()
     {
-        return $this->validateUsername() && $this->validatePassword();
+        $validUsername = $this->validateUsername();
+        $validPassword = $this->validatePassword();
+
+        if ($validUsername && $validPassword) {
+            return true;
+        }
+
+        return false;
     }
 
     private function validateUsername()
     {
         if (empty($this->username)) {
-            $feedback = new WarningFeedback('FEEDBACK_USERNAME_EMPTY');
-            SessionTools::setFeedback($feedback->get());
+            Feedback::add(
+                'warning',
+                'Username was left empty'
+            );
 
             return false;
         }
 
         if (!preg_match('/^[a-zA-Z0-9_]+$/', $this->username)) {
-            $feedback = new WarningFeedback('FEEDBACK_USERNAME_INVALID');
-            SessionTools::setFeedback($feedback->get());
+            Feedback::add(
+                'warning',
+                'Username can only contain alphanumerical characters(a-z, A-Z, 0-9) and underscore(_)'
+            );
 
             return false;
         }
 
         if (strlen($this->username) < 4 or strlen($this->username) > 25) {
-            $feedback = new WarningFeedback('FEEDBACK_USERNAME_LENGTH');
-            SessionTools::setFeedback($feedback->get());
+            Feedback::add(
+                'warning',
+                'Username must be longer than 3 and shorter than 26 characters'
+            );
 
             return false;
         }
@@ -78,15 +90,19 @@ class FormValidation
     private function validatePassword()
     {
         if (empty($this->passwd)) {
-            $feedback = new WarningFeedback('FEEDBACK_PASSWORD_EMPTY');
-            SessionTools::setFeedback($feedback->get());
+            Feedback::add(
+                'warning',
+                'Password was left empty'
+            );
 
             return false;
         }
 
         if (strlen($this->passwd) < 8) {
-            $feedback = new WarningFeedback('FEEDBACK_PASSWORD_LENGTH');
-            SessionTools::setFeedback($feedback->get());
+            Feedback::add(
+                'warning',
+                'Minimum password length is 8 characters'
+            );
 
             return false;
         }
