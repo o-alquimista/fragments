@@ -33,20 +33,20 @@ use App\Models\Profile\ProfileService;
  */
 class ProfileController extends AbstractController
 {
-    private $username;
-
     public function renderUserProfile($username)
     {
-        $result = $this->populate($username);
-
-        if ($result === false) {
-            return;
-        }
+        $service = new ProfileService;
+        $userExists = $service->getUserData($username);
 
         new Session;
+        $view = new ProfileView;
 
-        $view = new ProfileView($this->username);
-        $view->composePage();
+        if ($userExists) {
+            $userData = $service->username;
+            $view->composePage($userData);
+        } else {
+            $view->composeUserNotFoundError();
+        }
     }
 
     /**
@@ -59,41 +59,7 @@ class ProfileController extends AbstractController
 
         new Session;
 
-        $view = new ProfileView($this->username);
+        $view = new ProfileView;
         $view->composeList($list);
-    }
-
-    /**
-     * Populates the controller with the requested user
-     * information.
-     *
-     * @param string $username
-     * @return boolean
-     */
-    private function populate($username)
-    {
-        $service = new ProfileService;
-        $result = $service->getUserData($username);
-
-        if ($result === false) {
-            $this->renderError();
-
-            return false;
-        }
-
-        $this->username = $service->username;
-
-        return true;
-    }
-
-    /**
-     * Display user not found error.
-     */
-    private function renderError()
-    {
-        new Session;
-
-        $view = new ProfileView($this->username);
-        $view->composeError();
     }
 }

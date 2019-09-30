@@ -35,41 +35,37 @@ class View extends AbstractView
 
     public $username;
 
+    public $userList;
+
     public $sessionStatus;
 
-    public function __construct($username) {
+    public function composePage($username)
+    {
         $this->username = $username;
 
         if (SessionTools::get('login') == true) {
             $name = SessionTools::get('username');
             $this->sessionStatus = "You are logged in, " . $name;
         }
+
+        $this->renderTemplate('_templates/header.php');
+        $this->renderTemplate('Profile/templates/profile.php');
+        $this->renderTemplate('_templates/footer.php');
     }
 
-    public function composePage()
+    public function composeUserNotFoundError()
     {
-        require '../App/Views/_templates/header.php';
-        require '../App/Views/Profile/templates/profile.php';
-        require '../App/Views/_templates/footer.php';
-    }
-
-    public function composeError()
-    {
-        require '../App/Views/_templates/header.php';
-        require '../App/Views/Profile/templates/notFound.php';
-        require '../App/Views/_templates/footer.php';
+        $this->renderTemplate('_templates/header.php');
+        $this->renderTemplate('Profile/templates/notFound.php');
+        $this->renderTemplate('_templates/footer.php');
     }
 
     public function composeList($list)
     {
-        require '../App/Views/_templates/header.php';
-        require '../App/Views/Profile/templates/listTemplates/openContainer.php';
+        $this->userList = $list;
 
-        foreach ($list as $username) {
-            require '../App/Views/Profile/templates/listTemplates/listItem.php';
-        }
-
-        require '../App/Views/Profile/templates/listTemplates/closeContainer.php';
-        require '../App/Views/_templates/footer.php';
+        $this->renderTemplate('_templates/header.php');
+        $this->renderTemplate('Profile/templates/userList.php');
+        $this->renderTemplate('_templates/footer.php');
     }
 }

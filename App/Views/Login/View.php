@@ -34,11 +34,9 @@ class View extends AbstractView
 
     public function composePage()
     {
-        require '../App/Views/_templates/header.php';
-
+        $this->renderTemplate('_templates/header.php');
         $this->renderFeedback();
-
-        require '../App/Views/Login/templates/loginForm.php';
-        require '../App/Views/_templates/footer.php';
+        $this->renderTemplate('Login/templates/loginForm.php');
+        $this->renderTemplate('_templates/footer.php');
     }
 }

@@ -25,6 +25,11 @@ use Fragments\Utility\Feedback;
 
 abstract class AbstractView
 {
+    public function renderTemplate($path)
+    {
+        require '../App/Views/' . $path;
+    }
+
     public function renderFeedback()
     {
         $bag = Feedback::get();
