@@ -68,7 +68,7 @@ class Session
         }
 
         $isSetNewSessionID = $this->isSetNewSessionID();
-        if ($isSetNewSessionID === true) {
+        if ($isSetNewSessionID === false) {
             return;
         }
 
@@ -112,6 +112,8 @@ class Session
             return false;
         } catch(SoftException $err) {
             $err->sessionExpired();
+
+            return true;
         }
     }
 
