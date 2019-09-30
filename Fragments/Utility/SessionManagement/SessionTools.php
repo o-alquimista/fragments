@@ -30,7 +30,7 @@ class SessionTools
 {
     public static function get($name)
     {
-        if (isset($_SESSION[$name])) {
+        if (array_key_exists($name, $_SESSION)) {
             return $_SESSION[$name];
         }
     }
@@ -42,7 +42,7 @@ class SessionTools
 
     public static function isSet($name)
     {
-        if (isset($_SESSION[$name])) {
+        if (array_key_exists($name, $_SESSION)) {
             return true;
         }
 
