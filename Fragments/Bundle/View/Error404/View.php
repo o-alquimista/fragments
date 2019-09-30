@@ -21,7 +21,7 @@
 
 namespace Fragments\Bundle\View\Error404;
 
-use Fragments\Views\AbstractView;
+use Fragments\Bundle\View\AbstractView;
 
 /**
  * Error 404 view
