@@ -32,7 +32,8 @@ abstract class AbstractView
 
     public function renderFeedback()
     {
-        $bag = Feedback::get();
+        $feedback = new Feedback;
+        $bag = $feedback->get();
 
         foreach ($bag as $feedback) {
             foreach ($feedback as $id => $message) {

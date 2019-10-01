@@ -24,12 +24,13 @@ namespace Fragments\Bundle\Controller;
 use Fragments\Component\Server\Request;
 use Fragments\Component\SessionManagement\Session;
 
-class AbstractController
+abstract class AbstractController
 {
-    public function startSession()
+    public $session;
+
+    public function __construct()
     {
-        $session = new Session;
-        $session->start();
+        $this->session = new Session;
     }
 
     public function isFormSubmitted()

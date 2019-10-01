@@ -49,7 +49,7 @@ class CredentialHandler
         $matchingRows = $storage->retrieveCount($this->username);
 
         if ($matchingRows >= 1) {
-            Feedback::add(
+            (new Feedback)->add(
                 'warning',
                 'Username already taken'
             );

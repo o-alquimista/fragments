@@ -22,7 +22,7 @@
 namespace App\View\Profile;
 
 use Fragments\Bundle\View\AbstractView;
-use Fragments\Component\SessionManagement\SessionTools;
+use Fragments\Component\SessionManagement\Session;
 
 /**
  * Profile view.
@@ -43,8 +43,10 @@ class View extends AbstractView
     {
         $this->username = $username;
 
-        if (SessionTools::get('login') == true) {
-            $name = SessionTools::get('username');
+        $session = new Session;
+
+        if (true === $session->isSet('login')) {
+            $name = $session->get('username');
             $this->sessionStatus = "You are logged in, " . $name;
         }
 

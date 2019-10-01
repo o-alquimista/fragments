@@ -58,7 +58,7 @@ class FormValidation
     private function validateUsername()
     {
         if (empty($this->username)) {
-            Feedback::add(
+            (new Feedback)->add(
                 'warning',
                 'Username was left empty'
             );
@@ -67,7 +67,7 @@ class FormValidation
         }
 
         if (!preg_match('/^[a-zA-Z0-9_]+$/', $this->username)) {
-            Feedback::add(
+            (new Feedback)->add(
                 'warning',
                 'Username can only contain alphanumerical characters(a-z, A-Z, 0-9) and underscore(_)'
             );
@@ -76,7 +76,7 @@ class FormValidation
         }
 
         if (strlen($this->username) < 4 or strlen($this->username) > 25) {
-            Feedback::add(
+            (new Feedback)->add(
                 'warning',
                 'Username must be longer than 3 and shorter than 26 characters'
             );
@@ -90,7 +90,7 @@ class FormValidation
     private function validatePassword()
     {
         if (empty($this->passwd)) {
-            Feedback::add(
+            (new Feedback)->add(
                 'warning',
                 'Password was left empty'
             );
@@ -99,7 +99,7 @@ class FormValidation
         }
 
         if (strlen($this->passwd) < 8) {
-            Feedback::add(
+            (new Feedback)->add(
                 'warning',
                 'Minimum password length is 8 characters'
             );

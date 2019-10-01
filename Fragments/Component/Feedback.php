@@ -21,27 +21,34 @@
 
 namespace Fragments\Component;
 
-use Fragments\Component\SessionManagement\SessionTools;
+use Fragments\Component\SessionManagement\Session;
 
 class Feedback
 {
     private const BAG_NAME = 'feedbackBag';
 
-    public static function add($id, $message)
+    private $session;
+
+    public function __construct()
     {
-        if (false === SessionTools::isSet(self::BAG_NAME)) {
-            SessionTools::set(self::BAG_NAME, array());
+        $this->session = new Session;
+    }
+
+    public function add($id, $message)
+    {
+        if (false === $this->session->isSet(self::BAG_NAME)) {
+            $this->session->set(self::BAG_NAME, array());
         }
 
         $feedback = array($id => $message);
-        SessionTools::append(self::BAG_NAME, $feedback);
+        $this->session->append(self::BAG_NAME, $feedback);
     }
 
-    public static function get()
+    public function get()
     {
-        if (SessionTools::isSet(self::BAG_NAME)) {
-            $bag = SessionTools::get(self::BAG_NAME);
-            SessionTools::destroy(self::BAG_NAME);
+        if ($this->session->isSet(self::BAG_NAME)) {
+            $bag = $this->session->get(self::BAG_NAME);
+            $this->session->destroy(self::BAG_NAME);
 
             return $bag;
         }

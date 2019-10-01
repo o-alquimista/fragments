@@ -42,14 +42,14 @@ class Request
 
     public static function post($value)
     {
-        if (isset($_POST[$value])) {
+        if (array_key_exists($value, $_POST)) {
             return $_POST[$value];
         }
     }
 
     public static function get($value)
     {
-        if (isset($_GET[$value])) {
+        if (array_key_exists($value, $_GET)) {
             return $_GET[$value];
         }
     }

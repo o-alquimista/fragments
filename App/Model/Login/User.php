@@ -47,7 +47,7 @@ class User
         $matchingRows = $storage->retrieveCount($this->username);
 
         if ($matchingRows == 0) {
-            Feedback::add(
+            (new Feedback)->add(
                 'warning',
                 'Invalid credentials'
             );

@@ -22,7 +22,6 @@
 namespace App\Model\Login;
 
 use Fragments\Component\SessionManagement\Session;
-use Fragments\Component\SessionManagement\SessionTools;
 use App\Model\Login\DataMapper\AuthenticationMapper;
 
 /**
@@ -51,7 +50,7 @@ class Authentication
         $storage = new AuthenticationMapper;
         $data = $storage->retrieveData($this->username);
 
-        SessionTools::set('login', true);
-        SessionTools::set('username', $data->username);
+        $session->set('login', true);
+        $session->set('username', $data->username);
     }
 }

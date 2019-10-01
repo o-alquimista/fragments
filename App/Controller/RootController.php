@@ -33,7 +33,7 @@ class RootController extends AbstractController
 {
     public function renderPage()
     {
-        $this->startSession();
+        $this->session->start();
 
         $view = new RootView;
         $view->composePage();

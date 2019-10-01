@@ -34,7 +34,7 @@ class RegistrationController extends AbstractController
 {
     public function register()
     {
-        $this->startSession();
+        $this->session->start();
 
         if ($this->isFormSubmitted()) {
             $service = new RegisterService;

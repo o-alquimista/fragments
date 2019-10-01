@@ -49,7 +49,7 @@ class User
         $storage = new UserMapper;
         $storage->saveData($this->username, $this->passwd);
 
-        Feedback::add(
+        (new Feedback)->add(
             'success',
             'Registration complete'
         );

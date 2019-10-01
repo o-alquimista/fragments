@@ -49,7 +49,7 @@ class CredentialHandler
         $hash = $storage->retrieveHash($this->username);
 
         if (!password_verify($this->passwd, $hash)) {
-            Feedback::add(
+            (new Feedback)->add(
                 'warning',
                 'Invalid credentials'
             );

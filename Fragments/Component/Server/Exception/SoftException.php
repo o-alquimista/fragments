@@ -37,7 +37,8 @@ class SoftException extends Exception
 {
     public function sessionExpired()
     {
-        Feedback::add(
+        $feedback = new Feedback;
+        $feedback->add(
             'danger',
             'This session has expired'
         );

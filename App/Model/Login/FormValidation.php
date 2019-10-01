@@ -57,7 +57,7 @@ class FormValidation
     private function validateUsername()
     {
         if (empty($this->username)) {
-            Feedback::add(
+            (new Feedback)->add(
                 'warning',
                 'Username was left empty'
             );
@@ -71,7 +71,7 @@ class FormValidation
     private function validatePassword()
     {
         if (empty($this->passwd)) {
-            Feedback::add(
+            (new Feedback)->add(
                 'warning',
                 'Password was left empty'
             );
