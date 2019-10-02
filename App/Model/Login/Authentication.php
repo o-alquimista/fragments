@@ -50,7 +50,7 @@ class Authentication
         $storage = new AuthenticationMapper;
         $data = $storage->retrieveData($this->username);
 
-        $session->set('login', true);
+        $session->set('authenticated', true);
         $session->set('username', $data->username);
     }
 }

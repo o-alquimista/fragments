@@ -37,8 +37,6 @@ class ProfileController extends AbstractController
         $service = new ProfileService;
         $userExists = $service->getUserData($username);
 
-        $this->session->start();
-
         $view = new ProfileView;
 
         if ($userExists) {
@@ -56,8 +54,6 @@ class ProfileController extends AbstractController
     {
         $service = new ProfileService;
         $list = $service->getUserList();
-
-        $this->session->start();
 
         $view = new ProfileView;
         $view->composeList($list);

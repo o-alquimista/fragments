@@ -22,7 +22,6 @@
 namespace App\View\Profile;
 
 use Fragments\Bundle\View\AbstractView;
-use Fragments\Component\SessionManagement\Session;
 
 /**
  * Profile view.
@@ -33,25 +32,15 @@ class View extends AbstractView
 {
     public $title = 'Profile - Fragments';
 
-    public $username;
-
     public $userList;
 
-    public $sessionStatus;
+    public $userData;
 
-    public function composePage($username)
+    public function composePage($userData)
     {
-        $this->username = $username;
-
-        $session = new Session;
-
-        if (true === $session->isSet('login')) {
-            $name = $session->get('username');
-            $this->sessionStatus = "You are logged in, " . $name;
-        }
+        $this->userData = $userData;
 
         $this->renderTemplate('_templates/header.php');
-        $this->renderFeedback();
         $this->renderTemplate('Profile/templates/profile.php');
         $this->renderTemplate('_templates/footer.php');
     }
@@ -59,7 +48,6 @@ class View extends AbstractView
     public function composeUserNotFoundError()
     {
         $this->renderTemplate('_templates/header.php');
-        $this->renderFeedback();
         $this->renderTemplate('Profile/templates/notFound.php');
         $this->renderTemplate('_templates/footer.php');
     }
@@ -69,7 +57,6 @@ class View extends AbstractView
         $this->userList = $list;
 
         $this->renderTemplate('_templates/header.php');
-        $this->renderFeedback();
         $this->renderTemplate('Profile/templates/userList.php');
         $this->renderTemplate('_templates/footer.php');
     }

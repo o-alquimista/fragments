@@ -35,8 +35,6 @@ class SecurityController extends AbstractController
 {
     public function login()
     {
-        $this->session->start();
-
         if ($this->isFormSubmitted()) {
             $service = new LoginService;
             $login = $service->login();
@@ -53,9 +51,7 @@ class SecurityController extends AbstractController
 
     public function logout()
     {
-        $this->session->start();
-
-        $this->session->destroyAll();
+        $this->getSession()->destroyAll();
         Request::redirect('/');
     }
 }

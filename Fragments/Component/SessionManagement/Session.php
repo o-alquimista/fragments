@@ -44,6 +44,11 @@ use Fragments\Component\Server\Exception\SoftException;
  */
 class Session
 {
+    public function __construct()
+    {
+        $this->start();
+    }
+
     public function start()
     {
         if (session_status() == PHP_SESSION_ACTIVE) {
@@ -97,10 +102,6 @@ class Session
 
     public function regenerate()
     {
-        if (session_status() == PHP_SESSION_NONE) {
-            return;
-        }
-
         $newID = session_create_id();
         $this->set('new_session_id', $newID);
 
@@ -167,7 +168,7 @@ class Session
      *
      * @param string $name
      */
-    public static function destroy($name)
+    public function destroy($name)
     {
         unset($_SESSION[$name]);
     }
@@ -175,7 +176,7 @@ class Session
     /**
      * Unset all session variables.
      */
-    public static function destroyAll()
+    public function destroyAll()
     {
         $_SESSION = array();
     }

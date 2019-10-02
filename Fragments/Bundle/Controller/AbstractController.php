@@ -26,13 +26,6 @@ use Fragments\Component\SessionManagement\Session;
 
 abstract class AbstractController
 {
-    public $session;
-
-    public function __construct()
-    {
-        $this->session = new Session;
-    }
-
     public function isFormSubmitted()
     {
         if (Request::requestMethod() == "POST") {
@@ -40,5 +33,12 @@ abstract class AbstractController
         }
 
         return false;
+    }
+
+    public function getSession()
+    {
+        $session = new Session;
+
+        return $session;
     }
 }

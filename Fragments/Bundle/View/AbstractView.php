@@ -22,16 +22,39 @@
 namespace Fragments\Bundle\View;
 
 use Fragments\Component\Feedback;
+use Fragments\Component\SessionManagement\Session;
 
 abstract class AbstractView
 {
+    private const BASE_DIR = '../App/View/';
+
     public function renderTemplate($path)
     {
-        require '../App/View/' . $path;
+        require self::BASE_DIR . $path;
+    }
+
+    public function getSession()
+    {
+        $session = new Session;
+
+        return $session;
+    }
+
+    public function hasSession()
+    {
+        if (array_key_exists(session_name(), $_COOKIE)) {
+            return true;
+        }
+
+        return false;
     }
 
     public function renderFeedback()
     {
+        if (session_status() == PHP_SESSION_NONE) {
+            return;
+        }
+
         $feedback = new Feedback;
         $bag = $feedback->get();
 
@@ -44,6 +67,6 @@ abstract class AbstractView
 
     public function escape($output)
     {
-        return htmlspecialchars($output);
+        echo htmlspecialchars($output);
     }
 }

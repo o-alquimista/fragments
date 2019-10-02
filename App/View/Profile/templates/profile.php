@@ -1,8 +1,5 @@
-<div class='container'>
-
-  <p><?php echo $this->escape($this->sessionStatus) ?></p>
-
+<div class="container">
+  <?php $this->renderFeedback() ?>
   <h4>Profile</h4>
-  <p><?php echo $this->escape($this->username) ?></p>
-
+  <p><?php $this->escape($this->userData) ?></p>
 </div>
