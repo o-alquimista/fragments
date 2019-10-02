@@ -9,10 +9,11 @@
 </head>
 
 <body>
-  <?php if ($this->hasSession()): ?>
-    <?php if ($this->getSession()->isSet('authenticated')): ?>
-      <div class="container">
-        <p>You're logged in, <?php $this->escape($this->getSession()->get('username')) ?></p>
-      </div>
+  <div class="container-fluid navbar">
+    <b>Fragments</b>
+    <?php if ($this->hasSession()): ?>
+      <?php if ($this->getSession()->isSet('authenticated')): ?>
+        You're logged in, <?php $this->escape($this->getSession()->get('username')) ?>
+      <?php endif ?>
     <?php endif ?>
-  <?php endif ?>
+  </div>

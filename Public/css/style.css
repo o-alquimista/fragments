@@ -9,12 +9,12 @@ body {
 }
 
 h4 {
-  margin-top: 7px;
-  margin-bottom: 7px;
+  margin-top: 0;
+  margin-bottom: 15px;
 
   font-family: "Helvetica Neue", Arial, sans-serif;
   font-size: 1.5em;
-  font-weight: 100;
+  font-weight: bold;
 }
 
 /*
@@ -30,9 +30,43 @@ h4 {
  * Containers
  */
 
-.container {
-  width: 85%;
-  margin: auto;
+.container, .container-fluid {
+  padding: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+/*
+ * Navigation
+ */
+
+.navbar {
+  background-color: lightGrey;
+  min-height: 20px;
 }
 
 /*
@@ -68,8 +102,6 @@ h4 {
   cursor: pointer;
   background-color: #28A745;
   padding: 10px;
-  margin-top: 5px;
-  margin-bottom: 5px;
   width: 100%;
 
   border: none;
@@ -84,6 +116,11 @@ h4 {
   box-shadow: 0px 0px 0px 3px #95D4A3;
 }
 
+.form-group {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
 /*
  * Feedback messages
  */
@@ -95,6 +132,8 @@ h4 {
   padding: 15px;
   border-style: solid;
   border-width: thin;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .alert-danger {
