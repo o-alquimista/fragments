@@ -34,7 +34,7 @@ class XMLParser
 
     public function __construct()
     {
-        $routing = simplexml_load_file('../config/routes.xml');
+        $routing = simplexml_load_file('../Config/routes.xml');
 
         foreach ($routing->route as $route) {
             $id = (string)$route->id;

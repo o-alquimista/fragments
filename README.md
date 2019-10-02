@@ -11,7 +11,7 @@ Keep in mind that this project is merely an experiment, and is not recommended f
 
 - Create the table: `CREATE TABLE users (id INT NOT NULL AUTO_INCREMENT, username VARCHAR(255) NOT NULL, hash VARCHAR(255) NOT NULL, PRIMARY KEY(id));`
 
-- The 'root' setting (`DocumentRoot` on Apache) of your server or virtual host must point to the `/public_html` folder.
+- The 'root' setting (`DocumentRoot` on Apache) of your server or virtual host must point to the `/Public` folder.
 
 - Configure the root directory (Apache):
 ```
@@ -20,7 +20,7 @@ Require all granted
 FallbackResource /index.php
 ```
 
-Since Fragments is not meant for use in production, we already include an application in `/App`, plus some routes in `/config/routes.xml` and assets in `/public_html`.
+Since Fragments is not meant for use in production, we already include an application in `/App`, plus some routes in `/Config/routes.xml` and assets in `/Public`.
 
 ## License
 Copyright 2019 Douglas Silva (0x9fd287d56ec107ac)
