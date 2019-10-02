@@ -22,7 +22,6 @@
 namespace App\Controller;
 
 use Fragments\Bundle\Controller\AbstractController;
-use Fragments\Component\Server\Request;
 use App\View\Login\View as LoginView;
 use App\Model\Login\LoginService;
 
@@ -41,7 +40,7 @@ class SecurityController extends AbstractController
 
             if ($login === true) {
                 $username = $service->username;
-                Request::redirect('/profile/' . $username);
+                $this->getRequest()->redirect('/profile/' . $username);
             }
         }
 
@@ -52,6 +51,6 @@ class SecurityController extends AbstractController
     public function logout()
     {
         $this->getSession()->destroyAll();
-        Request::redirect('/');
+        $this->getRequest()->redirect('/');
     }
 }

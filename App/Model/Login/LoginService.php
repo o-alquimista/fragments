@@ -36,8 +36,10 @@ class LoginService
 
     public function __construct()
     {
-        $this->username = Request::post('username');
-        $this->passwd = Request::post('passwd');
+        $request = new Request;
+
+        $this->username = $request->post('username');
+        $this->passwd = $request->post('passwd');
     }
 
     public function login()

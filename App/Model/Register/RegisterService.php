@@ -36,8 +36,10 @@ class RegisterService
 
     public function __construct()
     {
-        $this->username = trim(Request::post('username'));
-        $this->passwd = Request::post('passwd');
+        $request = new Request;
+
+        $this->username = trim($request->post('username'));
+        $this->passwd = $request->post('passwd');
     }
 
     public function register()

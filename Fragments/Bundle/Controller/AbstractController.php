@@ -28,7 +28,7 @@ abstract class AbstractController
 {
     public function isFormSubmitted()
     {
-        if (Request::requestMethod() == "POST") {
+        if ($this->getRequest()->requestMethod() == "POST") {
             return true;
         }
 
@@ -40,5 +40,12 @@ abstract class AbstractController
         $session = new Session;
 
         return $session;
+    }
+
+    public function getRequest()
+    {
+        $request = new Request;
+
+        return $request;
     }
 }

@@ -30,24 +30,24 @@ namespace Fragments\Component\Server;
  */
 class Request
 {
-    public static function getURI()
+    public function getURI()
     {
         return $_SERVER['REQUEST_URI'];
     }
 
-    public static function requestMethod()
+    public function requestMethod()
     {
         return $_SERVER['REQUEST_METHOD'];
     }
 
-    public static function post($value)
+    public function post($value)
     {
         if (array_key_exists($value, $_POST)) {
             return $_POST[$value];
         }
     }
 
-    public static function get($value)
+    public function get($value)
     {
         if (array_key_exists($value, $_GET)) {
             return $_GET[$value];
@@ -59,7 +59,7 @@ class Request
      *
      * @param string $where
      */
-    public static function redirect($where)
+    public function redirect($where)
     {
         header('Location: ' . $where);
     }

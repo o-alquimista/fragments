@@ -38,7 +38,9 @@ class RequestContext
 
     public function __construct()
     {
-        $uri = Request::getURI();
+        $request = new Request;
+
+        $uri = $request->getURI();
 
         // Remove trailing slash from path, except for the root
         if ($uri !== '/') {
@@ -46,6 +48,6 @@ class RequestContext
         }
 
         $this->uri = $uri;
-        $this->requestMethod = Request::requestMethod();
+        $this->requestMethod = $request->requestMethod();
     }
 }

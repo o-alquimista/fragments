@@ -23,6 +23,7 @@ namespace Fragments\Bundle\View;
 
 use Fragments\Component\Feedback;
 use Fragments\Component\SessionManagement\Session;
+use Fragments\Component\Server\Request;
 
 abstract class AbstractView
 {
@@ -38,6 +39,13 @@ abstract class AbstractView
         $session = new Session;
 
         return $session;
+    }
+
+    public function getRequest()
+    {
+        $request = new Request;
+
+        return $request;
     }
 
     public function hasSession()
