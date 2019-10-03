@@ -137,11 +137,13 @@ class Session
         $this->destroy('new_session_id');
     }
 
-    public function get($name)
+    public function get($name, $default = [])
     {
         if ($this->isSet($name)) {
             return $_SESSION[$name];
         }
+
+        return $default;
     }
 
     public function set($name, $value)

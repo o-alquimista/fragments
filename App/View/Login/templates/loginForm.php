@@ -12,6 +12,8 @@
       <input id="inputPassword" type="password" class="form-input" name="passwd"
         autocapitalize="off" autocomplete="off" required="required"/>
     </div>
+    <input type="hidden" name="_csrf_token"
+      value="<?php $this->csrfToken('login') ?>"/>
     <div class="form-group">
       <button type="submit" class="form-submit">
         Sign In

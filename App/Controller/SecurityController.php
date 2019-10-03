@@ -35,12 +35,16 @@ class SecurityController extends AbstractController
     public function login()
     {
         if ($this->isFormSubmitted()) {
-            $service = new LoginService;
-            $login = $service->login();
+            $token = $this->getRequest()->post('_csrf_token');
 
-            if ($login === true) {
-                $username = $service->username;
-                $this->getRequest()->redirect('/profile/' . $username);
+            if ($this->isCsrfTokenValid($token, 'login')) {
+                $service = new LoginService;
+                $login = $service->login();
+
+                if ($login === true) {
+                    $username = $service->username;
+                    $this->getRequest()->redirect('/profile/' . $username);
+                }
             }
         }
 

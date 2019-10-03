@@ -23,6 +23,7 @@ namespace Fragments\Bundle\View;
 
 use Fragments\Component\Feedback;
 use Fragments\Component\SessionManagement\Session;
+use Fragments\Component\Security\Csrf\CsrfTokenManager;
 use Fragments\Component\Server\Request;
 
 abstract class AbstractView
@@ -46,6 +47,14 @@ abstract class AbstractView
         $request = new Request;
 
         return $request;
+    }
+
+    public function csrfToken(string $id)
+    {
+        $csrfManager = new CsrfTokenManager;
+        $token = $csrfManager->getToken($id);
+
+        echo $token;
     }
 
     public function hasSession()

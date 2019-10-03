@@ -35,8 +35,12 @@ class RegistrationController extends AbstractController
     public function register()
     {
         if ($this->isFormSubmitted()) {
-            $service = new RegisterService;
-            $service->register();
+            $token = $this->getRequest()->post('_csrf_token');
+
+            if ($this->isCsrfTokenValid($token, 'registration')) {
+                $service = new RegisterService;
+                $service->register();
+            }
         }
 
         $view = new RegisterView;

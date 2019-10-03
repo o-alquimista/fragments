@@ -23,6 +23,8 @@ namespace Fragments\Bundle\Controller;
 
 use Fragments\Component\Server\Request;
 use Fragments\Component\SessionManagement\Session;
+use Fragments\Component\Security\Csrf\CsrfTokenManager;
+use Fragments\Component\Feedback;
 
 abstract class AbstractController
 {
@@ -33,6 +35,22 @@ abstract class AbstractController
         }
 
         return false;
+    }
+
+    public function isCsrfTokenValid($token, string $id)
+    {
+        $csrfManager = new CsrfTokenManager;
+
+        if (false === $csrfManager->isTokenValid($token, $id)) {
+            $this->addFeedback(
+              'warning',
+              'Invalid CSRF token.'
+            );
+
+            return false;
+        }
+
+        return true;
     }
 
     public function getSession()
@@ -47,5 +65,11 @@ abstract class AbstractController
         $request = new Request;
 
         return $request;
+    }
+
+    public function addFeedback($id, $message)
+    {
+        $feedback = new Feedback;
+        $feedback->add($id, $message);
     }
 }

@@ -15,6 +15,8 @@
         title="Must be longer than or equal to 8 characters" minlength="8"
         autocapitalize="off" autocomplete="off" required="required"/>
     </div>
+    <input type="hidden" name="_csrf_token"
+      value="<?php $this->csrfToken('registration') ?>"/>
     <div class="form-group">
       <button type="submit" class="form-submit">
           Create an account
