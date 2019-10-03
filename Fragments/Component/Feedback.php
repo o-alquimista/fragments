@@ -36,7 +36,7 @@ class Feedback
 
     public function add($id, $message)
     {
-        if (false === $this->session->isSet(self::BAG_NAME)) {
+        if (false === $this->session->exists(self::BAG_NAME)) {
             $this->session->set(self::BAG_NAME, array());
         }
 
@@ -46,7 +46,7 @@ class Feedback
 
     public function get()
     {
-        if ($this->session->isSet(self::BAG_NAME)) {
+        if ($this->session->exists(self::BAG_NAME)) {
             $bag = $this->session->get(self::BAG_NAME);
             $this->session->destroy(self::BAG_NAME);
 

@@ -38,7 +38,7 @@ class CsrfTokenManager
     {
         $tokenName = self::PREFIX . $id;
 
-        if ($this->session->isSet($tokenName)) {
+        if ($this->session->exists($tokenName)) {
             return $this->session->get($tokenName);
         }
 
@@ -52,7 +52,7 @@ class CsrfTokenManager
     {
         $tokenName = self::PREFIX . $id;
 
-        if (false === $this->session->isSet($tokenName)) {
+        if (false === $this->session->exists($tokenName)) {
             return false;
         }
 

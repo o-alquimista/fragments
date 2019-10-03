@@ -58,7 +58,7 @@ class Session
         (new SessionStrict)->init();
 
         // If 'session_obsolete' is set, check if it's expired next
-        if (false === $this->isSet('session_obsolete')) {
+        if (false === $this->exists('session_obsolete')) {
             return;
         }
 
@@ -88,7 +88,7 @@ class Session
          * If the session variable 'new_session_id' exists,
          * attempt to restart the session with it.
          */
-        if (false === $this->isSet('new_session_id')) {
+        if (false === $this->exists('new_session_id')) {
             return;
         }
 
@@ -137,32 +137,32 @@ class Session
         $this->destroy('new_session_id');
     }
 
-    public function get($name, $default = [])
+    public function get($key, $default = null)
     {
-        if ($this->isSet($name)) {
-            return $_SESSION[$name];
+        if ($this->exists($key)) {
+            return $_SESSION[$key];
         }
 
         return $default;
     }
 
-    public function set($name, $value)
+    public function set($key, $value)
     {
-        $_SESSION[$name] = $value;
+        $_SESSION[$key] = $value;
     }
 
-    public function isSet($name)
+    public function exists($key)
     {
-        if (array_key_exists($name, $_SESSION)) {
+        if (array_key_exists($key, $_SESSION)) {
             return true;
         }
 
         return false;
     }
 
-    public function append($name, $value)
+    public function append($key, $value)
     {
-        $_SESSION[$name][] = $value;
+        $_SESSION[$key][] = $value;
     }
 
     /**
@@ -170,13 +170,13 @@ class Session
      *
      * @param string $name
      */
-    public function destroy($name)
+    public function destroy($key)
     {
-        unset($_SESSION[$name]);
+        unset($_SESSION[$key]);
     }
 
     /**
-     * Unset all session variables.
+     * Wipe all session variables.
      */
     public function destroyAll()
     {

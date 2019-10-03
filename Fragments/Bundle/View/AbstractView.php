@@ -66,6 +66,15 @@ abstract class AbstractView
         return false;
     }
 
+    public function isAuthenticated()
+    {
+        if ($this->getSession()->exists('authenticated')) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function renderFeedback()
     {
         if (session_status() == PHP_SESSION_NONE) {

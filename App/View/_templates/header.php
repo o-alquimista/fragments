@@ -12,7 +12,7 @@
   <div class="container-fluid navbar">
     <b>Fragments</b>
     <?php if ($this->hasSession()): ?>
-      <?php if ($this->getSession()->isSet('authenticated')): ?>
+      <?php if ($this->isAuthenticated()): ?>
         You're logged in, <?php $this->escape($this->getSession()->get('username')) ?>
       <?php endif ?>
     <?php endif ?>
