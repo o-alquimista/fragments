@@ -1,7 +1,5 @@
 # Fragments
-Fragments aims to be a small framework for web applications. Third-party dependencies will always be avoided if possible, relying solely on what PHP provides. Routing and autoloading are also developed in-house.
-
-Keep in mind that this project is merely an experiment, and is not recommended for use in production.
+Fragments aims to be a small framework for web applications. Keep in mind that this project is merely an experiment, and is not recommended for use in production.
 
 ## Requirements
 - PHP XML extension. This package is called `php-xml` on Ubuntu.
