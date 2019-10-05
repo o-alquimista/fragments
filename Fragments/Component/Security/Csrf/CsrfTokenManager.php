@@ -57,8 +57,15 @@ class CsrfTokenManager
         }
 
         $tokenStored = $this->session->get($tokenName);
+        $tokenValid = hash_equals($tokenStored, $tokenReceived);
 
-        return hash_equals($tokenStored, $tokenReceived);
+        if ($tokenValid) {
+            $this->session->destroy($tokenName);
+
+            return true;
+        }
+
+        return false;
     }
 
     private function generate()
