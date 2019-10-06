@@ -10,7 +10,7 @@ Fragments aims to be a small framework for web applications. Keep in mind that t
 Create a blank project:
 `composer create-project -s dev crimsonking/fragments-skeleton <your-project-name>`
 
-Edit `/config/database.xml` to configure database name, credentials, PDO driver and host.
+Edit `/config/database.ini` to configure database name, credentials, PDO driver and host.
 
 Configure your web server so that its root directory is `/public`. As for the directory settings, here's how you should configure it on Apache:
 ```
