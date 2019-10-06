@@ -11,7 +11,6 @@ Create a blank project:
 `composer create-project -s dev crimsonking/fragments-skeleton <your-project-name>`
 
 Fragments doesn't yet provide an easy way to specify database connection settings. Until it does, you must change them at `/vendor/crimsonking/fragments/src/Fragments/Component/Database/PDOConnection.php`. The username, password, database name and PDO driver for the connection must be set there.
-- Create the table: `CREATE TABLE users (id INT NOT NULL AUTO_INCREMENT, username VARCHAR(255) NOT NULL, hash VARCHAR(255) NOT NULL, PRIMARY KEY(id));`
 
 Configure your web server so that its root directory is `/public`. As for the directory settings, here's how you should configure it on Apache:
 ```
