@@ -8,7 +8,7 @@ Fragments aims to be a small framework for web applications. Keep in mind that t
 
 ## Getting started
 Create a blank project:
-`composer create-project -s dev crimsonking/fragments-skeleton <your-project-name>`
+`composer create-project crimsonking/fragments-skeleton <your-project-name>`
 
 Configure your web server so that its root directory is `<your-project-name>/public`. As for the directory settings, here's how you should configure it on Apache:
 ```
