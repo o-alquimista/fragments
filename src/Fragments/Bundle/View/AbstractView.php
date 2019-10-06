@@ -95,7 +95,7 @@ abstract class AbstractView
 
         foreach ($bag as $feedback) {
             foreach ($feedback as $id => $message) {
-                require '../Fragments/Bundle/View/_templates/feedback.php';
+                require __DIR__ . '/_templates/feedback.php';
             }
         }
     }
