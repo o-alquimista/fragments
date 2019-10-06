@@ -33,13 +33,15 @@ use PDO;
  */
 class PDOConnection
 {
-    private $username = "alq";
+    private $username;
 
-    private $password = "alq";
+    private $password;
 
-    private $host = "localhost";
+    private $host;
 
-    private $database = "fragments";
+    private $database;
+
+    private $driver;
 
     /**
      * @var object database connection object (PDO)
@@ -53,13 +55,15 @@ class PDOConnection
      */
     public function __construct()
     {
+        $this->loadConfig();
+
         try {
             $options = array(
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             );
 
             $this->connection = new PDO(
-                "mysql:host=$this->host;dbname=$this->database",
+                "$this->driver:host=$this->host;dbname=$this->database",
                 $this->username, $this->password, $options
             );
         } catch(PDOException $err) {
@@ -67,7 +71,6 @@ class PDOConnection
             $technicalError = $err->getMessage() . ' at line ' . $err->getLine();
 
             error_log($technicalError);
-
             echo $userFeedback;
 
             exit;
@@ -82,5 +85,16 @@ class PDOConnection
     public function getConnection()
     {
         return $this->connection;
+    }
+
+    private function loadConfig()
+    {
+        $config = simplexml_load_file('../config/database.xml');
+
+        $this->username = (string)$config->username;
+        $this->password = (string)$config->password;
+        $this->host = (string)$config->host;
+        $this->database = (string)$config->name;
+        $this->driver = (string)$config->driver;
     }
 }
