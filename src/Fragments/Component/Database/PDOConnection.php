@@ -89,12 +89,12 @@ class PDOConnection
 
     private function loadConfig()
     {
-        $config = simplexml_load_file('../config/database.xml');
+        $config = parse_ini_file('../config/database.ini');
 
-        $this->username = (string)$config->username;
-        $this->password = (string)$config->password;
-        $this->host = (string)$config->host;
-        $this->database = (string)$config->name;
-        $this->driver = (string)$config->driver;
+        $this->username = $config['username'];
+        $this->password = $config['password'];
+        $this->host = $config['host'];
+        $this->database = $config['database_name'];
+        $this->driver = $config['pdo_driver'];
     }
 }
