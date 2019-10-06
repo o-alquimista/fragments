@@ -2,23 +2,25 @@
 Fragments aims to be a small framework for web applications. Keep in mind that this project is merely an experiment, and is not recommended for use in production.
 
 ## Requirements
+- [Composer](https://getcomposer.org/)
+- [Yarn](https://yarnpkg.com/)
 - PHP XML extension. This package is called `php-xml` on Ubuntu.
 
-## Instructions
-- The default database name is `fragments`. Change it at `Fragments/Component/Database/PDOConnection.php`. The username, password and PDO driver for the connection can be set there as well.
+## Getting started
+Create a blank project:
+`composer create-project -s dev crimsonking/fragments-skeleton <your-project-name>`
 
+Fragments doesn't yet provide an easy way to specify database connection settings. Until it does, you must change them at `/vendor/crimsonking/fragments/src/Fragments/Component/Database/PDOConnection.php`. The username, password, database name and PDO driver for the connection must be set there.
 - Create the table: `CREATE TABLE users (id INT NOT NULL AUTO_INCREMENT, username VARCHAR(255) NOT NULL, hash VARCHAR(255) NOT NULL, PRIMARY KEY(id));`
 
-- The 'root' setting (`DocumentRoot` on Apache) of your server or virtual host must point to the `/Public` folder.
-
-- Configure the root directory (Apache):
+Configure your web server so that its root directory is `/public`. As for the directory settings, here's how you should configure it on Apache:
 ```
 AllowOverride None
 Require all granted
 FallbackResource /index.php
 ```
 
-Since Fragments is not meant for use in production, we already include an application in `/App`, plus some routes in `/Config/routes.xml` and assets in `/Public`.
+In order to manage assets, run `yarn install` and build them with `yarn build` (development), `yarn build-watch` (development w/ watch) or `yarn build-prod` (production).
 
 ## License
 Copyright 2019 Douglas Silva (0x9fd287d56ec107ac)
