@@ -34,8 +34,8 @@ class View extends AbstractView
 
     public function composePage()
     {
-        require '../Fragments/Bundle/View/_templates/header.php';
-        require '../Fragments/Bundle/View/Error404/templates/error.php';
-        require '../Fragments/Bundle/View/_templates/footer.php';
+        require __DIR__ . '/../_templates/header.php';
+        require __DIR__ . '/templates/error.php';
+        require __DIR__ . '/../_templates/footer.php';
     }
 }
