@@ -39,6 +39,8 @@ class PDOConnection
 
     private $host;
 
+    private $port;
+
     private $database;
 
     private $driver;
@@ -63,7 +65,7 @@ class PDOConnection
             );
 
             $this->connection = new PDO(
-                "$this->driver:host=$this->host;dbname=$this->database",
+                "$this->driver:host=$this->host;port=$this->port;dbname=$this->database",
                 $this->username, $this->password, $options
             );
         } catch(PDOException $err) {
@@ -94,6 +96,7 @@ class PDOConnection
         $this->username = $config['username'];
         $this->password = $config['password'];
         $this->host = $config['host'];
+        $this->port = $config['port'];
         $this->database = $config['database_name'];
         $this->driver = $config['pdo_driver'];
     }
