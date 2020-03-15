@@ -24,7 +24,7 @@ In order to manage assets, run `yarn install` and build them with `yarn build` (
 Add routes in `/config/routes.xml` and start building your first controller in `/src/Controller/`. Business logic/data mappers go inside the Model. The View essentially juggles with a couple of templates. Check the Fragments Bundle files, such as [AbstractController](https://github.com/o-alquimista/fragments/blob/master/src/Fragments/Bundle/Controller/AbstractController.php) and [AbstractView](https://github.com/o-alquimista/fragments/blob/master/src/Fragments/Bundle/View/AbstractView.php) to see what methods are there to help you. You can also try our [Fragments Demo](https://github.com/o-alquimista/fragments-demo) application to get an idea of how things work.
 
 ## License
-Copyright 2019 Douglas Silva (0x9fd287d56ec107ac)
+Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by

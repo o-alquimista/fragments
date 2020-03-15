@@ -44,9 +44,14 @@ use Fragments\Component\Server\Exception\SoftException;
  */
 class Session
 {
+    private $sessionStrict;
+
+    private $sessionUnsafe;
+
     public function __construct()
     {
-        $this->start();
+        $this->sessionStrict = new SessionStrict;
+        $this->sessionUnsafe = new SessionUnsafe;
     }
 
     public function start()
@@ -55,7 +60,7 @@ class Session
             return;
         }
 
-        (new SessionStrict)->init();
+        $this->sessionStrict->init();
 
         // If 'session_obsolete' is set, check if it's expired next
         if (false === $this->exists('session_obsolete')) {
@@ -97,11 +102,16 @@ class Session
         session_commit();
         session_id($newSessionId);
 
-        (new SessionStrict)->init();
+        $this->sessionStrict->init();
     }
 
     public function regenerate()
     {
+        // Cannot regenerate the ID of an inactive session
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            return;
+        }
+
         $newID = session_create_id();
         $this->set('new_session_id', $newID);
 
@@ -126,9 +136,9 @@ class Session
          *
          * This ensures the new session ID is initialized and accepted.
          */
-        (new SessionUnsafe)->init();
+        $this->sessionUnsafe->init();
         session_commit();
-        (new SessionStrict)->init();
+        $this->sessionStrict->init();
 
         /*
          * Remove leftover session variables from the ID regeneration process.
@@ -137,8 +147,10 @@ class Session
         $this->destroy('new_session_id');
     }
 
-    public function get($key, $default = null)
+    public function get(string $key, $default = null)
     {
+        $this->start();
+
         if ($this->exists($key)) {
             return $_SESSION[$key];
         }
@@ -146,13 +158,17 @@ class Session
         return $default;
     }
 
-    public function set($key, $value)
+    public function set(string $key, $value)
     {
+        $this->start();
+
         $_SESSION[$key] = $value;
     }
 
-    public function exists($key)
+    public function exists(string $key): bool
     {
+        $this->start();
+
         if (array_key_exists($key, $_SESSION)) {
             return true;
         }
@@ -160,18 +176,13 @@ class Session
         return false;
     }
 
-    public function append($key, $value)
-    {
-        $_SESSION[$key][] = $value;
-    }
-
     /**
      * Unset the specified session variable.
-     *
-     * @param string $name
      */
-    public function destroy($key)
+    public function destroy(string $key)
     {
+        $this->start();
+
         unset($_SESSION[$key]);
     }
 
@@ -180,6 +191,8 @@ class Session
      */
     public function destroyAll()
     {
-        $_SESSION = array();
+        $this->start();
+
+        $_SESSION = [];
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019 Douglas Silva (0x9fd287d56ec107ac)
+ * Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)
  *
  * This file is part of Fragments.
  *
@@ -32,27 +32,31 @@ class Feedback
     public function __construct()
     {
         $this->session = new Session;
-    }
 
-    public function add($id, $message)
-    {
+        // If the bag doesn't exist yet, create it
         if (false === $this->session->exists(self::BAG_NAME)) {
-            $this->session->set(self::BAG_NAME, array());
+            $this->session->set(self::BAG_NAME, []);
         }
-
-        $feedback = array($id => $message);
-        $this->session->append(self::BAG_NAME, $feedback);
     }
 
-    public function get()
+    /**
+     * Insert a feedback message into the Feedback Bag.
+     */
+    public function add(string $type, string $message)
     {
-        if ($this->session->exists(self::BAG_NAME)) {
-            $bag = $this->session->get(self::BAG_NAME);
-            $this->session->destroy(self::BAG_NAME);
+        $bag = $this->session->get(self::BAG_NAME);
+        $bag[$type][] = $message;
+        $this->session->set(self::BAG_NAME, $bag);
+    }
 
-            return $bag;
-        }
+    /**
+     * Retrieve all feedback messages at once and delete them.
+     */
+    public function get(): array
+    {
+        $bag = $this->session->get(self::BAG_NAME);
+        $this->session->set(self::BAG_NAME, []);
 
-        return array();
+        return $bag;
     }
 }

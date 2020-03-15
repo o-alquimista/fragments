@@ -84,24 +84,15 @@ abstract class AbstractView
         }
     }
 
-    public function renderFeedback()
+    public function renderFeedback(): array
     {
-        if (session_status() == PHP_SESSION_NONE) {
-            return;
-        }
-
         $feedback = new Feedback;
-        $bag = $feedback->get();
 
-        foreach ($bag as $feedback) {
-            foreach ($feedback as $id => $message) {
-                require __DIR__ . '/_templates/feedback.php';
-            }
-        }
+        return $feedback->get();
     }
 
-    public function escape($output)
+    public function escape(string $value)
     {
-        echo htmlspecialchars($output);
+        echo htmlspecialchars($value);
     }
 }
