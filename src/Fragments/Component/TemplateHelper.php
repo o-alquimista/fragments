@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019 Douglas Silva (0x9fd287d56ec107ac)
+ * Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)
  *
  * This file is part of Fragments.
  *
@@ -19,28 +19,39 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Component\Server\Exception;
+namespace Fragments\Component;
 
-use Exception;
 use Fragments\Component\Feedback;
+use Fragments\Component\Security\Csrf\CsrfTokenManager;
 
-/**
- * Soft Exceptions
- *
- * They are used for events that are not critical to the successful
- * execution of the program. In some cases, the program will fallback
- * to a predefined value.
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
- */
-class SoftException extends Exception
-{
-    public function sessionExpired()
+class TemplateHelper {
+    public function render(string $path, array $variables = [])
+    {
+        // Expose variables in the scope of the template
+        foreach ($variables as $name => $value) {
+            $$name = $value;
+        }
+
+        require($path);
+    }
+
+    public function getFeedback(): array
     {
         $feedback = new Feedback;
-        $feedback->add(
-            'danger',
-            'This session has expired'
-        );
+
+        return $feedback->get();
+    }
+
+    public function escape(string $value)
+    {
+        echo htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+    }
+
+    public function getCsrfToken(string $id)
+    {
+        $csrfManager = new CsrfTokenManager;
+        $token = $csrfManager->getToken($id);
+
+        echo $token;
     }
 }

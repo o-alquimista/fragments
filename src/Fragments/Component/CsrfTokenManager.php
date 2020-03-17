@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019 Douglas Silva (0x9fd287d56ec107ac)
+ * Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)
  *
  * This file is part of Fragments.
  *
@@ -19,10 +19,13 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Component\Security\Csrf;
+namespace Fragments\Component;
 
 use Fragments\Component\SessionManagement\Session;
 
+/**
+ * Manage tokens used to prevent CSRF attacks.
+ */
 class CsrfTokenManager
 {
     private const PREFIX = '_csrf/';
@@ -34,7 +37,12 @@ class CsrfTokenManager
         $this->session = new Session;
     }
 
-    public function getToken($id)
+    /**
+     * Get a new CSRF token.
+     *
+     * If the token ID already exists, it returns its value from the session.
+     */
+    public function getToken(string $id): string
     {
         $tokenName = self::PREFIX . $id;
 
@@ -48,19 +56,23 @@ class CsrfTokenManager
         return $value;
     }
 
-    public function isTokenValid($tokenReceived, $id)
+    /**
+     * Check validity of a CSRF token.
+     */
+    public function isTokenValid(string $tokenReceived, string $targetId): bool
     {
-        $tokenName = self::PREFIX . $id;
+        $targetId = self::PREFIX . $targetId;
 
-        if (false === $this->session->exists($tokenName)) {
+        if (false === $this->session->exists($targetId)) {
+            // FIXME: throw access denied exception
             return false;
         }
 
-        $tokenStored = $this->session->get($tokenName);
+        $tokenStored = $this->session->get($targetId);
         $tokenValid = hash_equals($tokenStored, $tokenReceived);
 
         if ($tokenValid) {
-            $this->session->destroy($tokenName);
+            $this->session->destroy($targetId);
 
             return true;
         }
@@ -68,13 +80,13 @@ class CsrfTokenManager
         return false;
     }
 
-    private function generate()
+    /**
+     * Generate an URI safe base64 encoded string that does not contain "+",
+     * "/" or "=" which need to be URL encoded and make URLs unnecessarily
+     * longer.
+     */
+    private function generate(): string
     {
-        /*
-         * Generate an URI safe base64 encoded string that does not contain "+",
-         * "/" or "=" which need to be URL encoded and make URLs
-         * unnecessarily longer.
-         */
         $string = random_bytes(256 / 8);
 
         $token = rtrim(strtr(base64_encode($string), '+/', '-_'), '=');

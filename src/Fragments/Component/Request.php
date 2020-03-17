@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019 Douglas Silva (0x9fd287d56ec107ac)
+ * Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)
  *
  * This file is part of Fragments.
  *
@@ -19,35 +19,33 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Component\Server;
+namespace Fragments\Component;
 
 /**
  * Server Request Utility
  *
  * Manipulation or retrieval of information regarding HTTP requests.
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
  */
 class Request
 {
-    public function getURI()
+    public function getURI(): string
     {
         return $_SERVER['REQUEST_URI'];
     }
 
-    public function requestMethod()
+    public function requestMethod(): string
     {
         return $_SERVER['REQUEST_METHOD'];
     }
 
-    public function post($value)
+    public function post(string $value)
     {
         if (array_key_exists($value, $_POST)) {
             return $_POST[$value];
         }
     }
 
-    public function get($value)
+    public function get(string $value)
     {
         if (array_key_exists($value, $_GET)) {
             return $_GET[$value];
@@ -56,11 +54,10 @@ class Request
 
     /**
      * Redirects the web browser to the specified URI.
-     *
-     * @param string $where
      */
-    public function redirect($where)
+    public function redirect(string $path)
     {
-        header('Location: ' . $where);
+        header('Location: ' . $path, true, 301);
+        exit;
     }
 }

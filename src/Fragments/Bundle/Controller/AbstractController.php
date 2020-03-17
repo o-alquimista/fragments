@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019 Douglas Silva (0x9fd287d56ec107ac)
+ * Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)
  *
  * This file is part of Fragments.
  *
@@ -22,52 +22,39 @@
 namespace Fragments\Bundle\Controller;
 
 use Fragments\Component\Server\Request;
-use Fragments\Component\SessionManagement\Session;
 use Fragments\Component\Security\Csrf\CsrfTokenManager;
 use Fragments\Component\Feedback;
+use Fragments\Component\TemplateHelper;
 
 abstract class AbstractController
 {
-    public function isFormSubmitted()
+    protected function renderTemplate(string $path, array $variables = []) {
+        $templateHelper = new TemplateHelper;
+        $templateHelper->render($path, $variables);
+    }
+
+    protected function isFormSubmitted(): bool
     {
-        if ($this->getRequest()->requestMethod() == "POST") {
+        $request = new Request;
+
+        if ($request->requestMethod() == "POST") {
             return true;
         }
 
         return false;
     }
 
-    public function isCsrfTokenValid($token, string $id)
+    protected function isCsrfTokenValid(string $targetId): bool
     {
-        $csrfManager = new CsrfTokenManager;
-
-        if (false === $csrfManager->isTokenValid($token, $id)) {
-            $this->addFeedback(
-              'warning',
-              'Invalid CSRF token.'
-            );
-
-            return false;
-        }
-
-        return true;
-    }
-
-    public function getSession()
-    {
-        $session = new Session;
-
-        return $session;
-    }
-
-    public function getRequest()
-    {
+        $csrfTokenManager = new CsrfTokenManager;
         $request = new Request;
 
-        return $request;
+        $token = $request->post('_csrf_token');
+
+        return $csrfTokenManager->isTokenValid($token, $targetId);
     }
 
-    public function addFeedback($id, $message)
+    protected function addFeedback(string $id, string $message)
     {
         $feedback = new Feedback;
         $feedback->add($id, $message);
