@@ -21,15 +21,13 @@
 
 namespace Fragments\Component\SessionManagement\Init;
 
-use RuntimeException;
-
 class SessionStrict extends AbstractSessionInit
 {
     public function init()
     {
         $this->options['use_strict_mode'] = 1;
         if (!session_start($this->options)) {
-          throw new RuntimeException('Failed to start the session');
+          // FIXME: throw server error exception
         }
     }
 }

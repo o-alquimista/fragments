@@ -30,14 +30,14 @@ class PDOBuilder
         try {
             // FIXME: is this needed?
             $options = array(
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
             );
 
-            $pdo = new PDO(
+            $pdo = new \PDO(
                 $config['pdo_driver'] . ":host=" . $config['host'] . ";port=" . $config['port'] . ";dbname=" . $config['database_name'],
                 $config['username'], $config['password'], $options
             );
-        } catch(PDOException $error) {
+        } catch(\PDOException $error) {
             // FIXME: throw server error exception
         }
 

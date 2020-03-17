@@ -26,15 +26,11 @@ namespace Fragments\Component\Routing;
  *
  * Combines route and request information to determine
  * the path to the requested resource.
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
  */
 class RequestMatcher
 {
     /**
      * Request context.
-     *
-     * @var object
      */
     private $context;
 
@@ -42,22 +38,16 @@ class RequestMatcher
      * Route collection.
      *
      * Route objects organized in an array.
-     *
-     * @var array
      */
     private $routes;
 
     /**
      * When a matching route is found, its name is stored here.
-     *
-     * @var string
      */
     public $matchedRouteName = null;
 
     /**
      * The parameter to be passed to the controller.
-     *
-     * @var string
      */
     public $parameter = null;
 
@@ -96,9 +86,6 @@ class RequestMatcher
     /**
      * Test the URI and its wildcard against the registered route
      * and retrieve the parameter.
-     *
-     * @param Route $route
-     * @return boolean
      */
     private function matchPathWithWildcard(Route $route) {
         if (!in_array($this->context->requestMethod, $route->methods)) {
@@ -125,9 +112,6 @@ class RequestMatcher
 
     /**
      * Test the URI against the registered route.
-     *
-     * @param Route $route
-     * @return boolean
      */
     private function matchPathWithoutWildcard(Route $route)
     {
@@ -145,9 +129,6 @@ class RequestMatcher
     /**
      * Returns true if the path contains a wildcard,
      * such as {alpha}.
-     *
-     * @param Route $route
-     * @return boolean
      */
     private function containsWildcard(Route $route)
     {

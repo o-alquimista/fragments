@@ -21,14 +21,12 @@
 
 namespace Fragments\Component\Routing;
 
-use Fragments\Component\Server\Request;
+use Fragments\Component\Request;
 
 /**
  * Request context.
  *
  * Stores information about the HTTP request.
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
  */
 class RequestContext
 {

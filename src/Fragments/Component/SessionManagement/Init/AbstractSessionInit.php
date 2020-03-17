@@ -27,8 +27,6 @@ namespace Fragments\Component\SessionManagement\Init;
  * Important: This is only meant to be used within the
  * Session Utility. To start a new session at the
  * controllers, refer to the Session class in this file.
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
  */
 abstract class AbstractSessionInit
 {

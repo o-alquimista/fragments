@@ -21,8 +21,8 @@
 
 namespace Fragments\Bundle\Controller;
 
-use Fragments\Component\Server\Request;
-use Fragments\Component\Security\Csrf\CsrfTokenManager;
+use Fragments\Component\Request;
+use Fragments\Component\CsrfTokenManager;
 use Fragments\Component\Feedback;
 use Fragments\Component\TemplateHelper;
 

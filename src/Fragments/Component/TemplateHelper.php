@@ -22,7 +22,7 @@
 namespace Fragments\Component;
 
 use Fragments\Component\Feedback;
-use Fragments\Component\Security\Csrf\CsrfTokenManager;
+use Fragments\Component\CsrfTokenManager;
 
 class TemplateHelper {
     public function render(string $path, array $variables = [])

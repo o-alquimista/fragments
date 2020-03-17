@@ -23,8 +23,6 @@ namespace Fragments\Component\Routing;
 
 /**
  * A route description
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
  */
 class Route
 {
@@ -32,22 +30,16 @@ class Route
      * The requested URI.
      *
      * Example: /profile/username
-     *
-     * @var string
      */
     public $path;
 
     /**
      * The fully qualified class name of the controller.
-     *
-     * @var string
      */
     public $controller;
 
     /**
      * The configured action. A method name.
-     *
-     * @var string
      */
     public $action;
 
@@ -55,8 +47,6 @@ class Route
      * The request methods supported.
      *
      * Example: POST, GET.
-     *
-     * @var array
      */
     public $methods;
 

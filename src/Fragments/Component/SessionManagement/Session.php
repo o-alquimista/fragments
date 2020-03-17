@@ -23,7 +23,6 @@ namespace Fragments\Component\SessionManagement;
 
 use Fragments\Component\SessionManagement\Init\SessionStrict;
 use Fragments\Component\SessionManagement\Init\SessionUnsafe;
-use Fragments\Component\Server\Exception\SoftException;
 
 /**
  * Session Utility.
@@ -39,8 +38,6 @@ use Fragments\Component\Server\Exception\SoftException;
  *
  * If it hasn't expired yet, an attempt to reset the
  * newly generated ID will be made.
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
  */
 class Session
 {
@@ -77,16 +74,10 @@ class Session
          * Wipes all session variables if the flag 'session_obsolete' has
          * been set for more than 5 minutes.
          */
-        try {
-            if ($obsoleteTime < time() - 300) {
-                $this->destroyAll();
+        if ($obsoleteTime < time() - 300) {
+            $this->destroyAll();
 
-                throw new SoftException();
-            }
-        } catch(SoftException $err) {
-            $err->sessionExpired();
-
-            return;
+            // FIXME: throw access denied exception
         }
 
         /*

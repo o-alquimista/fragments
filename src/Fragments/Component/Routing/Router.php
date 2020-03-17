@@ -21,15 +21,11 @@
 
 namespace Fragments\Component\Routing;
 
-use Fragments\Component\Server\Response\Error404;
-
 /**
  * The router controller.
  *
  * Controls the routing process. Influenced by Symfony's
  * routing component.
- *
- * @author Douglas Silva <0x9fd287d56ec107ac>
  */
 class Router
 {
@@ -46,8 +42,7 @@ class Router
         $matcher->match();
 
         if (is_null($matcher->matchedRouteName)) {
-            $error = new Error404;
-            $error->renderPage();
+            // FIXME: throw not found exception
 
             return;
         }
