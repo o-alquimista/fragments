@@ -3,7 +3,6 @@ Fragments aims to be a small framework for web applications. Keep in mind that t
 
 ## Requirements
 - [Composer](https://getcomposer.org/)
-- [Yarn](https://yarnpkg.com/)
 - PHP XML extension. This package is called `php-xml` on Ubuntu.
 
 ## Getting started
