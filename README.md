@@ -7,18 +7,12 @@ Fragments aims to be a small framework for web applications. Keep in mind that t
 - PHP XML extension. This package is called `php-xml` on Ubuntu.
 
 ## Getting started
-Create a blank project:
+1. Create a blank project:
 `composer create-project crimsonking/fragments-skeleton <your-project-name>`
 
-Configure your web server so that its root directory is `<your-project-name>/public`. As for the directory settings, here's how you should configure it on Apache:
-```
-AllowOverride None
-Require all granted
-Allow from All
-FallbackResource /index.php
-```
+2. Configure your web server so that its root directory is `<your-project-name>/public`.
 
-Create `/config/database.ini` with the following lines to configure database connection details:
+3. Create `/config/database.ini` with the following lines to configure database connection details:
 ```
 pdo_driver = mysql
 database_name = fragments
@@ -28,7 +22,7 @@ username = root
 password = root
 ```
 
-Add routes in the file `/config/routes.xml` and start building your first controller at `/src/Controller/`. You can also try our [Fragments Demo](https://github.com/o-alquimista/fragments-demo) application to get an idea of how things work.
+4. Add routes in the file `/config/routes.xml` and start building your first controller at `/src/Controller/`. You can also try our [Fragments Demo](https://github.com/o-alquimista/fragments-demo) application to get an idea of how things work.
 
 ## License
 Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)
