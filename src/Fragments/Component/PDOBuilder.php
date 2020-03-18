@@ -39,6 +39,7 @@ class PDOBuilder
             );
         } catch(\PDOException $error) {
             // FIXME: throw server error exception
+            exit;
         }
 
         return $pdo;
@@ -48,6 +49,12 @@ class PDOBuilder
     {
         $config = parse_ini_file('../config/database.ini');
 
+        if (false === $config) {
+            // FIXME: throw server error exception
+            exit;
+        }
+
+        // FIXME: test for missing configuration keys
         return $config;
     }
 }
