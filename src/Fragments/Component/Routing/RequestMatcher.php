@@ -87,8 +87,10 @@ class RequestMatcher
      * Test the URI and its wildcard against the registered route
      * and retrieve the parameter.
      */
-    private function matchPathWithWildcard(Route $route) {
+    private function matchPathWithWildcard(Route $route): bool {
         if (!in_array($this->context->requestMethod, $route->methods)) {
+            // FIXME: throw access denied exception
+
             return false;
         }
 
@@ -99,10 +101,10 @@ class RequestMatcher
         $prefix = preg_replace($pattern, $replacement, $path);
 
         // Using ~ as the regex delimiter to prevent conflict
-        $prefix = '~^' . $prefix . '\/' . '(?<username>[a-zA-Z0-9_]+)$~';
+        $prefix = '~^' . $prefix . '\/' . '(?<alpha>[a-zA-Z0-9_]+)$~';
 
         if (preg_match($prefix, $this->context->uri, $match) == true) {
-            $this->parameter = $match['username'];
+            $this->parameter = $match['alpha'];
 
             return true;
         }
@@ -113,7 +115,7 @@ class RequestMatcher
     /**
      * Test the URI against the registered route.
      */
-    private function matchPathWithoutWildcard(Route $route)
+    private function matchPathWithoutWildcard(Route $route): bool
     {
         if ($route->path !== $this->context->uri) {
             return false;
@@ -130,7 +132,7 @@ class RequestMatcher
      * Returns true if the path contains a wildcard,
      * such as {alpha}.
      */
-    private function containsWildcard(Route $route)
+    private function containsWildcard(Route $route): bool
     {
         $path = $route->path;
         $pattern = '/{alpha}/';

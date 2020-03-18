@@ -23,6 +23,8 @@ namespace Fragments\Component;
 
 use Fragments\Component\Feedback;
 use Fragments\Component\CsrfTokenManager;
+use Fragments\Component\Request;
+use Fragments\Component\Session;
 
 class TemplateHelper {
     public function render(string $path, array $variables = [])
@@ -53,5 +55,27 @@ class TemplateHelper {
         $token = $csrfManager->getToken($id);
 
         echo $token;
+    }
+
+    public function getSession(): Session
+    {
+        return new Session;
+    }
+
+    public function getRequest(): Request
+    {
+        return new Request;
+    }
+
+    public function isCurrentPage(string $path): bool
+    {
+        $request = new Request;
+        $uri = $request->getURI();
+
+        if ($path == $uri) {
+            return true;
+        }
+
+        return false;
     }
 }
