@@ -21,6 +21,8 @@
 
 namespace Fragments\Component;
 
+use Fragments\Bundle\Exception\ServerErrorHttpException;
+
 class PDOBuilder
 {
     public function getConnection(): \PDO
@@ -38,8 +40,7 @@ class PDOBuilder
                 $config['username'], $config['password'], $options
             );
         } catch(\PDOException $error) {
-            // FIXME: throw server error exception
-            exit;
+            throw new ServerErrorHttpException('Failed to connect to the database.');
         }
 
         return $pdo;
@@ -48,11 +49,6 @@ class PDOBuilder
     private function getConfig(): array
     {
         $config = parse_ini_file('../config/database.ini');
-
-        if (false === $config) {
-            // FIXME: throw server error exception
-            exit;
-        }
 
         // FIXME: test for missing configuration keys
         return $config;

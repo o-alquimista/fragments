@@ -21,13 +21,15 @@
 
 namespace Fragments\Component\SessionManagement\Init;
 
+use Fragments\Bundle\Exception\ServerErrorHttpException;
+
 class SessionStrict extends AbstractSessionInit
 {
     public function init()
     {
         $this->options['use_strict_mode'] = 1;
         if (!session_start($this->options)) {
-          // FIXME: throw server error exception
+          throw new ServerErrorHttpException('Failed to start the session.');
         }
     }
 }

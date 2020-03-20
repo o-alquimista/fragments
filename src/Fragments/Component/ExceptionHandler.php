@@ -19,17 +19,27 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Component\SessionManagement\Init;
+namespace Fragments\Component;
 
-use Fragments\Bundle\Exception\ServerErrorHttpException;
-
-class SessionUnsafe extends AbstractSessionInit
+/**
+ * Converts all PHP errors to exceptions.
+ */
+class ExceptionHandler
 {
-    public function init()
+    public function handler($severity, $message, $file, $line)
     {
-        $this->options['use_strict_mode'] = 0;
-        if (!session_start($this->options)) {
-          throw new ServerErrorHttpException('Failed to start the session.');
+        if (!(error_reporting() & $severity)) {
+            // This error code is not included in error_reporting
+            return;
         }
+
+        // FIXME: handle different severities differently
+
+        throw new \ErrorException($message, 0, $severity, $file, $line);
+    }
+
+    public function setHandler()
+    {
+        set_error_handler([$this, 'handler']);
     }
 }

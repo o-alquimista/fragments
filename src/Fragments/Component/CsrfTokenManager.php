@@ -22,6 +22,7 @@
 namespace Fragments\Component;
 
 use Fragments\Component\SessionManagement\Session;
+use Fragments\Bundle\Exception\AccessDeniedHttpException;
 
 /**
  * Manage tokens used to prevent CSRF attacks.
@@ -64,8 +65,7 @@ class CsrfTokenManager
         $targetId = self::PREFIX . $targetId;
 
         if (false === $this->session->exists($targetId)) {
-            // FIXME: throw access denied exception
-            return false;
+            throw new AccessDeniedHttpException('The CSRF token identifier could not be found.');
         }
 
         $tokenStored = $this->session->get($targetId);

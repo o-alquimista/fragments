@@ -21,6 +21,8 @@
 
 namespace Fragments\Component\Routing;
 
+use Fragments\Bundle\Exception\NotFoundHttpException;
+
 /**
  * The router controller.
  *
@@ -41,13 +43,11 @@ class Router
         $matcher = new RequestMatcher($routeCollection, $context);
         $matcher->match();
 
-        if (is_null($matcher->matchedRouteName)) {
-            // FIXME: throw not found exception
-
-            return;
+        if (!$matcher->matchedRouteName) {
+            throw new NotFoundHttpException('The page you were looking for could not be found.');
         }
 
-        if (!is_null($matcher->parameter)) {
+        if ($matcher->parameter) {
             $this->parameter = $matcher->parameter;
         }
 

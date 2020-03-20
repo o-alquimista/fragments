@@ -19,17 +19,12 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Component\SessionManagement\Init;
+namespace Fragments\Bundle\Exception;
 
-use Fragments\Bundle\Exception\ServerErrorHttpException;
-
-class SessionUnsafe extends AbstractSessionInit
+class ServerErrorHttpException extends HttpException
 {
-    public function init()
+    public function __construct(string $message = null, \Throwable $previous = null, int $code = 0)
     {
-        $this->options['use_strict_mode'] = 0;
-        if (!session_start($this->options)) {
-          throw new ServerErrorHttpException('Failed to start the session.');
-        }
+        parent::__construct(500, $message, $previous, $code);
     }
 }

@@ -23,6 +23,7 @@ namespace Fragments\Component\SessionManagement;
 
 use Fragments\Component\SessionManagement\Init\SessionStrict;
 use Fragments\Component\SessionManagement\Init\SessionUnsafe;
+use Fragments\Bundle\Exception\AccessDeniedHttpException;
 
 /**
  * Session Utility.
@@ -77,7 +78,7 @@ class Session
         if ($obsoleteTime < time() - 300) {
             $this->destroyAll();
 
-            // FIXME: throw access denied exception
+            throw new AccessDeniedHttpException('The session has expired.');
         }
 
         /*

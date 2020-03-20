@@ -21,6 +21,8 @@
 
 namespace Fragments\Component\Routing;
 
+use Fragments\Bundle\Exception\MethodNotAllowedHttpException;
+
 /**
  * Request matcher
  *
@@ -44,12 +46,12 @@ class RequestMatcher
     /**
      * When a matching route is found, its name is stored here.
      */
-    public $matchedRouteName = null;
+    public $matchedRouteName;
 
     /**
      * The parameter to be passed to the controller.
      */
-    public $parameter = null;
+    public $parameter;
 
     public function __construct($routeCollection, RequestContext $context)
     {
@@ -66,21 +68,13 @@ class RequestMatcher
         }
     }
 
-    private function testWildcard(Route $route)
+    private function testWildcard(Route $route): bool
     {
         if ($this->containsWildcard($route) === true) {
-            if ($this->matchPathWithWildcard($route) === true) {
-                return true;
-            }
-
-            return false;
-        } else {
-            if ($this->matchPathWithoutWildcard($route) == true) {
-                return true;
-            }
-
-            return false;
+            return $this->matchPathWithWildcard($route);
         }
+
+        return $this->matchPathWithoutWildcard($route);
     }
 
     /**
@@ -88,12 +82,6 @@ class RequestMatcher
      * and retrieve the parameter.
      */
     private function matchPathWithWildcard(Route $route): bool {
-        if (!in_array($this->context->requestMethod, $route->methods)) {
-            // FIXME: throw access denied exception
-
-            return false;
-        }
-
         $path = $route->path;
         $pattern = '/\/{alpha}/';
         $replacement = '';
@@ -103,7 +91,11 @@ class RequestMatcher
         // Using ~ as the regex delimiter to prevent conflict
         $prefix = '~^' . $prefix . '\/' . '(?<alpha>[a-zA-Z0-9_]+)$~';
 
-        if (preg_match($prefix, $this->context->uri, $match) == true) {
+        if (true == preg_match($prefix, $this->context->uri, $match)) {
+            if (!in_array($this->context->requestMethod, $route->methods)) {
+                throw new MethodNotAllowedHttpException;
+            }
+
             $this->parameter = $match['alpha'];
 
             return true;
@@ -122,7 +114,7 @@ class RequestMatcher
         }
 
         if (!in_array($this->context->requestMethod, $route->methods)) {
-            return false;
+            throw new MethodNotAllowedHttpException;
         }
 
         return true;

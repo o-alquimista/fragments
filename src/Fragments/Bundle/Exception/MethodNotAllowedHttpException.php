@@ -19,17 +19,14 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Component\SessionManagement\Init;
+namespace Fragments\Bundle\Exception;
 
-use Fragments\Bundle\Exception\ServerErrorHttpException;
-
-class SessionUnsafe extends AbstractSessionInit
+class MethodNotAllowedHttpException extends HttpException
 {
-    public function init()
+    public function __construct(\Throwable $previous = null, int $code = 0)
     {
-        $this->options['use_strict_mode'] = 0;
-        if (!session_start($this->options)) {
-          throw new ServerErrorHttpException('Failed to start the session.');
-        }
+        $message = 'Method not allowed.';
+
+        parent::__construct(405, $message, $previous, $code);
     }
 }
