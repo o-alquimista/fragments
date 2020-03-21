@@ -21,48 +21,75 @@
 
 namespace Fragments\Component\Routing;
 
+use Fragments\Component\Routing\Model\Route;
+use Fragments\Component\Routing\Parser\XMLParser;
+use Fragments\Component\Request;
 use Fragments\Bundle\Exception\NotFoundHttpException;
+use Fragments\Bundle\Exception\MethodNotAllowedHttpException;
 
-/**
- * The router controller.
- *
- * Controls the routing process. Influenced by Symfony's
- * routing component.
- */
 class Router
 {
-    private $parameter;
+    private $parser;
+
+    private $request;
+
+    public function __construct()
+    {
+        $this->parser = new XMLParser;
+        $this->request = new Request;
+    }
 
     public function start()
     {
-        $routeLoader = new XMLParser;
-        $routeCollection = $routeLoader->getRouteCollection();
+        $routes = $this->parser->getRoutes();
+        $route = $this->matchRoute($routes);
 
-        $context = new RequestContext;
-
-        $matcher = new RequestMatcher($routeCollection, $context);
-        $matcher->match();
-
-        if (!$matcher->matchedRouteName) {
-            throw new NotFoundHttpException('The page you were looking for could not be found.');
-        }
-
-        if ($matcher->parameter) {
-            $this->parameter = $matcher->parameter;
-        }
-
-        $routeName = $matcher->matchedRouteName;
-        $matchedRoute = $routeCollection[$routeName];
-
-        $this->loadRoute($matchedRoute);
+        $this->load($route);
     }
 
-    private function loadRoute(Route $matchedRoute)
+    private function matchRoute(array $routes): Route
     {
-        $controller = $matchedRoute->controller;
-        $action = $matchedRoute->action;
+        foreach ($routes as $route) {
+            if ($route->getPath() != $this->request->getURI()) {
+                continue;
+            }
+
+            if (!in_array($this->request->requestMethod(), $route->getMethods())) {
+                throw new MethodNotAllowedHttpException;
+            }
+
+            return $route;
+        }
+
+        throw new NotFoundHttpException('Route not found.');
+    }
+
+    private function load(Route $route)
+    {
+        $controller = $route->getController();
+        $action = $route->getAction();
 
         $controller = new $controller;
-        $controller->{$action}($this->parameter);
+        $controller->{$action}();
+    }
+
+    private function getRouteById(string $routeId): Route
+    {
+        $routes = $this->parser->getRoutes();
+
+        foreach ($routes as $route) {
+            if ($route->getId() == $routeId) {
+                return $route;
+            }
+        }
+
+        throw new NotFoundHttpException('Route not found.');
+    }
+
+    public function generateUrl(string $routeId): string
+    {
+        $route = $this->getRouteById($routeId);
+
+        return $route->getPath();
     }
 }

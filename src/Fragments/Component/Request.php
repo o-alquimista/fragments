@@ -21,6 +21,8 @@
 
 namespace Fragments\Component;
 
+use Fragments\Component\Routing\Router;
+
 /**
  * Server Request Utility
  *
@@ -53,10 +55,22 @@ class Request
     }
 
     /**
-     * Redirects the web browser to the specified URI.
+     * Redirects the client to the specified path.
      */
-    public function redirect(string $path)
+    public function redirect(string $routeId)
     {
+        header('Location: ' . $path, true, 301);
+        exit;
+    }
+
+    /**
+     * Generates a path from a route ID and redirects to it.
+     */
+    public function redirectToRoute(string $routeId)
+    {
+        $router = new Router;
+        $path = $router->generateUrl($routeId);
+
         header('Location: ' . $path, true, 301);
         exit;
     }
