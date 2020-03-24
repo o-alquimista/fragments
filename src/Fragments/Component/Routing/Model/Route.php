@@ -48,6 +48,11 @@ class Route
      */
     private $methods;
 
+    /**
+     * Route parameters injected by the router.
+     */
+    private $parameters;
+
     public function getId(): string
     {
         return $this->id;
@@ -106,6 +111,18 @@ class Route
         // Store them in an array
         $methods = explode('|', $methods);
         $this->methods = $methods;
+
+        return $this;
+    }
+
+    public function getParameters(): ?array
+    {
+        return $this->parameters;
+    }
+
+    public function setParameters(array $parameters)
+    {
+        $this->parameters = $parameters;
 
         return $this;
     }

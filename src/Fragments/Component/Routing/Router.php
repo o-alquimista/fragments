@@ -51,7 +51,36 @@ class Router
     {
         foreach ($routes as $route) {
             if ($route->getPath() != $this->request->getURI()) {
-                continue;
+                $routePath = $route->getPath();
+
+                // Are there any wildcards in the route path?
+                if (!preg_match('/{(\w+)}/', $routePath)) {
+                    continue;
+                }
+
+                // Replace all wildcards with capturing groups
+                $regex = preg_replace('/{(\w+)}/', '(\w+)', $routePath);
+
+                // Escape forward slashes in the path
+                $regex = preg_replace('/\//', '\/', $regex);
+
+                // Add start and end regex delimiters
+                $regex = '/^' . $regex . '$/';
+
+                if (preg_match($regex, $this->request->getURI(), $matches)) {
+                    // The first item is not a wildcard value, so remove it
+                    array_shift($matches);
+
+                    $parameters = [];
+
+                    foreach ($matches as $parameter) {
+                        $parameters[] = $parameter;
+                    }
+
+                    $route->setParameters($parameters);
+                } else {
+                    continue;
+                }
             }
 
             if (!in_array($this->request->requestMethod(), $route->getMethods())) {
@@ -68,9 +97,15 @@ class Router
     {
         $controller = $route->getController();
         $action = $route->getAction();
+        $parameters = $route->getParameters();
 
         $controller = new $controller;
-        $controller->{$action}();
+
+        if ($parameters) {
+            $controller->{$action}(...$parameters);
+        } else {
+            $controller->{$action}();
+        }
     }
 
     private function getRouteById(string $routeId): Route
