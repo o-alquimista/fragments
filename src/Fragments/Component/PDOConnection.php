@@ -23,34 +23,21 @@ namespace Fragments\Component;
 
 use Fragments\Bundle\Exception\ServerErrorHttpException;
 
-class PDOBuilder
+class PDOConnection
 {
-    public function getConnection(): \PDO
-    {
-        $config = $this->getConfig();
+    protected $connection;
 
-        try {
-            // FIXME: is this needed?
-            $options = array(
-                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-            );
-
-            $pdo = new \PDO(
-                $config['pdo_driver'] . ":host=" . $config['host'] . ";port=" . $config['port'] . ";dbname=" . $config['database_name'],
-                $config['username'], $config['password'], $options
-            );
-        } catch(\PDOException $error) {
-            throw new ServerErrorHttpException('Failed to connect to the database.');
-        }
-
-        return $pdo;
-    }
-
-    private function getConfig(): array
+    public function __construct()
     {
         $config = parse_ini_file('../config/database.ini');
 
-        // FIXME: test for missing configuration keys
-        return $config;
+        try {
+            $this->connection = new \PDO(
+                $config['pdo_driver'] . ":host=" . $config['host'] . ";port=" . $config['port'] . ";dbname=" . $config['database_name'],
+                $config['username'], $config['password']
+            );
+        } catch (\PDOException $error) {
+            throw new ServerErrorHttpException('Failed to connect to the database.');
+        }
     }
 }
