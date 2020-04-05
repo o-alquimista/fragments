@@ -54,10 +54,13 @@ class Bootstrap
         http_response_code($statusCode);
         error_log($message);
 
-        $this->templateHelper->render('../templates/error/error_page.php', [
-            'statusCode' => $statusCode,
-            'message' => $message
-        ]);
+        if (file_exists('../templates/error/' . $statusCode . '.php')) {
+            $this->templateHelper->render('../templates/error/' . $statusCode . '.php');
+        } else {
+            $this->templateHelper->render('../templates/error/error.php', [
+                'statusCode' => $statusCode
+            ]);
+        }
 
         exit;
     }
