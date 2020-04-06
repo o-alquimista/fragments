@@ -49,7 +49,7 @@ class Bootstrap
     private function exceptionHandler(HttpException $error)
     {
         $statusCode = $error->getStatusCode();
-        $message = $error->getMessage();
+        $message = $error->getMessage() . ' in file ' . $error->getFile() . ' at line ' . $error->getLine();
 
         http_response_code($statusCode);
         error_log($message);

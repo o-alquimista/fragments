@@ -37,7 +37,7 @@ class PDOConnection
                 $config['username'], $config['password']
             );
         } catch (\PDOException $error) {
-            throw new ServerErrorHttpException('Failed to connect to the database.');
+            throw new ServerErrorHttpException('Database connection failed: ' . $error->getMessage());
         }
     }
 }
