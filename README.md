@@ -9,7 +9,7 @@ Fragments aims to be a small framework for web applications. Keep in mind that t
 1. Create a blank project:
 `composer create-project crimsonking/fragments-skeleton <your-project-name>`
 
-2. Configure your web server so that its root directory is `<your-project-name>/public`.
+2. Configure your web server so that its root directory is `<your-project-name>/public` and the fallback resource is `index.php`.
 
 3. Make sure the timezone is set in your PHP configuration, or else the Session component will misbehave:
 ```
