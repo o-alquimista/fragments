@@ -100,12 +100,7 @@ class Router
         $parameters = $route->getParameters();
 
         $controller = new $controller;
-
-        if ($parameters) {
-            $controller->{$action}(...$parameters);
-        } else {
-            $controller->{$action}();
-        }
+        $controller->{$action}(...$parameters);
     }
 
     private function getRouteById(string $routeId): Route

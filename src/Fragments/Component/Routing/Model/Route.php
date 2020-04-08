@@ -46,19 +46,19 @@ class Route
     /**
      * The request methods supported.
      */
-    private $methods;
+    private $methods = [];
 
     /**
      * Route parameters injected by the router.
      */
-    private $parameters;
+    private $parameters = [];
 
     public function getId(): string
     {
         return $this->id;
     }
 
-    public function setId(string $id)
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -70,7 +70,7 @@ class Route
         return $this->path;
     }
 
-    public function setPath(string $path)
+    public function setPath(string $path): self
     {
         $this->path = $path;
 
@@ -82,7 +82,7 @@ class Route
         return $this->controller;
     }
 
-    public function setController(string $controller)
+    public function setController(string $controller): self
     {
         $this->controller = $controller;
 
@@ -94,7 +94,7 @@ class Route
         return $this->action;
     }
 
-    public function setAction(string $action)
+    public function setAction(string $action): self
     {
         $this->action = $action;
 
@@ -106,7 +106,7 @@ class Route
         return $this->methods;
     }
 
-    public function setMethods(string $methods)
+    public function setMethods(string $methods): self
     {
         // Store them in an array
         $methods = explode('|', $methods);
@@ -115,12 +115,12 @@ class Route
         return $this;
     }
 
-    public function getParameters(): ?array
+    public function getParameters(): array
     {
         return $this->parameters;
     }
 
-    public function setParameters(array $parameters)
+    public function setParameters(array $parameters): self
     {
         $this->parameters = $parameters;
 
