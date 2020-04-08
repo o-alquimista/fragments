@@ -49,8 +49,15 @@ class Router
 
     private function matchRoute(array $routes): Route
     {
+        $uri = $this->request->getURI();
+
+        // Eliminate the trailing forward slash from the URI
+        if (strlen($uri) > 1) {
+            $uri = rtrim($uri, '/');
+        }
+
         foreach ($routes as $route) {
-            if ($route->getPath() != $this->request->getURI()) {
+            if ($route->getPath() != $uri) {
                 $routePath = $route->getPath();
 
                 // Are there any wildcards in the route path?
@@ -67,7 +74,7 @@ class Router
                 // Add start and end regex delimiters
                 $regex = '/^' . $regex . '$/';
 
-                if (preg_match($regex, $this->request->getURI(), $matches)) {
+                if (preg_match($regex, $uri, $matches)) {
                     // The first item is not a wildcard value, so remove it
                     array_shift($matches);
 
