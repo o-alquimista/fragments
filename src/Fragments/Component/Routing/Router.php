@@ -42,14 +42,19 @@ class Router
     public function start()
     {
         $routes = $this->parser->getRoutes();
-        $route = $this->matchRoute($routes);
+        $route = $this->getMatchingRoute($routes);
 
         $this->load($route);
     }
 
-    private function matchRoute(array $routes): Route
+    private function getMatchingRoute(array $routes): Route
     {
         $uri = $this->request->getURI();
+
+        // Ignore GET parameters in the URI, if present
+        if (strpos($uri, '?') !== false) {
+            $uri = strstr($uri, '?', true);
+        }
 
         // Eliminate the trailing forward slash from the URI
         if (strlen($uri) > 1) {
