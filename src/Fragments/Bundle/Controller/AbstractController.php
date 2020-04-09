@@ -44,12 +44,9 @@ abstract class AbstractController
         return false;
     }
 
-    protected function isCsrfTokenValid(string $targetId): bool
+    protected function isCsrfTokenValid(string $targetId, string $token): bool
     {
         $csrfTokenManager = new CsrfTokenManager;
-        $request = new Request;
-
-        $token = $request->post('_csrf_token');
 
         return $csrfTokenManager->isTokenValid($token, $targetId);
     }
