@@ -66,10 +66,10 @@ class Request
     /**
      * Generates a path from a route ID and redirects to it.
      */
-    public function redirectToRoute(string $routeId)
+    public function redirectToRoute(string $routeId, array $parameters = [])
     {
         $router = new Router;
-        $path = $router->generateUrl($routeId);
+        $path = $router->generateUrl($routeId, $parameters);
 
         header('Location: ' . $path, true, 301);
         exit;

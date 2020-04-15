@@ -26,6 +26,7 @@ use Fragments\Component\Routing\Parser\XMLParser;
 use Fragments\Component\Request;
 use Fragments\Bundle\Exception\NotFoundHttpException;
 use Fragments\Bundle\Exception\MethodNotAllowedHttpException;
+use Fragments\Bundle\Exception\ServerErrorHttpException;
 
 class Router
 {
@@ -41,14 +42,19 @@ class Router
 
     public function start()
     {
-        $routes = $this->parser->getRoutes();
-        $route = $this->getMatchingRoute($routes);
+        $route = $this->getMatchingRoute();
 
-        $this->load($route);
+        $controller = $route->getController();
+        $action = $route->getAction();
+        $parameters = $route->getParameters();
+
+        $controller = new $controller;
+        $controller->{$action}(...$parameters);
     }
 
-    private function getMatchingRoute(array $routes): Route
+    private function getMatchingRoute(): Route
     {
+        $routes = $this->parser->getRoutes();
         $uri = $this->request->getURI();
 
         // Ignore GET parameters in the URI, if present
@@ -105,16 +111,6 @@ class Router
         throw new NotFoundHttpException('Route not found.');
     }
 
-    private function load(Route $route)
-    {
-        $controller = $route->getController();
-        $action = $route->getAction();
-        $parameters = $route->getParameters();
-
-        $controller = new $controller;
-        $controller->{$action}(...$parameters);
-    }
-
     private function getRouteById(string $routeId): Route
     {
         $routes = $this->parser->getRoutes();
@@ -128,10 +124,37 @@ class Router
         throw new NotFoundHttpException('Route not found.');
     }
 
-    public function generateUrl(string $routeId): string
+    public function generateUrl(string $routeId, array $parameters = []): string
     {
         $route = $this->getRouteById($routeId);
+        $routePath = $route->getPath();
 
-        return $route->getPath();
+        // If there are no wildcards in this route path, return it as is
+        if (!preg_match('/{(\w+)}/', $routePath)) {
+            return $routePath;
+        }
+
+        // Break the route path in segments, without forward slashes
+        $routePath = explode('/', trim($routePath, '/'));
+
+        /*
+         * Iterate over the parameters, trying to find a corresponding wildcard
+         * in one of the route path segments. If found, replace it with the
+         * parameter value.
+         */
+        foreach ($parameters as $parameterName => $parameterValue) {
+            foreach ($routePath as $pathKey => $pathSegment) {
+                $routePath[$pathKey] = preg_replace('/{' . $parameterName . '}/', $parameterValue, $pathSegment);
+            }
+        }
+
+        // Rebuild the path as a string, restoring forward slashes
+        $routePath = '/' . implode('/', $routePath);
+
+        if (preg_match('/{(\w+)}/', $routePath)) {
+            throw new ServerErrorHttpException('Failed to generate URL due to missing or invalid parameters: ' . $routePath);
+        }
+
+        return $routePath;
     }
 }
