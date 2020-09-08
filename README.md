@@ -1,5 +1,7 @@
 # Fragments
-Fragments aims to be a small framework for web applications. Keep in mind that this project is merely an experiment, and is not recommended for use in production.
+Fragments aims to be a small PHP framework for web applications. Keep in mind that this project is merely an experiment, and is not recommended for use in production.
+
+It has its own router component and is heavily inspired by [Symfony](https://symfony.com/).
 
 ## Requirements
 - [Composer](https://getcomposer.org/)
@@ -17,17 +19,19 @@ Fragments aims to be a small framework for web applications. Keep in mind that t
 date.timezone = UTC
 ```
 
-4. Create `/config/database.ini` with the following lines to configure database connection details:
+4. Create `/config/pdo.ini` with the following lines to configure database connection details:
 ```
-pdo_driver = mysql
-database_name = fragments
-host = 127.0.0.1
-port = 3306
-username = root
-password = root
+driver = mysql
+;host = localhost
+;port = 3306
+database = fragments_app
+socket = /path/to/socket
+;charset = utf8
+username = example
+password = "example"
 ```
 
-5. Add routes in the file `/config/routes.xml` and start building your first controller at `/src/Controller/`. You can also try our [Fragments Demo](https://github.com/o-alquimista/fragments-demo) application to get an idea of how things work.
+5. Add routes in the file `/config/routes.xml` and start building your first controller at `/src/Controller/`. You can also try our [Fragments application](https://github.com/o-alquimista/fragments-app) to get an idea of how things work.
 
 ## License
 Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)
