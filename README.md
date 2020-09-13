@@ -22,13 +22,13 @@ date.timezone = UTC
 4. Create `/config/pdo.ini` with the following lines to configure database connection details:
 ```
 driver = mysql
-;host = localhost
+host = localhost
 ;port = 3306
 database = fragments_app
-socket = /path/to/socket
+;socket = /path/to/socket
 ;charset = utf8
 username = example
-password = "example"
+password = example
 ```
 
 5. Add routes in the file `/config/routes.xml` and start building your first controller at `/src/Controller/`. You can also try our [Fragments application](https://github.com/o-alquimista/fragments-app) to get an idea of how things work.

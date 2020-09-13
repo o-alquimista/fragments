@@ -40,24 +40,28 @@ class Request
         return $_SERVER['REQUEST_METHOD'];
     }
 
-    public function post(string $value)
+    public function post(string $value): ?string
     {
         if (array_key_exists($value, $_POST)) {
             return $_POST[$value];
         }
+        
+        return null;
     }
 
-    public function get(string $value)
+    public function get(string $value): ?string
     {
         if (array_key_exists($value, $_GET)) {
             return $_GET[$value];
         }
+        
+        return null;
     }
 
     /**
      * Redirects the client to the specified path.
      */
-    public function redirect(string $routeId)
+    public function redirect(string $path)
     {
         header('Location: ' . $path, true, 301);
         exit;
@@ -69,9 +73,9 @@ class Request
     public function redirectToRoute(string $routeId, array $parameters = [])
     {
         $router = new Router;
-        $path = $router->generateUrl($routeId, $parameters);
+        $url = $router->generateUrl($routeId, $parameters);
 
-        header('Location: ' . $path, true, 301);
+        header('Location: ' . $url, true, 301);
         exit;
     }
 }

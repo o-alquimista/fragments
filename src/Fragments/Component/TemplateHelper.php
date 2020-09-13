@@ -24,7 +24,8 @@ namespace Fragments\Component;
 use Fragments\Component\Feedback;
 use Fragments\Component\CsrfTokenManager;
 use Fragments\Component\Request;
-use Fragments\Component\Session;
+use Fragments\Component\SessionManagement\Session;
+use Fragments\Component\Routing\Router;
 
 class TemplateHelper {
     public function render(string $path, array $variables = [])
@@ -44,17 +45,17 @@ class TemplateHelper {
         return $feedback->get();
     }
 
-    public function escape(string $value)
+    public function escape(string $value): string
     {
-        echo htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
     }
 
-    public function getCsrfToken(string $id)
+    public function getCsrfToken(string $id): string
     {
         $csrfManager = new CsrfTokenManager;
         $token = $csrfManager->getToken($id);
 
-        echo $token;
+        return $token;
     }
 
     public function getSession(): Session
@@ -76,6 +77,24 @@ class TemplateHelper {
             return true;
         }
 
+        return false;
+    }
+    
+    public function generateUrl(string $routeId, array $parameters = []): string
+    {
+        $router = new Router();
+        
+        return $router->generateUrl($routeId, $parameters);
+    }
+    
+    public function isAuthenticated(): bool
+    {
+        $session = new Session();
+        
+        if ($session->exists('user')) {
+            return true;
+        }
+        
         return false;
     }
 }

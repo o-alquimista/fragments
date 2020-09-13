@@ -72,8 +72,6 @@ class CsrfTokenManager
         $tokenValid = hash_equals($tokenStored, $tokenReceived);
 
         if ($tokenValid) {
-            $this->session->destroy($targetId);
-
             return true;
         }
 

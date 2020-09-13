@@ -45,7 +45,7 @@ class PdoConnection
             $port = isset($config['port']) ? ";port={$config['port']}" : '';
             
             if (isset($config['socket'])) {
-                $dsn = "{$config['driver']}:unix_socket={$config['socket']};dbname={$config['database']};{$charset}";
+                $dsn = "{$config['driver']}:unix_socket={$config['socket']};dbname={$config['database']}{$charset}";
             } else {
                 $dsn = "{$config['driver']}:host={$config['host']}{$port};dbname={$config['database']}{$charset}";
             }
