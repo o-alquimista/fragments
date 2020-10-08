@@ -21,21 +21,15 @@
 
 namespace Fragments\Component;
 
-use Fragments\Component\SessionManagement\Session;
-
 class Feedback
 {
-    private const BAG_NAME = 'feedbackBag';
-
-    private $session;
+    const BAG_NAME = 'feedbackBag';
 
     public function __construct()
     {
-        $this->session = new Session;
-
         // If the bag doesn't exist yet, create it
-        if (false === $this->session->exists(self::BAG_NAME)) {
-            $this->session->set(self::BAG_NAME, []);
+        if (false === isset($_SESSION[self::BAG_NAME])) {
+            $_SESSION[self::BAG_NAME] = [];
         }
     }
 
@@ -44,9 +38,9 @@ class Feedback
      */
     public function add(string $type, string $message)
     {
-        $bag = $this->session->get(self::BAG_NAME);
+        $bag = $_SESSION[self::BAG_NAME];
         $bag[$type][] = $message;
-        $this->session->set(self::BAG_NAME, $bag);
+        $_SESSION[self::BAG_NAME] = $bag;
     }
 
     /**
@@ -54,8 +48,8 @@ class Feedback
      */
     public function get(): array
     {
-        $bag = $this->session->get(self::BAG_NAME);
-        $this->session->set(self::BAG_NAME, []);
+        $bag = $_SESSION[self::BAG_NAME];
+        $_SESSION[self::BAG_NAME] = [];
 
         return $bag;
     }

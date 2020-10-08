@@ -21,7 +21,6 @@
 
 namespace Fragments\Component;
 
-use Fragments\Component\SessionManagement\Session;
 use Fragments\Bundle\Exception\AccessDeniedHttpException;
 
 /**
@@ -30,13 +29,6 @@ use Fragments\Bundle\Exception\AccessDeniedHttpException;
 class CsrfTokenManager
 {
     private const PREFIX = '_csrf/';
-
-    private $session;
-
-    public function __construct()
-    {
-        $this->session = new Session;
-    }
 
     /**
      * Get a new CSRF token.
@@ -47,12 +39,12 @@ class CsrfTokenManager
     {
         $tokenName = self::PREFIX . $id;
 
-        if ($this->session->exists($tokenName)) {
-            return $this->session->get($tokenName);
+        if (isset($_SESSION[$tokenName])) {
+            return $_SESSION[$tokenName];
         }
 
         $value = $this->generate();
-        $this->session->set($tokenName, $value);
+        $_SESSION[$tokenName] = $value;
 
         return $value;
     }
@@ -64,11 +56,11 @@ class CsrfTokenManager
     {
         $targetId = self::PREFIX . $targetId;
 
-        if (false === $this->session->exists($targetId)) {
+        if (!isset($_SESSION[$targetId])) {
             throw new AccessDeniedHttpException('The CSRF token identifier could not be found.');
         }
 
-        $tokenStored = $this->session->get($targetId);
+        $tokenStored = $_SESSION[$targetId];
         $tokenValid = hash_equals($tokenStored, $tokenReceived);
 
         if ($tokenValid) {

@@ -13,13 +13,7 @@ It has its own router component and is heavily inspired by [Symfony](https://sym
 
 2. Configure your web server so that its root directory is `<your-project-name>/public` and the fallback resource is `index.php`.
 
-3. Make sure the timezone is set in your PHP configuration, or else the Session component will misbehave:
-```
-[Date]
-date.timezone = UTC
-```
-
-4. Create `/config/pdo.ini` with the following lines to configure database connection details:
+3. Create `/config/pdo.ini` with the following lines to configure database connection details:
 ```
 driver = mysql
 host = localhost
@@ -31,7 +25,7 @@ username = example
 password = example
 ```
 
-5. Add routes in the file `/config/routes.xml` and start building your first controller at `/src/Controller/`. You can also try our [Fragments application](https://github.com/o-alquimista/fragments-app) to get an idea of how things work.
+4. Add routes in the file `/config/routes.xml` and start building your first controller at `/src/Controller/`. You can also try our [Fragments application](https://github.com/o-alquimista/fragments-app) to get an idea of how things work.
 
 ## License
 Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)

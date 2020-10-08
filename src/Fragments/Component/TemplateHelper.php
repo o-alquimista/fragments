@@ -24,7 +24,6 @@ namespace Fragments\Component;
 use Fragments\Component\Feedback;
 use Fragments\Component\CsrfTokenManager;
 use Fragments\Component\Request;
-use Fragments\Component\SessionManagement\Session;
 use Fragments\Component\Routing\Router;
 
 class TemplateHelper {
@@ -58,11 +57,6 @@ class TemplateHelper {
         return $token;
     }
 
-    public function getSession(): Session
-    {
-        return new Session;
-    }
-
     public function getRequest(): Request
     {
         return new Request;
@@ -89,9 +83,7 @@ class TemplateHelper {
     
     public function isAuthenticated(): bool
     {
-        $session = new Session();
-        
-        if ($session->exists('user')) {
+        if (isset($_SESSION['user'])) {
             return true;
         }
         
