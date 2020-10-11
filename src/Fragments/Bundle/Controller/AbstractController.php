@@ -21,27 +21,32 @@
 
 namespace Fragments\Bundle\Controller;
 
-use Fragments\Component\Request;
+use Fragments\Component\Http\Request;
+use Fragments\Component\Http\Response;
+use Fragments\Component\Http\RedirectResponse;
 use Fragments\Component\CsrfTokenManager;
 use Fragments\Component\Feedback;
-use Fragments\Component\TemplateHelper;
+use Fragments\Component\Templating;
+use Fragments\Component\Routing\Router;
 
 abstract class AbstractController
 {
-    protected function renderTemplate(string $path, array $variables = []) {
-        $templateHelper = new TemplateHelper;
-        $templateHelper->render($path, $variables);
+    /**
+     * Conveniently render a template from the controllers.
+     */
+    protected function render(string $template, array $variables = []): Response
+    {
+        $templating = new Templating();
+
+        return $templating->render($template, $variables);
     }
 
-    protected function isFormSubmitted(): bool
+    protected function redirectToRoute(string $routeId, $parameters = []): RedirectResponse
     {
-        $request = new Request;
+        $router = new Router();
+        $url = $router->generateUrl($routeId, $parameters);
 
-        if ($request->requestMethod() == "POST") {
-            return true;
-        }
-
-        return false;
+        return new RedirectResponse($url);
     }
 
     protected function isCsrfTokenValid(string $targetId, string $token): bool

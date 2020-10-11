@@ -23,7 +23,8 @@ namespace Fragments\Component\Routing;
 
 use Fragments\Component\Routing\Model\Route;
 use Fragments\Component\Routing\Parser\XMLParser;
-use Fragments\Component\Request;
+use Fragments\Component\Http\Request;
+use Fragments\Component\Http\Response;
 use Fragments\Bundle\Exception\NotFoundHttpException;
 use Fragments\Bundle\Exception\MethodNotAllowedHttpException;
 use Fragments\Bundle\Exception\ServerErrorHttpException;
@@ -32,30 +33,29 @@ class Router
 {
     private $parser;
 
-    private $request;
-
     public function __construct()
     {
         $this->parser = new XMLParser;
-        $this->request = new Request;
     }
 
-    public function start()
+    public function run(Request $request): Response
     {
-        $route = $this->getMatchingRoute();
+        $route = $this->getMatchingRoute($request);
 
         $controller = $route->getController();
         $action = $route->getAction();
         $parameters = $route->getParameters();
 
         $controller = new $controller;
-        $controller->{$action}(...$parameters);
+        $response = $controller->{$action}(...$parameters);
+
+        return $response;
     }
 
-    private function getMatchingRoute(): Route
+    private function getMatchingRoute(Request $request): Route
     {
         $routes = $this->parser->getRoutes();
-        $uri = $this->request->getURI();
+        $uri = $request->server['REQUEST_URI'];
 
         // Ignore GET parameters in the URI, if present
         if (strpos($uri, '?') !== false) {
@@ -101,7 +101,7 @@ class Router
                 }
             }
 
-            if (!in_array($this->request->requestMethod(), $route->getMethods())) {
+            if (!in_array($request->server['REQUEST_METHOD'], $route->getMethods())) {
                 throw new MethodNotAllowedHttpException;
             }
 
