@@ -54,9 +54,25 @@ class Session
         return session_regenerate_id();
     }
     
-    public function set(string $key, $value)
+    public function set($key, $value)
     {
         $_SESSION[$key] = $value;
+    }
+    
+    public function get($key, $default = null)
+    {
+        if (array_key_exists($key, $_SESSION)) {
+            return $_SESSION[$key];
+        }
+        
+        return $default;
+    }
+    
+    public function delete($key)
+    {
+        if (array_key_exists($key, $_SESSION)) {
+            unset($_SESSION[$key]);
+        }
     }
     
     public function destroy()
