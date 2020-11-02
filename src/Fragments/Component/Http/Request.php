@@ -38,4 +38,15 @@ class Request
         $this->get = $_GET;
         $this->server = $_SERVER;
     }
+
+    public function isSecure(): bool
+    {
+        $https = isset($this->server['HTTPS']) ? $this->server['HTTPS'] : '';
+
+        if (false === empty($https) && 'off' !== strtolower($https)) {
+            return true;
+        }
+
+        return false;
+    }
 }
