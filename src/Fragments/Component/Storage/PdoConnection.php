@@ -19,28 +19,23 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Component;
+namespace Fragments\Component\Storage;
 
 use Fragments\Bundle\Exception\ServerErrorHttpException;
 
-/**
- * Using the Singleton pattern, it creates an instance of the PDO class
- * and always returns that same instance.
- */
 class PdoConnection
 {
     private static $connection;
 
-    public function getConnection(): \PDO
+    public static function getConnection(): \PDO
     {
         if (!self::$connection) {
             $config = parse_ini_file('../config/pdo.ini');
             
             if (!$config) {
-                throw new ServerErrorHttpException('Failed to get connection parameters. Did you create the database.ini file at /config?');
+                throw new ServerErrorHttpException('Failed to get connection parameters. Did you create the pdo.ini file at /config?');
             }
-            
-            // Optional parameters
+
             $charset = isset($config['charset']) ? ";charset={$config['charset']}" : '';
             $port = isset($config['port']) ? ";port={$config['port']}" : '';
             

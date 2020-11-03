@@ -20,7 +20,7 @@ host = localhost
 ;port = 3306
 database = fragments_app
 ;socket = /path/to/socket
-;charset = utf8
+;charset = utf8mb4
 username = example
 password = example
 ```

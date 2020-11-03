@@ -21,12 +21,11 @@
 
 namespace Fragments\Bundle\Controller;
 
-use Fragments\Component\Http\Request;
 use Fragments\Component\Http\Response;
 use Fragments\Component\Http\RedirectResponse;
-use Fragments\Component\CsrfTokenManager;
-use Fragments\Component\Feedback;
-use Fragments\Component\Templating;
+use Fragments\Component\Session\Csrf;
+use Fragments\Component\Session\Feedback;
+use Fragments\Component\Html\Templating;
 use Fragments\Component\Routing\Router;
 
 abstract class AbstractController
@@ -49,11 +48,11 @@ abstract class AbstractController
         return new RedirectResponse($url);
     }
 
-    protected function isCsrfTokenValid(string $targetId, string $token): bool
+    protected function isCsrfTokenValid(string $name, string $token): bool
     {
-        $csrfTokenManager = new CsrfTokenManager;
+        $csrfManager = new Csrf;
 
-        return $csrfTokenManager->isTokenValid($token, $targetId);
+        return $csrfManager->verify($name, $token);
     }
 
     protected function addFeedback(string $id, string $message)

@@ -19,28 +19,32 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Component;
+namespace Fragments\Component\Session;
 
 class Feedback
 {
-    const BAG_NAME = 'feedbackBag';
+    const BAG_NAME = 'feedback';
+    
+    private $session;
 
     public function __construct()
     {
+        $this->session = new Session();
+
         // If the bag doesn't exist yet, create it
-        if (false === isset($_SESSION[self::BAG_NAME])) {
-            $_SESSION[self::BAG_NAME] = [];
+        if ($this->session->exists(self::BAG_NAME)) {
+            $this->session->set(self::BAG_NAME, []);
         }
     }
 
     /**
-     * Insert a feedback message into the Feedback Bag.
+     * Insert a feedback message into the feedback bag.
      */
     public function add(string $type, string $message)
     {
-        $bag = $_SESSION[self::BAG_NAME];
+        $bag = $this->session->get(self::BAG_NAME);
         $bag[$type][] = $message;
-        $_SESSION[self::BAG_NAME] = $bag;
+        $this->session->set(self::BAG_NAME, $bag);
     }
 
     /**
@@ -48,8 +52,8 @@ class Feedback
      */
     public function get(): array
     {
-        $bag = $_SESSION[self::BAG_NAME];
-        $_SESSION[self::BAG_NAME] = [];
+        $bag = $this->session->get(self::BAG_NAME);
+        $this->session->set(self::BAG_NAME, []);
 
         return $bag;
     }

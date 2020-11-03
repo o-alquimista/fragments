@@ -19,12 +19,14 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Component;
+namespace Fragments\Component\Html;
 
 use Fragments\Component\Http\Response;
 use Fragments\Component\Http\Request;
 use Fragments\Component\Routing\Router;
-use Fragments\Component\Feedback;
+use Fragments\Component\Session\Session;
+use Fragments\Component\Session\Feedback;
+use Fragments\Component\Session\Csrf;
 
 class Templating
 {
@@ -39,7 +41,7 @@ class Templating
 
         ob_start();
 
-        $context = $this->getContext();
+        $context = $this->buildContext();
         extract($context, EXTR_PREFIX_ALL, 'app');
         extract($variables);
 
@@ -52,18 +54,13 @@ class Templating
      * Returns an array of variables that can be useful when extracted into the
      * template's scope.
      */
-    private function getContext(): array
+    private function buildContext(): array
     {
         $context = [];
 
-        if (isset($_SESSION['user'])) {
-            $context['user'] = $_SESSION['user'];
-        } else {
-            $context['user'] = [];
-        }
-
         $context['router'] = new Router();
         $context['feedback'] = new Feedback();
+        $context['session'] = new Session();
         $context['request'] = new Request();
 
         return $context;
@@ -74,10 +71,10 @@ class Templating
         return htmlspecialchars($value, ENT_QUOTES);
     }
 
-    public function getCsrfToken(string $id): string
+    public function getCsrfToken(string $name): string
     {
-        $csrfManager = new CsrfTokenManager;
+        $csrfManager = new Csrf();
 
-        return $csrfManager->getToken($id);
+        return $csrfManager->get($name);
     }
 }

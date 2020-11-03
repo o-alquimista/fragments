@@ -28,7 +28,7 @@ class XMLParser implements ParserInterface
 {
     public function getRoutes(): array
     {
-        if (!file_exists('../config/routes.xml')) {
+        if (false === file_exists('../config/routes.xml')) {
             throw new ServerErrorHttpException('The route definition file is missing.');
         }
 

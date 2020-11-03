@@ -68,6 +68,15 @@ class Session
         return $default;
     }
     
+    public function exists($key): bool
+    {
+        if (array_key_exists($key, $_SESSION)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
     public function delete($key)
     {
         if (array_key_exists($key, $_SESSION)) {

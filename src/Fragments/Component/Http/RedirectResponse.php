@@ -29,10 +29,9 @@ class RedirectResponse extends Response
     public function __construct(string $url)
     {
         $headers = [];
-        $content = "";
+        $headers['Location'] = $url;
 
         $content = "Redirecting to {$url}";
-        $headers['Location'] = $url;
 
         parent::__construct($content, 302, $headers);
     }
