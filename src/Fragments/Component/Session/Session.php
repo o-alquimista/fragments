@@ -33,17 +33,17 @@ class Session
         ];
 
         if ($readAndClose) {
-            $this->options['read_and_close'] = true;
+            $options['read_and_close'] = true;
         }
 
         if (version_compare(phpversion(), '7.3.0', '>')) {
-            $this->options['cookie_samesite'] = 'Lax';
+            $options['cookie_samesite'] = 'Lax';
         }
 
         $request = new Request();
 
         if ($request->isSecure()) {
-            $this->options['cookie_secure'] = 1;
+            $options['cookie_secure'] = 1;
         }
 
         return session_start($options);

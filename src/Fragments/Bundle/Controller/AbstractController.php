@@ -55,9 +55,9 @@ abstract class AbstractController
         return $csrfManager->verify($name, $token);
     }
 
-    protected function addFeedback(string $id, string $message)
+    protected function addFeedback(string $type, string $message)
     {
         $feedback = new Feedback;
-        $feedback->add($id, $message);
+        $feedback->add($type, $message);
     }
 }

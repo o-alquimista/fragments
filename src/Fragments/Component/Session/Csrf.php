@@ -35,6 +35,11 @@ class Csrf
     public function __construct()
     {
         $this->session = new Session();
+
+        // If the bag doesn't exist yet, create it
+        if (false === $this->session->exists(self::BAG_NAME)) {
+            $this->session->set(self::BAG_NAME, []);
+        }
     }
 
     public function get(string $name): string

@@ -32,7 +32,7 @@ class Feedback
         $this->session = new Session();
 
         // If the bag doesn't exist yet, create it
-        if ($this->session->exists(self::BAG_NAME)) {
+        if (false === $this->session->exists(self::BAG_NAME)) {
             $this->session->set(self::BAG_NAME, []);
         }
     }
