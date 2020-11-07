@@ -25,7 +25,7 @@ use Fragments\Component\Routing\Model\Route;
 use Fragments\Component\Routing\Parser\XMLParser;
 use Fragments\Component\Http\Request;
 use Fragments\Component\Http\Response;
-use Fragments\Bundle\Exception\NotFoundHttpException;
+use Fragments\Component\Routing\Exception\RouteNotFoundException;
 use Fragments\Bundle\Exception\MethodNotAllowedHttpException;
 use Fragments\Bundle\Exception\ServerErrorHttpException;
 
@@ -102,13 +102,13 @@ class Router
             }
 
             if (!in_array($request->server['REQUEST_METHOD'], $route->getMethods())) {
-                throw new MethodNotAllowedHttpException;
+                throw new MethodNotAllowedHttpException();
             }
 
             return $route;
         }
 
-        throw new NotFoundHttpException('Route not found.');
+        throw new RouteNotFoundException();
     }
 
     private function getRouteById(string $routeId): Route
@@ -121,7 +121,7 @@ class Router
             }
         }
 
-        throw new NotFoundHttpException('Route not found.');
+        throw new RouteNotFoundException();
     }
 
     public function generateUrl(string $routeId, array $parameters = []): string
