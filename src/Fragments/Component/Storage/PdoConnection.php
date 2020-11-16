@@ -21,8 +21,6 @@
 
 namespace Fragments\Component\Storage;
 
-use Fragments\Bundle\Exception\ServerErrorHttpException;
-
 class PdoConnection
 {
     private static $connection;
@@ -31,33 +29,33 @@ class PdoConnection
     {
         if (!self::$connection) {
             $config = parse_ini_file('../config/pdo.ini');
-            
+
             if (!$config) {
-                throw new ServerErrorHttpException('Failed to get connection parameters. Did you create the pdo.ini file at /config?');
+                throw new \Exception('Failed to get connection parameters. Did you create the pdo.ini file at /config?', 500);
             }
 
             $charset = isset($config['charset']) ? ";charset={$config['charset']}" : '';
             $port = isset($config['port']) ? ";port={$config['port']}" : '';
-            
+
             if (isset($config['socket'])) {
                 $dsn = "{$config['driver']}:unix_socket={$config['socket']};dbname={$config['database']}{$charset}";
             } else {
                 $dsn = "{$config['driver']}:host={$config['host']}{$port};dbname={$config['database']}{$charset}";
             }
-            
+
             $options = [
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
             ];
-            
+
             try {
                 self::$connection = new \PDO($dsn, $config['username'], $config['password'], $options);
             } catch (\PDOException $e) {
                 error_log($e);
-                
-                throw new ServerErrorHttpException('Failed to connect to the database.');
+
+                throw new \Exception('Failed to connect to the database.', 500);
             }
         }
-        
+
         return self::$connection;
     }
 }

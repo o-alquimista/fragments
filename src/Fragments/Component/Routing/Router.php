@@ -24,10 +24,6 @@ namespace Fragments\Component\Routing;
 use Fragments\Component\Routing\Model\Route;
 use Fragments\Component\Routing\Parser\XMLParser;
 use Fragments\Component\Http\Request;
-use Fragments\Component\Http\Response;
-use Fragments\Component\Routing\Exception\RouteNotFoundException;
-use Fragments\Bundle\Exception\MethodNotAllowedHttpException;
-use Fragments\Bundle\Exception\ServerErrorHttpException;
 
 class Router
 {
@@ -38,21 +34,7 @@ class Router
         $this->parser = new XMLParser;
     }
 
-    public function run(Request $request): Response
-    {
-        $route = $this->getMatchingRoute($request);
-
-        $controller = $route->getController();
-        $action = $route->getAction();
-        $parameters = $route->getParameters();
-
-        $controller = new $controller;
-        $response = $controller->{$action}(...$parameters);
-
-        return $response;
-    }
-
-    private function getMatchingRoute(Request $request): Route
+    public function getRouteFromRequest(Request $request): Route
     {
         $routes = $this->parser->getRoutes();
         $uri = $request->server['REQUEST_URI'];
@@ -102,13 +84,13 @@ class Router
             }
 
             if (!in_array($request->server['REQUEST_METHOD'], $route->getMethods())) {
-                throw new MethodNotAllowedHttpException();
+                throw new \Exception('Method not allowed.', 405);
             }
 
             return $route;
         }
 
-        throw new RouteNotFoundException();
+        throw new \Exception('Route not found.', 404);
     }
 
     private function getRouteById(string $routeId): Route
@@ -121,7 +103,7 @@ class Router
             }
         }
 
-        throw new RouteNotFoundException();
+        throw new \Exception('Route not found.', 404);
     }
 
     public function generateUrl(string $routeId, array $parameters = []): string
@@ -152,7 +134,7 @@ class Router
         $routePath = '/' . implode('/', $routePath);
 
         if (preg_match('/{(\w+)}/', $routePath)) {
-            throw new ServerErrorHttpException('Failed to generate URL due to missing or invalid parameters: ' . $routePath);
+            throw new \Exception('Failed to generate URL due to missing or invalid parameters: ' . $routePath, 500);
         }
 
         return $routePath;

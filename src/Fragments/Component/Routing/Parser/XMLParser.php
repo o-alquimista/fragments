@@ -21,7 +21,6 @@
 
 namespace Fragments\Component\Routing\Parser;
 
-use Fragments\Bundle\Exception\ServerErrorHttpException;
 use Fragments\Component\Routing\Model\Route;
 
 class XMLParser implements ParserInterface
@@ -29,7 +28,7 @@ class XMLParser implements ParserInterface
     public function getRoutes(): array
     {
         if (false === file_exists('../config/routes.xml')) {
-            throw new ServerErrorHttpException('The route definition file is missing.');
+            throw new \Exception('The route definition file is missing.', 500);
         }
 
         $file = simplexml_load_file('../config/routes.xml');

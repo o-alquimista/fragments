@@ -24,17 +24,12 @@ namespace Fragments\Component\Session;
 class Feedback
 {
     const BAG_NAME = 'feedback';
-    
+
     private $session;
 
     public function __construct()
     {
         $this->session = new Session();
-
-        // If the bag doesn't exist yet, create it
-        if (false === $this->session->exists(self::BAG_NAME)) {
-            $this->session->set(self::BAG_NAME, []);
-        }
     }
 
     /**
@@ -42,6 +37,8 @@ class Feedback
      */
     public function add(string $type, string $message)
     {
+        $this->createBag();
+
         $bag = $this->session->get(self::BAG_NAME);
         $bag[$type][] = $message;
         $this->session->set(self::BAG_NAME, $bag);
@@ -52,9 +49,21 @@ class Feedback
      */
     public function get(): array
     {
+        $this->createBag();
+
         $bag = $this->session->get(self::BAG_NAME);
         $this->session->set(self::BAG_NAME, []);
 
         return $bag;
+    }
+
+    /**
+     * Creates the bag if it doesn't exist yet.
+     */
+    private function createBag()
+    {
+        if (false === $this->session->exists(self::BAG_NAME)) {
+            $this->session->set(self::BAG_NAME, []);
+        }
     }
 }

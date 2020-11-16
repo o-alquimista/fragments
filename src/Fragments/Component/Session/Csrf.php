@@ -21,29 +21,24 @@
 
 namespace Fragments\Component\Session;
 
-use Fragments\Bundle\Exception\AccessDeniedHttpException;
-
 /**
  * Manage tokens used to prevent CSRF attacks.
  */
 class Csrf
 {
     const BAG_NAME = 'csrf';
-    
+
     private $session;
-    
+
     public function __construct()
     {
         $this->session = new Session();
-
-        // If the bag doesn't exist yet, create it
-        if (false === $this->session->exists(self::BAG_NAME)) {
-            $this->session->set(self::BAG_NAME, []);
-        }
     }
 
     public function get(string $name): string
     {
+        $this->createBag();
+
         $bag = $this->session->get(self::BAG_NAME);
 
         if (array_key_exists($name, $bag)) {
@@ -59,12 +54,24 @@ class Csrf
 
     public function verify(string $name, string $token): bool
     {
+        $this->createBag();
+
         $bag = $this->session->get(self::BAG_NAME);
 
         if (false === array_key_exists($name, $bag)) {
-            throw new AccessDeniedHttpException('The CSRF token identifier could not be found.');
+            throw new \Exception('The CSRF token identifier could not be found.', 403);
         }
 
         return hash_equals($bag[$name], $token);
+    }
+
+    /**
+     * Creates the bag if it doesn't exist yet.
+     */
+    private function createBag()
+    {
+        if (false === $this->session->exists(self::BAG_NAME)) {
+            $this->session->set(self::BAG_NAME, []);
+        }
     }
 }

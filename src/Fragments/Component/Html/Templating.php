@@ -36,7 +36,7 @@ class Templating
     public function render(string $template, array $variables = []): Response
     {
         if (false === file_exists("../templates/{$template}")) {
-            throw new \Exception('The template file could not be found.');
+            throw new \Exception('The template file could not be found.', 500);
         }
 
         ob_start();
