@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)
+ * Copyright 2019-2021 Douglas Silva (0x9fd287d56ec107ac)
  *
  * This file is part of Fragments.
  *
@@ -24,6 +24,7 @@ namespace Fragments\Component\Routing;
 use Fragments\Component\Routing\Model\Route;
 use Fragments\Component\Routing\Parser\XMLParser;
 use Fragments\Component\Http\Request;
+use Fragments\Component\Http\Exception\HttpException;
 
 class Router
 {
@@ -84,13 +85,13 @@ class Router
             }
 
             if (!in_array($request->server['REQUEST_METHOD'], $route->getMethods())) {
-                throw new \Exception('Method not allowed.', 405);
+                throw new HttpException(405, 'Method not allowed.');
             }
 
             return $route;
         }
 
-        throw new \Exception('Route not found.', 404);
+        throw new HttpException(404, 'Route not found.');
     }
 
     private function getRouteById(string $routeId): Route
@@ -103,7 +104,7 @@ class Router
             }
         }
 
-        throw new \Exception('Route not found.', 404);
+        throw new HttpException(404, 'Route not found.');
     }
 
     public function generateUrl(string $routeId, array $parameters = []): string
@@ -134,7 +135,7 @@ class Router
         $routePath = '/' . implode('/', $routePath);
 
         if (preg_match('/{(\w+)}/', $routePath)) {
-            throw new \Exception('Failed to generate URL due to missing or invalid parameters: ' . $routePath, 500);
+            throw new \RuntimeException('Failed to generate URL due to missing or invalid parameters: ' . $routePath);
         }
 
         return $routePath;

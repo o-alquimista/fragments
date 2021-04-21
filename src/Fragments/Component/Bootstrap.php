@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)
+ * Copyright 2019-2021 Douglas Silva (0x9fd287d56ec107ac)
  *
  * This file is part of Fragments.
  *
@@ -21,6 +21,7 @@
 
 namespace Fragments\Component;
 
+use Fragments\Component\Http\Exception\HttpException;
 use Fragments\Component\Http\Request;
 use Fragments\Component\Http\Response;
 use Fragments\Component\Routing\Router;
@@ -49,39 +50,59 @@ class Bootstrap
 
             $controller = new $controller;
             $response = $controller->{$action}(...$parameters);
+        } catch (HttpException $exception) {
+            $response = $this->createCustomErrorResponse($exception);
         } catch (\Throwable $exception) {
-            $response = $this->createErrorResponse($exception);
+            $response = $this->createServerErrorResponse($exception);
         }
 
         return $response;
     }
-
-    private function createErrorResponse(\Throwable $exception): Response
+    
+    private function createCustomErrorResponse(HttpException $exception): Response
     {
-        // Log server errors
-        if ($exception->getCode() >= 500 && $exception->getCode() < 600) {
+        if ($exception->getStatusCode() === 500) {
             error_log($exception);
         }
+        
+        if (file_exists('../templates/error')) {
+            if (file_exists("../templates/error/{$exception->getStatusCode()}.php")) {
+                $response = $this->templating->render("error/{$exception->getStatusCode()}.php");
+                $response->setStatusCode($exception->getStatusCode());
+            } else {
+                $response = $this->templating->render('error/error.php', [
+                    'statusCode' => $exception->getStatusCode()
+                ]);
+                
+                $response->setStatusCode($exception->getStatusCode());
+            }
+        } else {
+            $response = new Response($exception->getMessage(), $exception->getStatusCode());
+        }
+        
+        return $response;
+    }
+
+    private function createServerErrorResponse(\Throwable $exception): Response
+    {
+        error_log($exception);
 
         // Render a custom error response if it exists
         if (file_exists('../templates/error')) {
-            if (file_exists("../templates/error/{$exception->getCode()}.php")) {
+            if (file_exists("../templates/error/500.php")) {
                 // Render code-specific template
-                $response = $this->templating->render("error/{$exception->getCode()}.php");
+                $response = $this->templating->render("error/500.php");
+                $response->setStatusCode(500);
             } else {
                 // Render generic template
                 $response = $this->templating->render('error/error.php', [
-                    'statusCode' => $exception->getCode()
+                    'statusCode' => 500
                 ]);
+                
+                $response->setStatusCode(500);
             }
         } else {
-            $message = 'Something went wrong.';
-
-            if ($exception->getCode() === 404) {
-                $message = 'Page not found';
-            }
-
-            $response = new Response($message, $exception->getCode());
+            $response = new Response('Something went wrong.', 500);
         }
 
         return $response;

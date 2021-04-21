@@ -19,34 +19,21 @@
  * along with Fragments.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Fragments\Component\Http;
+namespace Fragments\Component\Http\Exception;
 
-/**
- * An object-oriented representation of the HTTP request.
- */
-class Request
+class HttpException extends \RuntimeException
 {
-    public $post;
+    private $statusCode;
 
-    public $get;
-
-    public $server;
-
-    public function __construct()
+    public function __construct(int $statusCode, string $message = '', \Throwable $previous = null, ?int $code = 0)
     {
-        $this->post = $_POST;
-        $this->get = $_GET;
-        $this->server = $_SERVER;
+        $this->statusCode = $statusCode;
+
+        parent::__construct($message, $code, $previous);
     }
-
-    public function isSecure(): bool
+    
+    public function getStatusCode(): int
     {
-        $https = isset($this->server['HTTPS']) ? $this->server['HTTPS'] : '';
-
-        if (false === empty($https) && 'off' !== strtolower($https)) {
-            return true;
-        }
-
-        return false;
+        return $this->statusCode;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)
+ * Copyright 2019-2021 Douglas Silva (0x9fd287d56ec107ac)
  *
  * This file is part of Fragments.
  *
@@ -31,7 +31,7 @@ class PdoConnection
             $config = parse_ini_file('../config/pdo.ini');
 
             if (!$config) {
-                throw new \Exception('Failed to get connection parameters. Did you create the pdo.ini file at /config?', 500);
+                throw new \RuntimeException('Failed to get connection parameters. Did you create the pdo.ini file at /config?');
             }
 
             $charset = isset($config['charset']) ? ";charset={$config['charset']}" : '';
@@ -52,7 +52,7 @@ class PdoConnection
             } catch (\PDOException $e) {
                 error_log($e);
 
-                throw new \Exception('Failed to connect to the database.', 500);
+                throw new \RuntimeException('Failed to connect to the database.');
             }
         }
 

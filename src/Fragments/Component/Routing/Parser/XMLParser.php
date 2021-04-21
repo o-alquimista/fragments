@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)
+ * Copyright 2019-2021 Douglas Silva (0x9fd287d56ec107ac)
  *
  * This file is part of Fragments.
  *
@@ -28,7 +28,7 @@ class XMLParser implements ParserInterface
     public function getRoutes(): array
     {
         if (false === file_exists('../config/routes.xml')) {
-            throw new \Exception('The route definition file is missing.', 500);
+            throw new \RuntimeException('The route definition file is missing.');
         }
 
         $file = simplexml_load_file('../config/routes.xml');

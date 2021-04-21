@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)
+ * Copyright 2019-2021 Douglas Silva (0x9fd287d56ec107ac)
  *
  * This file is part of Fragments.
  *
@@ -36,7 +36,7 @@ class Templating
     public function render(string $template, array $variables = []): Response
     {
         if (false === file_exists("../templates/{$template}")) {
-            throw new \Exception('The template file could not be found.', 500);
+            throw new \RuntimeException('The template file could not be found.');
         }
 
         ob_start();

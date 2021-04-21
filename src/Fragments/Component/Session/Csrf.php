@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)
+ * Copyright 2019-2021 Douglas Silva (0x9fd287d56ec107ac)
  *
  * This file is part of Fragments.
  *
@@ -20,6 +20,8 @@
  */
 
 namespace Fragments\Component\Session;
+
+use Fragments\Component\Http\Exception\HttpException;
 
 /**
  * Manage tokens used to prevent CSRF attacks.
@@ -59,7 +61,7 @@ class Csrf
         $bag = $this->session->get(self::BAG_NAME);
 
         if (false === array_key_exists($name, $bag)) {
-            throw new \Exception('The CSRF token identifier could not be found.', 403);
+            throw new HttpException(403, 'The CSRF token identifier could not be found.');
         }
 
         return hash_equals($bag[$name], $token);

@@ -28,7 +28,7 @@ password = example
 4. Add routes in the file `/config/routes.xml` and start building your first controller at `/src/Controller/`. You can also try our [Fragments application](https://github.com/o-alquimista/fragments-app) to get an idea of how things work.
 
 ## License
-Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)
+Copyright 2019-2021 Douglas Silva (0x9fd287d56ec107ac)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
