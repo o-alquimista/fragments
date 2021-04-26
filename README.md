@@ -4,6 +4,7 @@ Fragments aims to be a small PHP framework for web applications. Keep in mind th
 It has its own router component and is heavily inspired by [Symfony](https://symfony.com/).
 
 ## Requirements
+- PHP 8
 - [Composer](https://getcomposer.org/)
 - PHP XML extension. This package is called `php-xml` on Ubuntu.
 

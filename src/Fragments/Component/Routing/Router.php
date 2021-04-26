@@ -41,8 +41,8 @@ class Router
         $uri = $request->server['REQUEST_URI'];
 
         // Ignore GET parameters in the URI, if present
-        if (strpos($uri, '?') !== false) {
-            $uri = strstr($uri, '?', true);
+        if (strpos(haystack: $uri, needle: '?') !== false) {
+            $uri = strstr(haystack: $uri, needle: '?', before_needle: true);
         }
 
         // Eliminate the trailing forward slash from the URI
@@ -51,16 +51,14 @@ class Router
         }
 
         foreach ($routes as $route) {
-            if ($route->getPath() != $uri) {
-                $routePath = $route->getPath();
-
+            if ($route->path !== $uri) {
                 // Are there any wildcards in the route path?
-                if (!preg_match('/{(\w+)}/', $routePath)) {
+                if (false == preg_match('/{(\w+)}/', $route->path)) {
                     continue;
                 }
 
                 // Replace all wildcards with capturing groups
-                $regex = preg_replace('/{(\w+)}/', '(\w+)', $routePath);
+                $regex = preg_replace('/{(\w+)}/', '(\w+)', $route->path);
 
                 // Escape forward slashes in the path
                 $regex = preg_replace('/\//', '\/', $regex);
@@ -68,7 +66,7 @@ class Router
                 // Add start and end regex delimiters
                 $regex = '/^' . $regex . '$/';
 
-                if (preg_match($regex, $uri, $matches)) {
+                if (preg_match(pattern: $regex, subject: $uri, matches: $matches)) {
                     // The first item is not a wildcard value, so remove it
                     array_shift($matches);
 
@@ -78,20 +76,20 @@ class Router
                         $parameters[] = $parameter;
                     }
 
-                    $route->setParameters($parameters);
+                    $route->parameters = $parameters;
                 } else {
                     continue;
                 }
             }
 
-            if (!in_array($request->server['REQUEST_METHOD'], $route->getMethods())) {
-                throw new HttpException(405, 'Method not allowed.');
+            if (false === in_array(needle: $request->server['REQUEST_METHOD'], haystack: $route->getMethods())) {
+                throw new HttpException(statusCode: 405, message: 'Method not allowed.');
             }
 
             return $route;
         }
 
-        throw new HttpException(404, 'Route not found.');
+        throw new HttpException(statusCode: 404, message: 'Route not found.');
     }
 
     private function getRouteById(string $routeId): Route
@@ -99,26 +97,26 @@ class Router
         $routes = $this->parser->getRoutes();
 
         foreach ($routes as $route) {
-            if ($route->getId() == $routeId) {
+            if ($route->id === $routeId) {
                 return $route;
             }
         }
 
-        throw new HttpException(404, 'Route not found.');
+        throw new HttpException(statusCode: 404, message: 'Route not found.');
     }
 
     public function generateUrl(string $routeId, array $parameters = []): string
     {
         $route = $this->getRouteById($routeId);
-        $routePath = $route->getPath();
+        $routePath = $route->path;
 
         // If there are no wildcards in this route path, return it as is
-        if (!preg_match('/{(\w+)}/', $routePath)) {
+        if (false == preg_match('/{(\w+)}/', $routePath)) {
             return $routePath;
         }
 
         // Break the route path in segments, without forward slashes
-        $routePath = explode('/', trim($routePath, '/'));
+        $routePath = explode(delimiter: '/', string: trim($routePath, '/'));
 
         /*
          * Iterate over the parameters, trying to find a corresponding wildcard
@@ -127,12 +125,12 @@ class Router
          */
         foreach ($parameters as $parameterName => $parameterValue) {
             foreach ($routePath as $pathKey => $pathSegment) {
-                $routePath[$pathKey] = preg_replace('/{' . $parameterName . '}/', $parameterValue, $pathSegment);
+                $routePath[$pathKey] = preg_replace(pattern: '/{' . $parameterName . '}/', replacement: $parameterValue, subject: $pathSegment);
             }
         }
 
         // Rebuild the path as a string, restoring forward slashes
-        $routePath = '/' . implode('/', $routePath);
+        $routePath = '/' . implode(glue: '/', pieces: $routePath);
 
         if (preg_match('/{(\w+)}/', $routePath)) {
             throw new \RuntimeException('Failed to generate URL due to missing or invalid parameters: ' . $routePath);

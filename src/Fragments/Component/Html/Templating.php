@@ -66,9 +66,9 @@ class Templating
         return $context;
     }
 
-    public function escape(string $value): string
+    public function escape(string $string): string
     {
-        return htmlspecialchars($value, ENT_QUOTES);
+        return htmlspecialchars($string, flags: ENT_QUOTES);
     }
 
     public function getCsrfToken(string $name): string

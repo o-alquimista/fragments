@@ -30,14 +30,11 @@ class Session
         $options = [
             'cookie_httponly' => 1,
             'use_strict_mode' => 1,
+            'cookie_samesite' => 'Lax'
         ];
 
         if ($readAndClose) {
             $options['read_and_close'] = true;
-        }
-
-        if (version_compare(phpversion(), '7.3.0', '>')) {
-            $options['cookie_samesite'] = 'Lax';
         }
 
         $request = new Request();

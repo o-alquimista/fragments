@@ -43,13 +43,8 @@ class Bootstrap
     {
         try {
             $route = $this->router->getRouteFromRequest($request);
-
-            $controller = $route->getController();
-            $action = $route->getAction();
-            $parameters = $route->getParameters();
-
-            $controller = new $controller;
-            $response = $controller->{$action}(...$parameters);
+            $controller = new $route->controller;
+            $response = $controller->{$route->action}(...$route->parameters);
         } catch (HttpException $exception) {
             $response = $this->createCustomErrorResponse($exception);
         } catch (\Throwable $exception) {
@@ -61,23 +56,23 @@ class Bootstrap
     
     private function createCustomErrorResponse(HttpException $exception): Response
     {
-        if ($exception->getStatusCode() === 500) {
+        if ($exception->statusCode === 500) {
             error_log($exception);
         }
         
         if (file_exists('../templates/error')) {
-            if (file_exists("../templates/error/{$exception->getStatusCode()}.php")) {
-                $response = $this->templating->render("error/{$exception->getStatusCode()}.php");
-                $response->setStatusCode($exception->getStatusCode());
+            if (file_exists("../templates/error/{$exception->statusCode}.php")) {
+                $response = $this->templating->render("error/{$exception->statusCode}.php");
+                $response->statusCode = $exception->statusCode;
             } else {
                 $response = $this->templating->render('error/error.php', [
-                    'statusCode' => $exception->getStatusCode()
+                    'statusCode' => $exception->statusCode
                 ]);
                 
-                $response->setStatusCode($exception->getStatusCode());
+                $response->statusCode = $exception->statusCode;
             }
         } else {
-            $response = new Response($exception->getMessage(), $exception->getStatusCode());
+            $response = new Response(content: $exception->getMessage(), statusCode: $exception->statusCode);
         }
         
         return $response;
@@ -92,17 +87,17 @@ class Bootstrap
             if (file_exists("../templates/error/500.php")) {
                 // Render code-specific template
                 $response = $this->templating->render("error/500.php");
-                $response->setStatusCode(500);
+                $response->statusCode = 500;
             } else {
                 // Render generic template
                 $response = $this->templating->render('error/error.php', [
                     'statusCode' => 500
                 ]);
                 
-                $response->setStatusCode(500);
+                $response->statusCode = 500;
             }
         } else {
-            $response = new Response('Something went wrong.', 500);
+            $response = new Response(content: 'Something went wrong.', statusCode: 500);
         }
 
         return $response;

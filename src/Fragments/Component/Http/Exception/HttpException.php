@@ -23,17 +23,12 @@ namespace Fragments\Component\Http\Exception;
 
 class HttpException extends \RuntimeException
 {
-    private $statusCode;
+    public int $statusCode;
 
     public function __construct(int $statusCode, string $message = '', \Throwable $previous = null, ?int $code = 0)
     {
         $this->statusCode = $statusCode;
 
         parent::__construct($message, $code, $previous);
-    }
-    
-    public function getStatusCode(): int
-    {
-        return $this->statusCode;
     }
 }

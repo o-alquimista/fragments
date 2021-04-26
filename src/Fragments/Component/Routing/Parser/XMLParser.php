@@ -36,11 +36,11 @@ class XMLParser implements ParserInterface
 
         foreach ($file as $entry) {
             $route = new Route;
-            $route->setId($entry->id);
-            $route->setPath($entry->path);
+            $route->id = $entry->id;
+            $route->path = $entry->path;
+            $route->controller = $entry->controller;
+            $route->action = $entry->action;
             $route->setMethods($entry->methods);
-            $route->setController($entry->controller);
-            $route->setAction($entry->action);
 
             $routes[] = $route;
         }

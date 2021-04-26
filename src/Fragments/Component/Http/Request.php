@@ -26,11 +26,11 @@ namespace Fragments\Component\Http;
  */
 class Request
 {
-    public $post;
+    public array $post;
 
-    public $get;
+    public array $get;
 
-    public $server;
+    public array $server;
 
     public function __construct()
     {

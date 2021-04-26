@@ -47,7 +47,7 @@ class Csrf
             return $bag[$name];
         }
 
-        $token = bin2hex(random_bytes(32));
+        $token = bin2hex(random_bytes(length: 32));
         $bag[$name] = $token;
         $this->session->set(self::BAG_NAME, $bag);
 
@@ -61,7 +61,7 @@ class Csrf
         $bag = $this->session->get(self::BAG_NAME);
 
         if (false === array_key_exists($name, $bag)) {
-            throw new HttpException(403, 'The CSRF token identifier could not be found.');
+            throw new HttpException(statusCode: 403, message: 'The CSRF token identifier could not be found.');
         }
 
         return hash_equals($bag[$name], $token);

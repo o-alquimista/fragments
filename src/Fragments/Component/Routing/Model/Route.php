@@ -26,22 +26,22 @@ class Route
     /**
      * The route identifier.
      */
-    private $id;
+    public string $id;
 
     /**
      * The associated URL.
      */
-    private $path;
+    public string $path;
 
     /**
      * The fully qualified class name of the controller.
      */
-    private $controller;
+    public string $controller;
 
     /**
      * The class method to be executed.
      */
-    private $action;
+    public string $action;
 
     /**
      * The request methods supported.
@@ -51,55 +51,7 @@ class Route
     /**
      * Route parameters injected by the router.
      */
-    private $parameters = [];
-
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    public function setId(string $id): self
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-
-    public function setPath(string $path): self
-    {
-        $this->path = $path;
-
-        return $this;
-    }
-
-    public function getController(): string
-    {
-        return $this->controller;
-    }
-
-    public function setController(string $controller): self
-    {
-        $this->controller = $controller;
-
-        return $this;
-    }
-
-    public function getAction(): string
-    {
-        return $this->action;
-    }
-
-    public function setAction(string $action): self
-    {
-        $this->action = $action;
-
-        return $this;
-    }
+    public array $parameters = [];
 
     public function getMethods(): array
     {
@@ -111,18 +63,6 @@ class Route
         // Store them in an array
         $methods = explode('|', $methods);
         $this->methods = $methods;
-
-        return $this;
-    }
-
-    public function getParameters(): array
-    {
-        return $this->parameters;
-    }
-
-    public function setParameters(array $parameters): self
-    {
-        $this->parameters = $parameters;
 
         return $this;
     }

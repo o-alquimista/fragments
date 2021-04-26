@@ -22,7 +22,7 @@
 namespace Fragments\Component\Http;
 
 /**
- * An object-oriented representation of the HTTP response.
+ * Conveniently performs a redirection to the specified URL.
  */
 class RedirectResponse extends Response
 {

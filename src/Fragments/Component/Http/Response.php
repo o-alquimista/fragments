@@ -26,11 +26,11 @@ namespace Fragments\Component\Http;
  */
 class Response
 {
-    public $content;
+    public string $content;
 
-    public $statusCode;
+    public int $statusCode;
 
-    public $headers;
+    public array $headers;
 
     public function __construct(string $content = '', int $statusCode = 200, array $headers = [])
     {
@@ -43,11 +43,6 @@ class Response
     {
         $this->sendHeaders();
         $this->sendContent();
-    }
-    
-    public function setStatusCode(int $statusCode)
-    {
-        $this->statusCode = $statusCode;
     }
 
     private function sendHeaders()
