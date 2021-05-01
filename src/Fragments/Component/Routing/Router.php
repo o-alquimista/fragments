@@ -22,6 +22,8 @@
 namespace Fragments\Component\Routing;
 
 use Fragments\Component\Routing\Model\Route;
+use Fragments\Component\Routing\Parser\ParserInterface;
+use Fragments\Component\Routing\Parser\AttributeParser;
 use Fragments\Component\Routing\Parser\XMLParser;
 use Fragments\Component\Http\Request;
 use Fragments\Component\Http\Exception\HttpException;
@@ -32,7 +34,16 @@ class Router
 
     public function __construct()
     {
-        $this->parser = new XMLParser;
+        $this->parser = $this->getParser();
+    }
+
+    private function getParser(): ParserInterface
+    {
+        if (file_exists('../config/routes.xml')) {
+            return new XMLParser();
+        }
+
+        return new AttributeParser();
     }
 
     public function getRouteFromRequest(Request $request): Route
@@ -82,7 +93,7 @@ class Router
                 }
             }
 
-            if (false === in_array(needle: $request->server['REQUEST_METHOD'], haystack: $route->getMethods())) {
+            if (false === in_array(needle: $request->server['REQUEST_METHOD'], haystack: $route->methods)) {
                 throw new HttpException(statusCode: 405, message: 'Method not allowed.');
             }
 

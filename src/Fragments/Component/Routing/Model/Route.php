@@ -46,24 +46,10 @@ class Route
     /**
      * The request methods supported.
      */
-    private $methods = [];
+    public array $methods = [];
 
     /**
      * Route parameters injected by the router.
      */
     public array $parameters = [];
-
-    public function getMethods(): array
-    {
-        return $this->methods;
-    }
-
-    public function setMethods(string $methods): self
-    {
-        // Store them in an array
-        $methods = explode('|', $methods);
-        $this->methods = $methods;
-
-        return $this;
-    }
 }

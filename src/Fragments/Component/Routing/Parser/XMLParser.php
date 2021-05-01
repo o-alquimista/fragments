@@ -40,7 +40,9 @@ class XMLParser implements ParserInterface
             $route->path = $entry->path;
             $route->controller = $entry->controller;
             $route->action = $entry->action;
-            $route->setMethods($entry->methods);
+
+            $methods = explode('|', $entry->methods);
+            $route->methods = $methods;
 
             $routes[] = $route;
         }

@@ -47,7 +47,10 @@ class Templating
 
         include "../templates/{$template}";
 
-        return new Response(ob_get_clean());
+        $contents = ob_get_contents();
+        ob_end_clean();
+
+        return new Response($contents);
     }
 
     /**
