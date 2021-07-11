@@ -6,7 +6,6 @@ It has its own router component and is heavily inspired by [Symfony](https://sym
 ## Requirements
 - PHP 8 or newer
 - [Composer](https://getcomposer.org/)
-- PHP XML extension. This package is called `php-xml` on Ubuntu.
 
 ## Getting started
 1. Create a blank project:

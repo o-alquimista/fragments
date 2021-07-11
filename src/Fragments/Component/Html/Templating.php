@@ -52,6 +52,31 @@ class Templating
 
         return new Response($contents);
     }
+    
+    /**
+     * Includes a template file and returns its contents as a string.
+     * 
+     * @param string $template The template file relative to the '/templates' directory
+     * @param array $variables Variables to include in the template
+     * @throws \RuntimeException When the template file cannot be found
+     * @return string The contents of the parsed template file
+     */
+    public function include(string $template, array $variables = []): string
+    {
+        if (false === file_exists("../templates/{$template}")) {
+            throw new \RuntimeException('The template file could not be found.');
+        }
+        
+        ob_start();
+        extract($variables);
+
+        include "../templates/{$template}";
+
+        $contents = ob_get_contents();
+        ob_end_clean();
+        
+        return $contents;
+    }
 
     /**
      * Returns an array of variables that can be useful when extracted into the
