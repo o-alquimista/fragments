@@ -103,7 +103,7 @@ class Router
         throw new HttpException(statusCode: 404, message: 'Route not found.');
     }
 
-    private function getRouteById(string $routeId): Route
+    private function getRouteById(string $routeId): ?Route
     {
         $routes = $this->parser->getRoutes();
 
@@ -113,12 +113,17 @@ class Router
             }
         }
 
-        throw new HttpException(statusCode: 404, message: 'Route not found.');
+        return null;
     }
 
     public function generateUrl(string $routeId, array $parameters = []): string
     {
         $route = $this->getRouteById($routeId);
+
+        if (!$route) {
+            throw new HttpException(statusCode: 404, message: 'Route not found.');
+        }
+
         $routePath = $route->path;
 
         // If there are no wildcards in this route path, return it as is

@@ -68,6 +68,9 @@ class Templating
         }
         
         ob_start();
+
+        $context = $this->buildContext();
+        extract($context, EXTR_PREFIX_ALL, 'app');
         extract($variables);
 
         include "../templates/{$template}";
