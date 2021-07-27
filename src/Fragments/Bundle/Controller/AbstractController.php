@@ -46,10 +46,4 @@ abstract class AbstractController
 
         return new RedirectResponse($url);
     }
-
-    protected function addFeedback(string $type, string $message)
-    {
-        $feedback = new Feedback;
-        $feedback->add($type, $message);
-    }
 }

@@ -132,7 +132,7 @@ class Router
         }
 
         // Break the route path in segments, without forward slashes
-        $routePath = explode(delimiter: '/', string: trim($routePath, '/'));
+        $routePath = explode(separator: '/', string: trim($routePath, '/'));
 
         /*
          * Iterate over the parameters, trying to find a corresponding wildcard
@@ -146,7 +146,7 @@ class Router
         }
 
         // Rebuild the path as a string, restoring forward slashes
-        $routePath = '/' . implode(glue: '/', pieces: $routePath);
+        $routePath = '/' . implode(separator: '/', array: $routePath);
 
         if (preg_match('/{(\w+)}/', $routePath)) {
             throw new \RuntimeException('Failed to generate URL due to missing or invalid parameters: ' . $routePath);
